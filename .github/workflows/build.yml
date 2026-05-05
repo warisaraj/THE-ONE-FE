@@ -1,4 +1,4 @@
-name: Build and Zip
+name: Build and Tar
 
 on:
   push:
@@ -23,8 +23,11 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Create tar.gz
+        run: tar -czf dist.tar.gz dist/
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dist
-          path: dist/
+          name: dist-tar
+          path: dist.tar.gz
