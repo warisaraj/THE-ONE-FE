@@ -1,0 +1,128 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb" style="width: 2000px;">
+    <div class="row">
+      <div class="col-md-10 col-xs-12 align-self-center">
+        <h4 class="soc-title">Sachet</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Master Data Management</a>
+              </li>
+              <li class="breadcrumb-item active">
+                Sachet
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-2 col-xs-12 align-self-center text-right">
+        <button *ngIf="menuPermissions.edit" [routerLink]="['/master-data-management','sachet','edit']" id="btnEditTop" name="btnEditTop" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit">
+          <i class="fas fa-edit"></i><span>Edit</span>
+        </button>
+        <!-- <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop"  class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button> -->
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text" style="font-weight: 700;">Sachet Info</h5>
+            <button *ngIf="menuPermissions.view" [routerLink]="['/master-data-management','sachet', 'history']" style="padding: 5px 10px !important;" id="btnHistory" name="btnHistory" class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="History of data revisions">
+              <img src="assets/icon-md/c7.svg" alt="">
+            </button>
+          </div>
+          <div class="ibox-body">
+            <div id="tab-1" class="tab-pane active">
+              <div class="panel-body" style="padding-left: 0 !important;padding-right: 0 !important;">
+                <div class="row">
+                  <div class="col-sm-3" style="font-size: 18px; text-align: center; border-right: #AE934F 1px solid;">
+                    <p class="mt-20" style="font-weight: 600;">Morning Sachet</p>
+                    <div style="height: 50px;"></div>
+                    <img *ngIf="!sachet.morningPicture" src="assets/img/no-img.png" width="64%" style="border-radius: 5px; margin:auto">
+                    <img *ngIf="sachet.morningPicture" [attr.src]="sachet.morningPicture | resolveImageUrl" width="64%" style="border-radius: 5px; margin:auto" (click)="popupImg(sachet.morningPicture)" />
+                    <div style="height: 30px;"></div>
+                    <p style="text-align:left; padding-left:20px;font-weight: 600;">Note :</p>
+                    <div class="form-group">
+                      <span style="text-align:left; padding-left:20px; padding-left:20px;width:100%; word-wrap:break-word; display:inline-block">
+                        {{sachet.morningNote ? sachet.morningNote : '-'}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-sm-3" style="font-size: 18px; text-align: center; border-right: #AE934F 1px solid;">
+                    <p class="mt-20" style="font-weight: 600;">Lunch Sachet</p>
+                    <div style="height: 50px;"></div>
+                    <img *ngIf="!sachet.lunchPicture" src="assets/img/no-img.png" width="64%" style="border-radius: 5px; margin:auto">
+                    <img *ngIf="sachet.lunchPicture" [attr.src]="sachet.lunchPicture | resolveImageUrl" width="64%" style="border-radius: 5px; margin:auto" (click)="popupImg(sachet.lunchPicture)" />
+                    <div style="height: 30px;"></div>
+                    <p style="text-align:left; padding-left:20px;font-weight: 600;">Note :</p>
+                    <div class="form-group">
+                      <span style="text-align:left; padding-left:20px; padding-left:20px;width:100%; word-wrap:break-word; display:inline-block">
+                        {{sachet.lunchNote ? sachet.lunchNote : '-'}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-sm-3" style="font-size: 18px; text-align: center; border-right: #AE934F 1px solid;">
+                    <p class="mt-20" style="font-weight: 600;">Evening Sachet</p>
+                    <div style="height: 50px;"></div>
+                    <img *ngIf="!sachet.eveningPicture" src="assets/img/no-img.png" width="64%" style="border-radius: 5px; margin:auto">
+                    <img *ngIf="sachet.eveningPicture" [attr.src]="sachet.eveningPicture | resolveImageUrl" width="64%" style="border-radius: 5px; margin:auto" (click)="popupImg(sachet.eveningPicture)" />
+                    <div style="height: 30px;"></div>
+                    <p style="text-align:left; padding-left:20px;font-weight: 600;">Note :</p>
+                    <div class="form-group">
+                      <span style="text-align:left; padding-left:20px; padding-left:20px;width:100%; word-wrap:break-word; display:inline-block">
+                        {{sachet.eveningNote ? sachet.eveningNote : '-'}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="col-sm-3" style="font-size: 18px; text-align: center;">
+                    <p class="mt-20" style="font-weight: 600;">Bedtime Sachet</p>
+                    <div style="height: 50px;"></div>
+                    <img *ngIf="!sachet.bedtimePicture" src="assets/img/no-img.png" width="64%" style="border-radius: 5px; margin:auto">
+                    <img *ngIf="sachet.bedtimePicture" [attr.src]="sachet.bedtimePicture | resolveImageUrl" width="64%" style="border-radius: 5px; margin:auto" (click)="popupImg(sachet.bedtimePicture)" />
+                    <div style="height: 30px;"></div>
+                    <p style="text-align:left; padding-left:20px;font-weight: 600;">Note :</p>
+                    <div class="form-group">
+                      <span style="text-align:left; padding-left:20px; padding-left:20px;width:100%; word-wrap:break-word; display:inline-block">
+                        {{sachet.bedtimeNote ? sachet.bedtimeNote : '-'}}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer no-bg">
+            <div class="ibox-footer-right">
+              <button *ngIf="menuPermissions.edit" [routerLink]="['/master-data-management','sachet','edit']" id="btnEditTop" name="btnEditTop" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit">
+                <i class="fas fa-edit"></i><span>Edit</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<dx-popup [fullScreen]="true" [dragEnabled]="false" [showTitle]="true" [showCloseButton]="true" [(visible)]="popupVisible">
+  <div *dxTemplate="let data of 'content'" class="text-center">
+    <img [src]="filePicture | resolveImageUrl" style="height:100%;" />
+  </div>
+</dx-popup>
+<app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()" (onCloseModalWarning)="onCloseModalWarning()"></app-alert>

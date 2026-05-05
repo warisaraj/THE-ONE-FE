@@ -1,0 +1,84 @@
+.custom-ibox {
+  background: #F9F7F2;
+
+  .ibox-title-text {
+    font-weight: 700 !important;
+  }
+
+  .ibox-heading {
+    border-bottom: 1px solid #AE934F !important;
+  }
+
+  .far.fa-chevron-down,
+  .far.fa-chevron-up {
+    color: #AE934F;
+    font-weight: 700;
+  }
+}
+
+#tblCompound {
+  margin: auto;
+  width: 95%;
+  th {
+    border: 1px solid #E9E9E9;
+    background-color: #fff;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  tr:nth-child(even) {
+    td {
+
+      background: #fff;
+    }
+  }
+
+  tr:nth-child(odd) {
+    td {
+
+      background: #f6f6f6;
+    }
+  }
+
+  td {
+    border: 1px solid #E9E9E9;
+  }
+
+  .input-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10%;
+
+    input {
+      text-align: center !important;
+    }
+  }
+}
+
+.ibox-heading {
+  padding: 15px 20px;
+  border-bottom: 1px solid #E5E5E5;
+  background-color: transparent;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+}
+
+.custom-ibox .ibox-heading {
+  border-bottom: 1px solid #AE934F !important;
+}
+
+.ibox-heading .ibox-title-text {
+  margin: 0;
+  float: left;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 29px;
+  color: #646965;
+}

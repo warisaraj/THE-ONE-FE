@@ -1,0 +1,71 @@
+.his-pharmacy .row-history {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.his-pharmacy .column-history {
+  flex: 50%;
+  padding: 10px;
+  max-width: 50%;
+
+  .control-label {
+    text-align: right;
+  }
+}
+
+@media (max-width: 768px) {
+  .his-pharmacy .column-history {
+    .control-label {
+      text-align: left;
+    }
+  }
+}
+
+@media (max-width: 425px) {
+  .his-pharmacy .column-history {
+    flex: 100%;
+    max-width: 100%;
+
+    .control-label {
+      text-align: left;
+    }
+  }
+}
+
+.hr-line-light {
+  height: 0.5px;
+  background-color: #ae934f;
+  margin-top: 15px;
+  margin-bottom: 15px
+}
+
+::ng-deep #chkFavorite .dx-checkbox-icon {
+  height: 34px;
+  width: 34px;
+}
+
+::ng-deep #chkFavorite.dx-checkbox-checked .dx-checkbox-icon {
+  &::before {
+    color :#8A998D;
+    background-color: #8A998D;
+    position: absolute;
+    display: block;
+    width: 26px;
+    height: 26px;
+    top: 11px;
+    left: 11px;
+  }
+}
+
+::ng-deep #chkFavorite.dx-checkbox-indeterminate .dx-checkbox-icon {
+  &::before {
+    color :#8A998D;
+    background-color: #8A998D;
+    position: absolute;
+    display: block;
+    width: 26px;
+    height: 26px;
+    top: 10px;
+    left: 10px;
+  }
+}

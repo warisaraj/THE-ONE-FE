@@ -1,0 +1,429 @@
+<div #modalSplitDelivery class="modal inmodal" id="modalSplitDelivery" tabindex="-1" role="dialog" aria-hidden="true">
+  <div [ngClass]="{'modal-dialog-custom': step===0, 'modal-dialog-custom1': step===1||step===2}">
+    <div class="modal-content animated fadeIn">
+      <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+        <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+          Split Delivery
+        </div>
+        <div class="col-sm-4 modal-title-1">
+          <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;">
+            <i class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+          </a>
+        </div>
+      </div>
+      <div style="padding: 0 23px; margin-bottom: 42px">
+        <div style="border: 1px solid #C4C4C4;"></div>
+      </div>
+      <div class="m-l-n-sm pb-30" *ngIf="step === 0">
+        <div class="text-center">
+          <div>
+            <img src="assets/icon-md/c.png" width="110px" style="position: absolute;" alt="">
+            <img src="assets/icon-md/c17.svg" style="margin-left: 37px;margin-top: 32px;height: 45px;" alt="">
+          </div>
+        </div>
+        <br>
+      </div>
+      <div class="modal-header" style="padding-top: 0">
+        <!--step 0-->
+        <div *ngIf="step === 0">
+          <h4 class="modal-title font-yellow-w">Split Delivery</h4>
+          <p>You want to split Delivery ?</p>
+        </div>
+        <!--step 1-->
+        <form class="form-horizontal" [formGroup]="splitDeliveryForm1" *ngIf="step === 1">
+          <!--Supply Day-->
+          <div class="form-group">
+            <label class="col-sm-4 control-label">Supply Day</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" id="txtSupplyDay" name="txtSupplyDay"
+                     [(ngModel)]="dataForm1.supplyDay" formControlName="txtSupplyDay">
+            </div>
+          </div>
+          <!--Number of Item-->
+          <!-- <div class="form-group">
+            <label class="col-sm-4 control-label">Number of Item</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" id="txtNumberOfItem" name="txtNumberOfItem" [(ngModel)]="dataForm1.numberOfItem" formControlName="txtNumberOfItem">
+            </div>
+          </div> -->
+          <!--Number of split-->
+          <div class="form-group">
+            <label class="col-sm-4 control-label">Number of split
+              <span class="fontred">*</span>
+            </label>
+            <div
+              [ngClass]="{'has-error':!splitDeliveryForm1.controls['txtNumberOfSplit'].valid&&splitDeliveryForm1.controls['txtNumberOfSplit'].dirty,'col-sm-7':true}">
+              <!-- <input type="text" class="form-control" id="txtNumberOfSplit" name="txtNumberOfSplit" -->
+              <!--        [(ngModel)]="dataForm1.numberOfSplit" (keypress)="numberOnly($event)" formControlName="txtNumberOfSplit"> -->
+              <dx-number-box [min]="2" [max]="dataForm1.supplyDay" class="form-control" id="txtNumberOfSplit" name="txtNumberOfSplit"
+                             [(ngModel)]="dataForm1.numberOfSplit" formControlName="txtNumberOfSplit"></dx-number-box>
+            </div>
+          </div>
+          <br>
+          <div class="form-group"><label class="col-sm-4 control-label">Delivery Start</label>
+            <div class="col-sm-7" style="text-align:left;">
+              <div>
+                <input type="radio" id="deliveryStart1" name="rdlDeliveryStart" class="mr-15" [value]="1"
+                       formControlName="rdlDeliveryStart" [(ngModel)]="dataForm1.deliveryStart">Start delivery according
+                to delivery date
+                <div *ngIf="dataForm1.deliveryStart == 1"
+                     style="align-items:center;display:flex;margin:10px 0;margin-left: 30px;">
+                  <span style="width:120px">Remind date</span>
+                  <select formControlName="txtRemindDate" name="txtRemindList" id="txtRemindList" class="form-control"
+                          [(ngModel)]="dataForm1.remind">
+                    <option *ngFor="let item of remindList" [value]="item">{{ item }}</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <div style="align-items: center;display: flex;margin: 10px 0;">
+                  <div style="width:170px">
+                    <input type="radio" id="deliveryStart2" name="rdlDeliveryStart" class="mr-15" [value]="2"
+                           formControlName="rdlDeliveryStart" [(ngModel)]="dataForm1.deliveryStart">Custom date
+                  </div>
+                  <dx-date-box formControlName="txtCustomDate" *ngIf="dataForm1.deliveryStart == 2" style="width: 100%;"
+                               [openOnFieldClick]="true" [acceptCustomValue]="false" class="form-control cus-datebox"
+                               type="date" displayFormat="dd/MM/yyyy" [min]="minCustomDate"
+                               [(ngModel)]="dataForm1.customDate"></dx-date-box>
+                </div>
+                <div *ngIf="dataForm1.deliveryStart == 2"
+                     style="align-items:center;display:flex;margin:10px 0;margin-left: 30px;">
+                  <span style="width:120px">Remind date</span>
+                  <select formControlName="txtRemindDate" name="txtRemindList" id="txtRemindList" class="form-control"
+                          [(ngModel)]="dataForm1.remind">
+                    <option *ngFor="let item of remindList" [value]="item">{{ item }}</option>
+                  </select>
+                </div>
+              </div>
+              <!-- <input type="text" class="form-control" id="txtFirstDeliveryDate" name="txtFirstDeliveryDate" [(ngModel)]="dataForm1.firstDeliveryDate" formControlName="txtFirstDeliveryDate"> -->
+            </div>
+          </div>
+        </form>
+        <!--step 2-->
+        <form class="form-horizontal" [formGroup]="splitDeliveryForm2" *ngIf="step === 2">
+          <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-10">
+              <!-- Add Delivery-->
+              <div class="row">
+                <div class="col-sm-12 text-right">
+                  <button id="btnDeliveryAdd" type="button" style="padding: 5px 10px !important;"
+                          class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top"
+                          title="Add Delivery" (click)="onClickSplitDeliveryAdd()">
+                    <i class="fal fa-plus mr-0"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="pt-30 pb-15 mb-5" style="background-color: #F9F7F2 !important;"
+                   *ngFor="let item of deliveryList; index as i">
+                <!-- Queue -->
+                <div class="col-sm-11 title-no-menu text-right pr-0 ml-30 mb-10">
+                  <span style="float: left;padding-top: 10px;">Queue {{i + 1}}</span>
+                  <button id="btnDeleteDelivery" type="button" class="btn btn-default icon btn-sm" data-placement="top"
+                          title="Delete Delivery" (click)="onClickDeliveryDelete(item.no, i)" *ngIf="i>1">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+                <!--Delivery Start Date #1-->
+                <div class="form-group" *ngIf="i===0 && !isChangeDeliveryDate">
+                  <label class="col-sm-4 control-label">Delivery Date
+                    <span class="fontred">*</span>
+                  </label>
+                  <div [ngClass]="{'has-error':!splitDeliveryForm2.controls['txtDeliveryStartDate'+item.no].valid&&splitDeliveryForm2.controls['txtDeliveryStartDate'+item.no].dirty,
+                    'col-sm-7':true}">
+                    <input type="text" class="form-control" id="txtDeliveryStartDate{{item.no}}"
+                           name="txtDeliveryStartDate{{item.no}}" [(ngModel)]="item.deliveryStartDate"
+                           formControlName="txtDeliveryStartDate{{item.no}}">
+                  </div>
+
+                  <!-- <div class="col-sm-1 pl-0">
+                    <button id="btnChangeDeliveryStartDate" style="padding: 5px 10px !important;margin-top: -2.5px !important;" class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Change Delivery Start Date" (click)="onClickChangeDeliveryStartDate()">
+                      <i class="fal fa-calendar-alt mr-0"></i>
+                    </button>
+                  </div> -->
+                </div>
+                <!--Delivery Start Date #++-->
+                <div class="form-group" *ngIf="i>0 || isChangeDeliveryDate">
+                  <label class="col-sm-4 control-label">Delivery Date
+                    <span class="fontred">*</span>
+                  </label>
+                  <div [ngClass]="{'has-error':!splitDeliveryForm2.controls['txtDeliveryStartDate'+item.no].valid&&splitDeliveryForm2.controls['txtDeliveryStartDate'+item.no].dirty,
+                    'col-sm-7':true}">
+                    <dx-date-box id="txtDeliveryStartDate{{item.no}}" [openOnFieldClick]="true"
+                                 [acceptCustomValue]="false"
+                                 (onValueChanged)="onValueChangedDeliveryStartDate($event, i)"
+                                 style="background-color: #FFFFFF !important; border: 1px solid #8A998D;"
+                                 class="form-control cus-datebox" type="date" displayFormat="dd/MM/yyyy"
+                                 [(ngModel)]="item.deliveryStartDate"
+                                 [min]="minDeliveryDate"
+                                 formControlName="txtDeliveryStartDate{{item.no}}"></dx-date-box>
+                  </div>
+                </div>
+                <!--Supply Day-->
+                <div class="form-group">
+                  <label class="col-sm-4 control-label">Supply Day
+                    <span class="fontred">*</span>
+                  </label>
+                  <div
+                    [ngClass]="{'has-error':(!splitDeliveryForm2.controls['txtDeliverySupplyDay'+item.no].valid&&splitDeliveryForm2.controls['txtDeliverySupplyDay'+item.no].dirty) || isErrorMaxSupplyDay,'col-sm-7':true}">
+                    <input type="text" class="form-control" id="txtDeliverySupplyDay{{item.no}}"
+                           name="txtDeliverySupplyDay{{item.no}}" [(ngModel)]="item.supplyDay"
+                           (keypress)="numberOnly($event)"
+                           formControlName="txtDeliverySupplyDay{{item.no}}" (input)="fnCheckSumSupplyDay()">
+                  </div>
+                </div>
+                <!--Delivery Start Date #++-->
+                <div class="form-group" *ngIf="i>0 || dataForm1.deliveryStart == 2">
+                  <label class="col-sm-4 control-label">Remind Date
+                    <span class="fontred">*</span>
+                  </label>
+                  <div [ngClass]="{'has-error':!splitDeliveryForm2.controls['txtDeliveryRemindDate'+item.no].valid&&splitDeliveryForm2.controls['txtDeliveryRemindDate'+item.no].dirty,
+                  'col-sm-7':true}">
+                    <dx-date-box id="txtDeliveryRemindDate{{item.no}}" [openOnFieldClick]="true"
+                                 [acceptCustomValue]="false"
+                                 style="background-color: #FFFFFF !important; border: 1px solid #8A998D;"
+                                 class="form-control cus-datebox" type="date" displayFormat="dd/MM/yyyy"
+                                 [(ngModel)]="item.deliveryRemindDate"
+                                 formControlName="txtDeliveryRemindDate{{item.no}}"></dx-date-box>
+                  </div>
+                </div>
+                <!-- Delivery Detail -->
+                <div [hidden]="item.showHide == 1">
+                  <!-- Recipient Name -->
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                      Recipient Name
+                      <span class="fontred">*</span>
+                    </label>
+                    <div
+                      [ngClass]="{'has-error':!splitDeliveryForm2.controls['txtRecipientName'+item.no].valid&&splitDeliveryForm2.controls['txtRecipientName'+item.no].dirty,'col-sm-7':true}">
+                      <input type="text" class="form-control" id="txtRecipientName{{item.no}}"
+                             name="txtRecipientName{{item.no}}" formControlName="txtRecipientName{{item.no}}"
+                             [(ngModel)]="item.recipientName">
+                    </div>
+                  </div>
+                  <!-- Phone -->
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                      Phone
+                      <span class="fontred">*</span>
+                    </label>
+                    <div
+                      [ngClass]="{'has-error':!splitDeliveryForm2.controls['txtPhone'+item.no].valid&&splitDeliveryForm2.controls['txtPhone'+item.no].dirty,'col-sm-7':true}">
+                      <input type="text" class="form-control" id="txtPhone{{item.no}}"
+                             name="txtPhone{{item.no}}" formControlName="txtPhone{{item.no}}" [(ngModel)]="item.phone">
+                    </div>
+                  </div>
+                  <!-- Address -->
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                      Address              
+                      <span class="fontred" *ngIf="checkRequired('ddlAddress' + item.no)">*</span>
+                    </label>
+                    <div
+                      [ngClass]="{'has-error':!splitDeliveryForm2.controls['ddlAddress'+item.no].valid&&splitDeliveryForm2.controls['ddlAddress'+item.no].dirty,'col-sm-7':true}">
+                      <select name="ddlAddress{{item.no}}" id="ddlAddress{{item.no}}"
+                              formControlName="ddlAddress{{item.no}}" class="form-control"
+                              [(ngModel)]="item.patientAddressId"
+                              (change)="onClickDeliveryDetailAddress(i)">
+                        <option selected="selected" [value]="null">Please select</option>
+                        <option *ngFor="let item of addressList"
+                                [value]="item.patientAddressId">{{ item.concatAddress }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <!-- Address Detail -->
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label">Address Detail
+                    </label>
+                    <div [ngClass]="{'col-sm-7':true}">
+                     <textarea class="form-control" id="txtAddressDetail{{item.no}}"
+                               name="txtAddressDetail{{item.no}}"
+                               formControlName="txtAddressDetail{{item.no}}" rows="3"
+                               [(ngModel)]="item.address"
+                               style="resize: vertical"></textarea>
+                    </div>
+                  </div>
+                  <!-- District/Province -->
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label">District/Province
+                    </label>
+                    <div [ngClass]="{'col-sm-7':true}">
+                      <input type="text" class="form-control" id="txtDistrictProvince{{item.no}}"
+                             name="txtDistrictProvince{{item.no}}" formControlName="txtDistrictProvince{{item.no}}"
+                             [(ngModel)]="item.districtProvince">
+                    </div>
+                  </div>
+                  <!-- Postcode -->
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label">Postcode
+                    </label>
+                    <div [ngClass]="{'col-sm-7':true}">
+                      <input type="text" class="form-control" id="txtPostcode{{item.no}}"
+                             name="txtPostcode{{item.no}}" formControlName="txtPostcode{{item.no}}"
+                             [(ngModel)]="item.postcode">
+                    </div>
+                  </div>
+                  <!-- Arrival Time -->
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                      Arrival Time
+                      <span class="fontred">*</span>
+                    </label>
+                    <div
+                      [ngClass]="{'has-error':!splitDeliveryForm2.controls['ddlArrivalTime'+item.no].valid&&splitDeliveryForm2.controls['ddlArrivalTime'+item.no].dirty,'col-sm-7':true}">
+                      <select id="ddlArrivalTime{{item.no}}"
+                              name="ddlArrivalTime{{item.no}}" formControlName="ddlArrivalTime{{item.no}}"
+                              [(ngModel)]="item.arrivalTime" class="form-control" (change)="fnConvertStringNull(i,'arrivalTime')">
+                        <option selected="selected" [value]="null">Please select</option>
+                        <option *ngFor="let item of arrivalTimeMap[i]" [value]="item.id">{{ item.name }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <!-- Delivery Method -->
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                      Delivery Method
+                      <span class="fontred">*</span>
+                    </label>
+                    <div
+                      [ngClass]="{'has-error':!splitDeliveryForm2.controls['ddlDeliveryMethod'+item.no].valid&&splitDeliveryForm2.controls['ddlDeliveryMethod'+item.no].dirty,'col-sm-7':true}">
+                      <select id="ddlDeliveryMethod{{item.no}}"
+                              name="ddlDeliveryMethod{{item.no}}" formControlName="ddlDeliveryMethod{{item.no}}"
+                              [(ngModel)]="item.deliveryMethod" class="form-control" 
+                              (change)="onDeliveryMethodChanged($event.target.value,item.no)"
+                              >
+                        <option selected="selected" [value]="null">Please select</option>
+                        <option *ngFor="let item of openData.deliveryMethodList"
+                                [value]="item.id">{{ item.name }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <!--Delivery Method Other-->
+                  <div class="form-group" *ngIf="+item.deliveryMethod === 6">
+                    <label class="col-sm-4 control-label">
+                      Delivery Method Other
+                      <span class="fontred">*</span>
+                    </label>
+                    <div
+                      [ngClass]="{'has-error':!splitDeliveryForm2.controls['txtDeliveryMethodOther'+item.no].valid&&splitDeliveryForm2.controls['txtDeliveryMethodOther'+item.no].dirty,'col-sm-7':true}">
+                      <input type="text" class="form-control" id="txtDeliveryMethodOther{{item.no}}"
+                             name="txtDeliveryMethodOther{{item.no}}"
+                             maxlength="255" [(ngModel)]="item.deliveryMethodOther"
+                             formControlName="txtDeliveryMethodOther{{item.no}}">
+                    </div>
+                  </div>
+                  <!-- Packaging -->
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label">
+                      Packaging
+                      <span class="fontred">*</span>
+                    </label>
+                    <div
+                      [ngClass]="{'has-error':!splitDeliveryForm2.controls['ddlPackaging'+item.no].valid&&splitDeliveryForm2.controls['ddlPackaging'+item.no].dirty,'col-sm-7':true}">
+                      <select id="ddlPackaging{{item.no}}"
+                              name="ddlPackaging{{item.no}}" formControlName="ddlPackaging{{item.no}}"
+                              [(ngModel)]="item.packaging" class="form-control" (change)="fnConvertStringNull(i,'packaging')">
+                        <option selected="selected" [value]="null">Please select</option>
+                        <option *ngFor="let item of openData.packagingList" [value]="item.id">{{ item.name }}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <!-- Documentation -->
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label">Documentation
+                    </label>
+                    <div [ngClass]="{'col-sm-7':true,'control-label':true}" style="text-align:left">
+                      <dx-check-box name="cbxIsInvoice{{item.no}}" id="cbxIsInvoice{{item.no}}"
+                                    formControlName="cbxIsInvoice{{item.no}}" class="mb-5"
+                                    [(ngModel)]="item.isInvoice" text="Invoice">
+                      </dx-check-box>
+                      <br>
+                      <dx-check-box name="cbxIsReceipt{{item.no}}" id="cbxIsReceipt{{item.no}}"
+                                    formControlName="cbxIsReceipt{{item.no}}"
+                                    [(ngModel)]="item.isReceipt" text="Receipt">
+                      </dx-check-box>
+                    </div>
+                  </div>
+                  <!-- Urgent -->
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label">Urgent
+                    </label>
+                    <div [ngClass]="{'col-sm-7':true,'control-label':true}" style="text-align:left">
+                      <dx-check-box name="cbxIsUrgent{{item.no}}" id="cbxIsUrgent{{item.no}}"
+                                    formControlName="cbxIsUrgent{{item.no}}"
+                                    [(ngModel)]="item.isUrgent" text="Urgent">
+                      </dx-check-box>
+                    </div>
+                  </div>
+                  <!-- Additional Note -->
+                  <div class="form-group">
+                    <label class="col-sm-4 control-label">Additional Note
+                    </label>
+                    <div [ngClass]="{'col-sm-7':true}">
+                       <textarea class="form-control" id="txtCashierDeliNote{{item.no}}"
+                                 name="txtCashierDeliNote{{item.no}}"
+                                 formControlName="txtCashierDeliNote{{item.no}}" rows="3"
+                                 [(ngModel)]="item.cashierDeliNote"
+                                 style="resize: vertical"></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group" *ngIf="item.showHide == 1">
+                  <label style="color:#AE934F;text-align: center;cursor: pointer;" (click)="item.showHide = 2">Show
+                    delivery detail</label>
+                </div>
+                <div class="form-group" *ngIf="item.showHide == 2">
+                  <label style="color:#AE934F;text-align: center;cursor: pointer;" (click)="item.showHide = 1">Hide
+                    delivery detail</label>
+                </div>
+                <!--Reason-->
+                <!-- <div class="form-group" *ngIf="i===0 && isChangeDeliveryDate">
+                  <label class="col-sm-4 control-label">Reason
+                    <span class="fontred">*</span>
+                  </label>
+                  <div [ngClass]="{'has-error':!splitDeliveryForm2.controls['txtDeliveryReason'].valid&&splitDeliveryForm2.controls['txtDeliveryReason'].dirty,
+                    'col-sm-7':true}">
+                    <textarea class="form-control" id="txtDeliveryReason" name="txtDeliveryReason" formControlName="txtDeliveryReason" rows="3" placeholder="" style="resize: vertical" [(ngModel)]="item.reason"></textarea>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+            <div class="col-sm-1"></div>
+          </div>
+        </form>
+        <br>
+        <!-- button step 0-->
+        <div class="row" *ngIf="step === 0">
+          <button style="margin-left:3px;width:129px" id="btnSplitDeliveryNo" type="button"
+                  class="btn btn-default font-btn width-btn-small" data-dismiss="modal"
+                  (click)="onClickSplitDeliveryNo()" title="No">No
+          </button>
+          <button style="margin-left:3px;width:129px" id="btnSplitDeliveryYes"
+                  class="btn btn-success font-btn width-btn-small" data-dismiss="model" title="Yes"
+                  (click)="onClickSplitDeliveryYes()">Yes
+          </button>
+        </div>
+        <!--button step 1-->
+        <div class="row" *ngIf="step === 1">
+          <button style="margin-left:3px;width:129px" id="btnSplitDeliveryNext"
+                  class="btn btn-success font-btn  width-btn-small" data-dismiss="model" title="Next"
+                  (click)="onClickSplitDeliveryNext(false)">Next
+          </button>
+        </div>
+        <!--button step 2-->
+        <div class="row" *ngIf="step === 2">
+          <button id="btnEditTop" class="btn btn-default float-xs-left mr-10" data-toggle="tooltip" data-placement="top"
+                  title="Back" (click)="onClickSplitDeliveryBack()">
+            <i class="fas fa-angle-left"></i><span>Back</span>
+          </button>
+          <button id="btnSave" class="btn btn-success float-xs-right" data-toggle="tooltip" data-placement="top"
+                  title="Save" style="margin-left: 3px;" (click)="onClickSplitDeliverySave()">
+            <i class="fas fa-save"></i><span>Save</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<!--menu-->
+<nav class="navbar-default navbar-static-side ps posfixed wrapper-nav-site bgLine" [perfectScrollbar]="config"
+     role="navigation">
+  <div class="sidebar-collapse" id="side-menu">
+    <ul class="nav metismenu">
+      <li class="nav-headerGreen m-t">
+        <!--Profile-->
+        <div class="dropdown profile-element  ">
+          <div class="text-center">
+            <img class="m-t-sm" src="assets/VTL Supplement Logo.png" height="56" alt="">
+          </div>
+        </div>
+      <li class="nav-headerGreen">
+        <div class="logo-element">
+          <img src="assets/VTL Supplement Logo.png" width="80%" style="margin-top:10px;" alt="">
+        </div>
+      </li>
+    </ul>
+    <ul class="nav metismenu ">
+      <br/><br/>
+    </ul>
+    <!-- Other Menu -->
+    <ul class="nav metismenu portal-mobile" parentId="[]" (click)="changeTab($event)" root="true" visible="true"
+        level="0" (reset)="reset">
+      <ng-template ngFor let-child let-i="index" [ngForOf]="(root ? model : model)">
+        <li routerLinkActive="active" style="z-index: 0"
+            *ngIf="child.menuName !== 'Advance Setting'">
+          <a [routerLink]="['/menu', child.menuId, child.typePage]" [queryParams]="{ token: token }"
+             (click)="funLinktoggle(child.typePage)" [attr.target]="child.target"
+             (mouseenter)="hover=true" (mouseleave)="hover=false" id="mainMenu{{i}}" style="z-index: 0"
+             title="{{child.menuName}}">
+            <i class="{{child.menuIcon || ''}} famenu icon-show-mini"></i>
+            <span class="nav-label nav-lenght" [innerHTML]="child.menuName"></span>
+          </a>
+        </li>
+      </ng-template>
+    </ul>
+    <!-- Advance Setting -->
+    <ul class="nav metismenu portal-mobile fix" parentId="[]" (click)="changeTab($event)" root="true" visible="true"
+        level="0" (reset)="reset">
+      <hr style="margin:0px;border: 1px solid #AE934F;margin-bottom: -2px;"/>
+      <ng-template ngFor let-child let-i="index" [ngForOf]="(root ? model : model)">
+        <li routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" style="z-index: 0"
+            *ngIf="child.menuName === 'Advance Setting'">
+          <a [routerLink]="['/menu', child.menuId, child.typePage]" [queryParams]="{ token: token }"
+             (click)="funLinktoggle(child.typePage)" [attr.target]="child.target"
+             (mouseenter)="hover=true" (mouseleave)="hover=false" id="mainMenu{{i}}" style="z-index: 0"
+             title="{{child.menuName}}">
+            <i class="famenu far fa-sliders-h"></i>
+            <span class="nav-label nav-lenght">  Advance Setting </span>
+          </a>
+        </li>
+      </ng-template>
+    </ul>
+    <br/><br/>
+  </div>
+</nav>

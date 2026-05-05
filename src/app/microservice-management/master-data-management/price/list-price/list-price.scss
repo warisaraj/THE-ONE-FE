@@ -1,0 +1,47 @@
+.ibox dx-number-box.cusnumbox {
+  padding: 0 !important;
+  border: 1px solid #8A998D !important;
+  border-radius: 5px !important;
+  &.dx-state-disabled{
+    background:#EFEFEF !important;
+  }
+}
+
+#tblProductionCharge{
+  th{
+    border: 1px solid #E9E9E9;
+    background-color: #fff;
+    text-align: center;
+    width: 50%;
+  }
+  tr:nth-child(even){
+    background: #fff;
+  }
+  tr:nth-child(odd){
+    background: #f6f6f6;
+  }
+  td{
+    border: 1px solid #E9E9E9;
+    width: 50%;
+  }
+  .input-box{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    gap:10%;
+    
+    input{
+      text-align: center !important;
+    }
+  }
+}
+.hr-line-solid{
+  border-style: none !important;
+  border-bottom: 1px solid #ae934f !important;
+}
+
+.flex-wrap{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}

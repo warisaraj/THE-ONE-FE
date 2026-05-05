@@ -1,0 +1,38 @@
+// $fontName: 'THSarabunNew', sans-serif !important;
+// $fontName: 'Sukhumvit Set', sans-serif !important;
+
+$fontName: 'OpenSans', sans-serif !important;
+$fontSize: 16px;
+
+$primary: #00a5e5;
+$success: #AE934F;
+$info: #ec068d;
+$warning: #f2c800;
+$danger: #da4552;
+$default: #FEFBF4;
+$main: #2b3a4a;
+$dark: #646965;
+
+$themeBgColor: #F9F7F2; /* #BEF18c, #b5efd7,  */
+$themeBgActive: darken($themeBgColor, 10%);
+$themeHeader: lighten($themeBgColor, 50%);
+$themeBgActiveMenu: #f8dadc;//lighten(#da4552, 35%);
+$themeBg: $themeBgActive;
+$themeHeaderBg: #FFF;
+$themeActive: $themeBgColor;
+$themecolorActive: #FFF;
+$themecolorMain: #2A2A2A;
+$themeBorderMenuLeft: #AE934F;
+
+
+// ibox
+$themeIboxBorder: #e8e8e8;
+$themeIboxBg: #FFF;
+$themeColor: #909090;
+
+// table
+$tableHoverColor: lighten(#da4552, 35%);
+
+// input
+$inputBgColor: #FFFFFF;
+$inputBorder: 1px solid #8A998D;

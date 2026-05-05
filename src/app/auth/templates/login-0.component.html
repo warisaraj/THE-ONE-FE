@@ -1,0 +1,184 @@
+
+<div class="row" >
+  <nav class="navbar navbar-static-top wrapper-nav-header" role="navigation" style="width: 100%;">
+    <div class="navbar-header">
+      <p
+            class="m-none pull-right m-l header-main-text" style="">
+            THE ONE</p>
+    </div>
+
+  </nav>
+</div>
+
+<div class="row" style="position: absolute; background-repeat:none; padding: 0;" >
+</div>
+<div class="login-main-session" style="margin-top:30px;">
+  <div class="content">
+    <div class="content-before"></div>
+    <div class="content-logo">
+      <img src="assets/VTL Supplement Logo.png" height="106" >
+    </div>
+
+
+    <div class="middle-box text-center loginscreen animated fadeInDown" *ngIf="typePage === 'login'">
+      <div class="borderlogin">
+        <div class="ibox-contentloing">
+
+          <form (ngSubmit)="f.form.valid && signin()" #f="ngForm" class="m-login__form m-form m-t" action="" role="form" >
+            <ng-template #alertSignin></ng-template>
+
+            <div class="text-h">  Login</div>
+            <div class="hr-line"></div>
+
+            <div class="form-group" loginSubmit>
+            <div class="text-h2">  Username<span class="text-red-active">*</span></div>
+              <div  [ngClass]="{'has-error':loginSubmit  &&  (!model.username || !isFormat), 'input-group m-b':true }">
+                <input maxlength="50" type="text" class="form-control" style="height:45px" placeholder="" id="txtUsername" name="username" [(ngModel)]="model.username" #username="ngModel" autocomplete="off" style="text-transform: lowercase;"></div>
+            </div>
+            <div *ngIf="!isFormat" class="fontred">Username is Invalid Format.</div>
+            <div class="form-group">
+            <div class="text-h2">   Password<span class="text-red-active">*</span></div>
+              <div [ngClass]="{'has-error':loginSubmit &&  !model.password, 'input-group m-b':true }">
+                <input maxlength="36" type="password" class="form-control"  style="height:34px;" placeholder=""  id="txtPassword" name="password" #txtPassword [(ngModel)]="model.password" #password="ngModel">
+                <span #togglerShow  id="btnShowHide" name="btnShowHide"  style="cursor: pointer;position: absolute;right: 12px;z-index: 10;top: 7px;">
+                  <i *ngIf="!textShowHide" (click)="toggleShow($event)" id="btnShow" name="btnShow" class="fal fa-eye" style="color: #001738" title="Show" style="color: #AE934F;"></i>
+                  <i *ngIf="textShowHide" (click)="toggleShow($event)" id="btnHide" name="btnHide"  class="fal fa-eye-slash" style="color: #001738" title="Show" style="color: #AE934F;"></i>
+                </span>
+              </div>
+            </div>
+            <a href="#"><button type="submit" class="m-t-lg btn btn-login block full-width m-b"  style="height:45px;font-weight: 700;" [disabled]="loading" [ngClass]="{'m-loader m-loader&#45;&#45;right m-loader&#45;&#45;light': loading}" id="m_login_signin_submit">Login</button></a>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="middle-box text-center loginscreen animated fadeInDown" *ngIf="typePage === 'register'"     style="width: 800px;max-width: 800px">
+      <div class="borderlogin" style='width: 780px;'>
+        <div class="ibox-contentloing">
+
+          <form class="form-horizontal m-login__form m-form m-t" [formGroup]="userForm">
+
+
+          <div class="text-h">  Register </div>
+            <div class="hr-line"></div>
+
+            <div class="form-group">
+              <label class="col-sm-3 control-label">Firstname<span class="fontred">*</span></label>
+              <div [ngClass]="{'has-error':!userForm.controls.txtFirstname.valid&&userForm.controls.txtFirstname.dirty,'col-sm-9':true}">
+                <input  type="text" class="form-control" id="txtFirstname" name="txtFirstname" maxlength="255" [(ngModel)]="dataUser.firstname" formControlName="txtFirstname" [title]="dataUser.firstname"  >
+                <!-- <div *ngIf="!userForm.controls.txtFirstname.valid&&userForm.controls.txtFirstname.dirty" style="color: red;text-align: right">Firstname EN english alphabet values are required.</div> -->
+              </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">Lastname<span class="fontred">*</span></label>
+              <div [ngClass]="{'has-error':!userForm.controls.txtLastname.valid&& userForm.controls.txtLastname.dirty,'col-sm-9':true}">
+                <input  type="text" class="form-control" id="txtLastname" name="txtLastname" maxlength="255" [(ngModel)]="dataUser.lastname" formControlName="txtLastname"  [title]="dataUser.lastname" >
+                <!-- <div *ngIf="!userForm.controls.txtLastname.valid&&userForm.controls.txtLastname.dirty" style="color: red;text-align: right">Lastname EN english alphabet values are required.</div> -->
+              </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">E-mail<span  class="fontred">*</span></label>
+              <div [ngClass]="{'has-error':!userForm.controls.txtEmail.valid&&userForm.controls.txtEmail.dirty,'col-sm-9':true}">
+                <input type="text" class="form-control" id="txtEmail" name="txtEmail" maxlength="255" [(ngModel)]="dataUser.email" formControlName="txtEmail" [title]="dataUser.email" >
+                <div *ngIf="!userForm.controls.txtEmail.valid && userForm.controls.txtEmail.errors && userForm.controls.txtEmail.errors.pattern" class="fontred text-right">E-mail is Invalid Format.</div>
+              </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">Mobile number<span class="fontred">*</span></label>
+              <div [ngClass]="{'has-error':!userForm.controls.txtTelephoneNumber.valid&&userForm.controls.txtTelephoneNumber.dirty,'col-sm-9':true}">
+                <input (keypress)="eventHandler($event)" type="text" class="form-control" id="txtTelephoneNumber" name="txtTelephoneNumber" maxlength="100" [(ngModel)]="dataUser.telephoneNumber" formControlName="txtTelephoneNumber" [title]="dataUser.telephoneNumber" >
+                <div *ngIf="!userForm.controls.txtTelephoneNumber.valid && userForm.controls.txtTelephoneNumber.errors && userForm.controls.txtTelephoneNumber.errors.pattern" class="fontred text-right">Mobile number is Invalid Format.</div>
+              </div>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">Username<span  class="fontred">*</span></label>
+               <div [ngClass]="{'col-sm-9':true}">
+                 <input  maxlength="50"  type="text" class="form-control" [attr.value]="model.username" [(ngModel)]="model.username" [title]="model.username" [attr.disabled]="true"/>
+               </div>
+            </div>
+              <div class="hr-line-dashed"></div>
+            <div class="form-group">
+              <label class="col-sm-3 control-label">Position</label>
+              <div [ngClass]="{'col-sm-9':true}">
+                <div class="select-wrapper">
+                  <select
+                       name="txtPosition"
+                       id="txtPosition"
+                       [title]="dataUser.position"
+                       class="form-control "
+                       formControlName="txtPosition"
+                       [(ngModel)]="dataUser.position">
+                       <option selected="selected" [value]="''">Please select</option>
+                       <option *ngFor="let item of positionList" [value]="item">{{ item }}</option>
+                   </select>
+                  </div>
+              </div>
+            </div>
+
+
+            <div class="hr-line-dashed"></div>
+            <div class="text-remark" style="margin-bottom: 50px;">
+            Remark : Please contact the administrator after registering to set your role and permissions.
+            </div>
+            <ng-template #alertSignin></ng-template>
+
+            <div class="form-group"    style="text-align: center;">
+            <button (click)="onRegister()" id="btnSaveTop" name="btnSaveTop" class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal" data-placement="top" title="Save" >
+              <i class="fas fa-save"></i><span>Save</span>
+            </button>
+
+            <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop"  class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;" >
+              <i class="fal fa-times"></i><span>Cancel</span>
+            </button>
+            </div>
+
+
+            <!-- <a href="#"><button type="submit" class="m-t-lg btn btn-login block full-width m-b"  style="height:45px" [disabled]="loading" [ngClass]="{'m-loader m-loader&#45;&#45;right m-loader&#45;&#45;light': loading}" id="m_login_signin_submit">Choose Role</button></a> -->
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="middle-box text-center loginscreen animated fadeInDown" *ngIf="typePage === 'select-role'">
+      <div class="borderlogin">
+        <div class="ibox-contentloing">
+
+          <form (ngSubmit)="f.form.valid && selectRole()" #f="ngForm" class="m-login__form m-form m-t" action="" role="form" >
+            <ng-template #alertSignin></ng-template>
+
+            <div class="text-h">  Select Role</div>
+            <div class="hr-line"></div>
+            <div class="form-group">
+            <div class="text-h2" style="font-style: normal;font-weight: 400;font-size: 18px;line-height: 29px;color: #646965;">  Role<span class="text-red-active">*</span></div>
+            </div>
+            <div *ngFor="let enum of roles">
+            <label for="enum_answer_{{enum}}" style="font-style: normal;font-weight: 400;font-size: 14px;line-height: 22px;color: #646965;">
+              <input id="enum_answer_{{enum}}" [value]='enum' type="radio" name="enums" [(ngModel)]="roleSelected">
+                {{enum}}
+            </label>
+          </div>
+
+
+            <a href="#"><button type="submit" class="m-t-lg btn btn-login block full-width m-b"  style="height:45px;font-style:normal;font-weight:700;font-size:15px;line-height:24px;text-align:center;" [disabled]="loading" [ngClass]="{'m-loader m-loader&#45;&#45;right m-loader&#45;&#45;light': loading}" id="m_login_signin_submit">Choose Role</button></a>
+          </form>
+        </div>
+      </div>
+    </div>
+
+</div>
+</div>
+
+<app-alert #myModal (onClickBack)="onClickBack()" ></app-alert>
+
+
+<div class="footer fontfooter m-none " style="width:100%;  margin-left: 0px;margin-top:0px;position: fixed;bottom: 0px;font-weight: 300;font-size: 18px;">
+  <div class="text-center">
+<img src="assets/logo.svg" alt="" height="38" width="100" style="margin-right:20px">
+<small>
+  2022 © Copyright VitalLife Scientific Wellness Center
+</small>
+  </div>
+</div>

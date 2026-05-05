@@ -1,0 +1,311 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">Raw Materials</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Master Data Management</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a (click)="onClickBack()">Raw Materials</a>
+              </li>
+              <li class="breadcrumb-item active">
+                <span *ngIf="pageType == 'view'"> View Raw Materials Info </span>
+                <span *ngIf="pageType == 'new'"> Create Raw Materials Info </span>
+                <span *ngIf="pageType == 'edit'"> Edit Raw Materials Info </span>
+                <span *ngIf="pageType == 'history'"> History of data revisions </span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-12 align-self-center text-right">
+        <button *ngIf="pageType != 'view'" (click)="btnSubmit()" id="btnSaveTop" name="btnSaveTop" class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal" data-placement="top" title="Save" [disabled]="disbledBtn.save">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button *ngIf="pageType == 'view' && menuPermissions.edit " [routerLink]="['/master-data-management','raw-materials', Id ,'edit']" id="btnEditTop" name="btnEditTop" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit" [disabled]="disbledBtn.save">
+          <i class="fas fa-edit"></i><span>Edit</span>
+        </button>
+        <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text">Raw Materials Info<br><small *ngIf="pageType != 'view'">*Please enter data in
+                the "Require Field" textbox.</small></h5>
+            <!-- <button [routerLink]="['/master-data-management','raw-materials', Id ,'history']" *ngIf="pageType == 'view'"
+                    class="btn btn-success float-xs-left mr-10" style="padding:5px" data-toggle="tooltip"
+                    data-placement="top" title="History of data revisions">
+              <i class="fas fa-history" style="margin:0"></i>
+            </button> -->
+            <button [routerLink]="['/master-data-management','raw-materials', Id ,'history']" *ngIf="pageType == 'view'" style="padding: 5px 10px !important;" id="btnHistory" name="btnHistory" class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="History of data revisions">
+              <img src="assets/icon-md/c7.svg" alt="">
+            </button>
+          </div>
+          <div class="ibox-body">
+            <div id="tab-1" class="tab-pane active">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                      <div class="ibox-content" style="border:0px;">
+                        <form class="form-horizontal" [formGroup]="editGroupForm">
+
+                          <div class="form-group">
+                            <div class="col-sm-2" style="display:grid;">
+                              <label class="control-label">No<span class="fontred">*</span></label>
+                              <div style="height: 20px;"></div>
+                              <label class="control-label">Code<span class="fontred">*</span></label>
+                            </div>
+
+                            <div class="col-sm-4">
+                              <div [ngClass]="{'has-error':!editGroupForm.controls.txtNo.valid&&editGroupForm.controls.txtNo.dirty}">
+                                <dx-number-box style="margin-bottom: 15px;" class="form-control cusnumbox" format="#" [min]="1" [inputAttr]="{ maxlength: '6' }" [(value)]="editDataGroups.no" [(ngModel)]="editDataGroups.no" formControlName="txtNo"></dx-number-box>
+                              </div>
+                              <div [ngClass]="{'has-error':!editGroupForm.controls.txtCode.valid&&editGroupForm.controls.txtCode.dirty}">
+                                <input type="text" class="form-control" id="txtCode" name="txtCode" maxlength="50" [(ngModel)]="editDataGroups.code" formControlName="txtCode">
+                              </div>
+                            </div>
+
+                            <div [ngClass]="{'col-sm-6':true}" style="padding:0px;">
+                              <label class="col-sm-4 control-label">Description</label>
+                              <div class="col-sm-8">
+                                <textarea (keyup)="textAreaAutoHeight()" class="form-control" id="txtDescription" name="txtDescription" rows="3" placeholder="" style="resize: vertical; height: 83px; max-height: 83px;" [(ngModel)]="editDataGroups.description" formControlName="txtDescription"></textarea>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <label class="col-sm-2 control-label"> RM Name<span class="fontred">*</span></label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls.txtName.valid&&editGroupForm.controls.txtName.dirty,'col-sm-4':true}">
+                              <input type="text" class="form-control" id="txtName" name="txtName" maxlength="255" [(ngModel)]="editDataGroups.rawMaterialName" formControlName="txtName">
+                              <dx-check-box [disabled]="pageType == 'view'" class="mt-10 checkbox-expense" [(value)]="editDataGroups.isExpense" text="Expense"></dx-check-box>
+                            </div>
+
+                            <label class="col-sm-2 control-label" style="padding-top: 0px;">VTL Cap Packing Stat
+                              <div class="sub-label">(mg)</div>
+                            </label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls.txtVtl.valid&&editGroupForm.controls.txtVtl.dirty,'col-sm-4':true}">
+                              <input (keypress)="numberOnly($event, true)" autocomplete="off" onPaste="return false" type="text" class="form-control" id="txtVtl" name="txtVtl" maxlength="11" [(ngModel)]="editDataGroups.vtlCapPackingStat" formControlName="txtVtl">
+                            </div>
+                          </div>
+
+
+                          <div class="form-group">
+                            <label class="col-sm-2 control-label">BIN</label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls.txtBin.valid&&editGroupForm.controls.txtBin.dirty,'col-sm-4':true}">
+                              <div class="select-wrapper">
+                                <select name="txtBin" id="txtBin" formControlName="txtBin" [title]="editDataGroups.binId" class="form-control " [(ngModel)]="editDataGroups.binId">
+                                  <option selected="selected" [value]="undefined">Please select</option>
+                                  <option *ngFor="let item of binList" [value]="item.id">{{ item.binName }}</option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <label class="col-sm-2 control-label" style="padding-top: 0px;">Cost<span class="fontred">*</span>
+                              <div class="sub-label">THB/mg</div>
+                            </label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls.txtCost.valid&&editGroupForm.controls.txtCost.dirty,'col-sm-4':true}">
+                              <input [mask]="common.decimal('txtCost')" [validation]="false" (input)="onInput('txtCost', 'cost')" [ngModel]="editDataGroups.cost" autocomplete="off" onPaste="return false" type="text" class="form-control" id="txtCost" name="txtCost" formControlName="txtCost">
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <label class="col-sm-2 control-label">Unit<span class="fontred">*</span>
+                              <div class="sub-label">(Order from doctor)</div>
+                            </label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls.txtUnit.valid&&editGroupForm.controls.txtUnit.dirty,'col-sm-4':true}">
+                              <!-- <input type="text" class="form-control" id="txtUnit" name="txtUnit" maxlength="255" [(ngModel)]="editDataGroups.uom" formControlName="txtUnit" > -->
+                              <div class="select-wrapper">
+                                <select name="txtUnit" id="txtUnit" formControlName="txtUnit" [title]="editDataGroups.unit" class="form-control " [(ngModel)]="editDataGroups.unit">
+                                  <option selected="selected" [value]="undefined">Please select</option>
+                                  <option *ngFor="let item of unitList" [value]="item">{{ item }}</option>
+                                </select>
+                              </div>
+                            </div>
+
+                            <label class="col-sm-2 control-label" style="padding-top: 0px;">Retail Price<span class="fontred">*</span>
+                              <div class="sub-label"> THB/mg</div>
+                            </label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls.txtRetailPrice.valid&&editGroupForm.controls.txtRetailPrice.dirty,'col-sm-4':true}">
+                              <input [mask]="common.decimal('txtRetailPrice')" [validation]="false" (input)="onInput('txtRetailPrice', 'retailPrice')" autocomplete="off" onPaste="return false" type="text" class="form-control" id="txtRetailPrice" name="txtRetailPrice" [ngModel]="editDataGroups.retailPrice" formControlName="txtRetailPrice">
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <label class="col-sm-2 control-label">Recommended Dose/Day<span class="fontred">*</span></label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls.txtRecommended.valid&&editGroupForm.controls.txtRecommended.dirty,'col-sm-4':true}">
+                              <input autocomplete="off" onPaste="return false" type="text" class="form-control" id="txtRecommended" name="txtRecommended" maxlength="20" [(ngModel)]="editDataGroups.recommendedDose" formControlName="txtRecommended">
+                            </div>
+
+                            <!-- <label class="col-sm-2 control-label" style="padding-top: 0px;">Dose Equivalent<span class="fontred">*</span>
+                              <div class="sub-label">(TrakCare)</div>
+                            </label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls.txtDoseEquivalent.valid&&editGroupForm.controls.txtDoseEquivalent.dirty,'col-sm-4':true}">
+                              <input (keypress)="numberOnly($event)" autocomplete="off" onPaste="return false" type="text" class="form-control" id="txtDoseEquivalent" name="txtDoseEquivalent" maxlength="255" [(ngModel)]="editDataGroups.doseEquivalent" formControlName="txtDoseEquivalent" [attr.disabled]="true" [disabled]="true">
+                            </div> -->
+                            <label class="col-sm-2 control-label">Expiry Date<span class="fontred">*</span></label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls.txtExpiryDate.valid&&editGroupForm.controls.txtExpiryDate.dirty,'col-sm-4':true}">
+                              <dx-date-box [(value)]="editDataGroups.expiryDate" [min]="pageType == 'view' ? null : minNow" [openOnFieldClick]="true" [acceptCustomValue]="false" class="form-control cus-datebox" type="date" displayFormat="dd-MM-yyyy 23:59:59" [(ngModel)]="editDataGroups.expiryDate" formControlName="txtExpiryDate"></dx-date-box>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <label class="col-sm-2 control-label">Minimum Dose/Day<span class="fontred">*</span></label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls.txtMinDose.valid&&editGroupForm.controls.txtMinDose.dirty,'col-sm-4':true}">
+                              <input (keypress)="numberOnly($event,true)" autocomplete="off" onPaste="return false" type="text" class="form-control" id="txtMinDose" name="txtMinDose" maxlength="11" [(ngModel)]="editDataGroups.minimumDose" formControlName="txtMinDose">
+                            </div>
+                            <label class="col-sm-2 control-label" style="padding-top: 0px;">Dose Equivalent<span class="fontred">*</span>
+                              <div class="sub-label">(TrakCare)</div>
+                            </label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls.txtDoseEquivalent.valid&&editGroupForm.controls.txtDoseEquivalent.dirty,'col-sm-4':true}">
+                              <input autocomplete="off" onPaste="return false" type="text" class="form-control" id="txtDoseEquivalent" name="txtDoseEquivalent" [(ngModel)]="editDataGroups.doseEquivalent" formControlName="txtDoseEquivalent" [attr.disabled]="true" [disabled]="true">
+                            </div>
+
+                          </div>
+
+                          <div class="form-group">
+                            <label class="col-sm-2 control-label">Maximum Dose/Day<span class="fontred">*</span></label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls.txtMaxDose.valid&&editGroupForm.controls.txtMaxDose.dirty,'col-sm-4':true}">
+                              <input (keypress)="numberOnly($event,true)" autocomplete="off" onPaste="return false" type="text" class="form-control" id="txtMaxDose" name="txtMaxDose" maxlength="11" [(ngModel)]="editDataGroups.maximumDose" formControlName="txtMaxDose">
+                            </div>
+                            <label class="col-sm-2 control-label">Prescription<span class="fontred">*</span></label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls.txtPrescription.valid&&editGroupForm.controls.txtPrescription.dirty,'col-sm-4':true}">
+                              <input type="text" class="form-control" id="txtPrescription" name="txtPrescription" maxlength="255" [(ngModel)]="editDataGroups.prescription" formControlName="txtPrescription">
+                            </div>
+
+                          </div>
+
+                          <div class="form-group">
+                            <div [ngClass]="{'col-sm-6':true}" style="padding:0px;">
+                              <div [ngClass]="{'col-sm-12  form-group':true}" style="padding:0px;">
+
+                                <label class="col-sm-4 control-label" style="padding-top: 0px;">
+                                  Strength <span class="fontred">*</span>
+                                  <div class="sub-label"> UOM per mg</div>
+                                </label>
+                                <div class="col-sm-8" style="padding:0px;">
+                                  <div *ngIf="pageType == 'edit' || pageType == 'new' " class="col-sm-12">
+                                    <div [ngClass]="{'has-error':!editGroupForm.controls.txtValue1.valid&&editGroupForm.controls.txtValue1.dirty,'col-sm-4':true}" style="padding-right: 5px;padding-left: 0px;padding-bottom: 8px;">
+                                      <input (change)="calculateStrength()" (keyup)="calculateStrength()" [mask]="common.decimal('txtValue1')" [validation]="false" (input)="onInput('txtValue1', 'value1')" autocomplete="off" onPaste="return false" type="text" class="form-control allownumericwithdecimal" id="txtValue1" name="txtValue1" [ngModel]="editDataGroups.value1" formControlName="txtValue1">
+                                    </div>
+                                    <div class="col-sm-4" style="padding-right: 5px;padding-left: 5px;padding-bottom: 8px;">
+                                      <!-- <input type="text" class="form-control" id="txtStrength1" name="txtStrength2" maxlength="255" [(ngModel)]="editDataGroups.strength2" formControlName="txtStrength2"> -->
+                                      <div class="select-wrapper">
+                                        <select (change)="calculateStrength()" name="txtFormula" id="txtFormula" formControlName="txtFormula" class="form-control" [(ngModel)]="editDataGroups.formula">
+                                          <option *ngFor="let item of calculateList" [value]="item">{{ item }}</option>
+                                        </select>
+                                      </div>
+                                    </div>
+                                    <div [ngClass]="{'has-error':!editGroupForm.controls.txtValue2.valid&&editGroupForm.controls.txtValue2.dirty,'col-sm-4':true}" style="padding-right: 0px;padding-left: 5px;padding-bottom: 8px;">
+                                      <input (change)="calculateStrength()" (keyup)="calculateStrength()" [mask]="common.decimal('txtValue2')" [validation]="false" (input)="onInput('txtValue2', 'value2')" autocomplete="off" onPaste="return false" type="text" class="form-control allownumericwithdecimal" id="txtValue2" name="txtValue2" [ngModel]="editDataGroups.value2" formControlName="txtValue2">
+                                    </div>
+                                  </div>
+
+                                  <div [ngClass]="{'has-error':!editGroupForm.controls.txtStrength.valid&&editGroupForm.controls.txtStrength.dirty,'col-sm-12':true}">
+                                    <input type="text" class="form-control" id="txtStrength" name="txtStrength" maxlength="255" [(ngModel)]="editDataGroups.strength" formControlName="txtStrength" [attr.disabled]="pageType == 'edit' || pageType == 'new'">
+                                  </div>
+                                </div>
+
+                              </div>
+
+
+                            </div>
+
+                            <div [ngClass]="{'col-sm-6':true}" style="padding:0px;">
+                              <label class="col-sm-4 control-label" style="padding-top: 0px;">Picture
+                                <div class="sub-label">Max. 1MB</div>
+                              </label>
+                              <div [ngClass]="{'col-sm-8':true}">
+                                <div *ngIf="pageType != 'view'">
+                                  <div class="custom-file-upload" (click)="imageInput.click()">
+                                    <input #imageInput type="file" accept=".heic,.heif,image/*" (change)="processFile(imageInput)" style="display: none">
+                                    <span class="upload-text"> {{editDataGroups.imageName}} </span>
+                                    <a class="upload-bt"> Upload </a>
+                                  </div>
+                                </div>
+                                <div *ngIf="filePicture" style="margin-top:10px;">
+                                  <div class="picture-preview">
+                                    <img [attr.src]="filePicture | resolveImageUrl" (click)="popupImg()" />
+                                  </div>
+                                </div>
+                                <div *ngIf="!filePicture && pageType == 'view'">
+                                  <div class="picture-preview">
+                                    <img src="assets/img/no-img.png">
+                                  </div>
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <label *ngIf="pageType != 'new'" class="col-sm-2 control-label">Status<span class="fontred">*</span></label>
+                            <div *ngIf="pageType != 'new'" [ngClass]="{'has-error':!editGroupForm.controls.txtStatus.valid&&editGroupForm.controls.txtStatus.dirty,'col-sm-4':true}">
+                              <select name="txtStatus" id="txtStatus" formControlName="txtStatus" class="form-control " [(ngModel)]="editDataGroups.status">
+                                <option *ngFor="let item of statusList" [value]="item.id">{{ item.name }}</option>
+                              </select>
+                            </div>
+                          </div>
+
+                          <div class="hr-line-dashed"></div>
+
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ibox-footer no-bg">
+            <div class="ibox-footer-right">
+              <button *ngIf="pageType != 'view'" (click)="btnSubmit()" id="btnSaveTop" name="btnSaveTop" class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal" data-placement="top" title="Save" [disabled]="disbledBtn.save">
+                <i class="fas fa-save"></i><span>Save</span>
+              </button>
+              <button *ngIf="pageType == 'view' && menuPermissions.edit"  [routerLink]="['/master-data-management','raw-materials', Id ,'edit']" id="btnEditTop" name="btnEditTop" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit" [disabled]="disbledBtn.save">
+                <i class="fas fa-edit"></i><span>Edit</span>
+              </button>
+              <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop"  class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                <i class="fal fa-times"></i><span>Cancel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<dx-popup [fullScreen]="true" [dragEnabled]="false" [showTitle]="true" [showCloseButton]="true" [(visible)]="popupVisible">
+  <div *dxTemplate="let data of 'content'" class="text-center">
+    <img [src]="filePicture | resolveImageUrl" style="height:100%;" />
+  </div>
+</dx-popup>
+
+<app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()" (onCloseModalWarning)="onCloseModalWarning()"></app-alert>
+
+<dx-load-panel shadingColor="rgba(0,0,0,0.4)" [(visible)]="isLoadingPanel" [showIndicator]="true" [showPane]="true"
+  [shading]="true">
+</dx-load-panel>

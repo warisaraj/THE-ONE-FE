@@ -1,0 +1,16 @@
+{
+  "apps" : [{
+    "name"        : "vitallife-fe",
+    "script"      : "./server.js",
+    "watch"       : false,
+    "time"        : true,
+    "cwd"         : "./",
+    "env": {
+      "FE_PORT": 443,
+      "BE_TARGET": "https://10.102.96.18:8897",
+      "SSL": true,
+      "SSL_KEY": "/home/rootbh/ssl/Test-WildCard-2021_bumrungrad_org.key",
+      "SSL_CRT": "/home/rootbh/ssl/Test-WildCard-2021.bumrungrad.org.crt"
+    }
+  }]
+}

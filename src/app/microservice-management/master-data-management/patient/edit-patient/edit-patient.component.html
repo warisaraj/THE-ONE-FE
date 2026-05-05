@@ -1,0 +1,570 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">Patient</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Master Data Management</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a (click)="onClickBack()">Patient</a>
+              </li>
+              <li class="breadcrumb-item active">
+                <span *ngIf="pageType == 'view'"> View Patient Info </span>
+                <span *ngIf="pageType == 'new'"> Create Patient Info </span>
+                <span *ngIf="pageType == 'edit'"> Edit Patient Info </span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-12 align-self-center text-right">
+        <button *ngIf="pageType != 'view'" (click)="btnSubmit()" id="btnSaveTop" name="btnSaveTop"
+                class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal"
+                data-placement="top" title="Save" [disabled]="disbledBtn.save">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button *ngIf="pageType == 'view' && menuPermissions.edit"
+                [routerLink]="['/master-data-management','patient', Id ,'edit']" id="btnEditTop" name="btnEditTop"
+                class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit"
+                [disabled]="disbledBtn.save">
+          <i class="fas fa-edit"></i><span>Edit</span>
+        </button>
+        <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right"
+                data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;"
+                [disabled]="disbledBtn.cancel">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text">Patient Info<br><small *ngIf="pageType != 'view'">*Please enter data in the
+              "Require Field" textbox.</small></h5>
+            <button *ngIf="menuPermissions.view && pageType == 'view'"
+                    [routerLink]="['/master-data-management','patient', Id ,'history']"
+                    style="padding: 5px 10px !important;"
+                    id="btnHistory" name="btnHistory" class="btn btn-success float-xs-left" data-toggle="tooltip"
+                    data-placement="top" title="History of data revisions">
+              <img src="assets/icon-md/c7.svg" alt="">
+            </button>
+          </div>
+          <div class="ibox-body">
+            <div id="tab-1" class="tab-pane active">
+              <div class="panel-body">
+                <div class="row" id="divPatientInfo">
+                  <div class="col-lg-12">
+                    <div class="ibox">
+                      <div class="custom-ibox">
+                        <div class="ibox-heading">
+                          <h5 class="ibox-title-text">Patient details</h5>
+                          <div class="ibox-graph-info collapse-link" (click)="clickCollapse('divPatientInfo')">
+                            <i class="far fa-chevron-down"></i>
+                          </div>
+                        </div>
+                        <div class="ibox-body">
+                          <div class="row" style="padding:20px;">
+                            <form class="form-horizontal" [formGroup]="editGroupForm">
+
+                              <div class="col-sm-12">
+                                <div class="form-group col-sm-6">
+                                  <label class="col-sm-3 control-label">Location Type<span
+                                    class="fontred">*</span></label>
+                                  <div class="col-sm-8">
+                                    <label class="radio-inline"  *ngIf="!common.isRoleClinics(role)">
+                                      <input type="radio" name="rdoLocationType" formControlName="rdoLocationType"
+                                             id="rdoVTN" [value]="1" [(ngModel)]="editDataGroups.locationType"
+                                             (change)="changeLocationType()">VTL
+                                    </label>
+                                    <label class="radio-inline">
+                                      <input type="radio" name="rdoLocationType" formControlName="rdoLocationType"
+                                             id="rdoOther" [value]="2" [(ngModel)]="editDataGroups.locationType"
+                                             (change)="changeLocationType()">Other
+                                    </label>
+                                  </div>
+                                </div>
+                                <!-- Location Detail -->
+                                <div class="form-group col-sm-6">
+                                  <label class="col-sm-3 control-label">Patient Location Detail<span
+                                    *ngIf="editDataGroups.locationType === 2" class="fontred">*</span></label>
+                                  <div
+                                    [ngClass]="{'has-error':!editGroupForm.controls.locationDetail.valid&&editGroupForm.controls.locationDetail.dirty,'col-sm-8':true}">
+                                    <div class="select-wrapper">
+                                      <select name="locationDetail" id="ddlLocationDetail" formControlName="locationDetail"
+                                              [title]="editDataGroups.locationDetail" class="form-control"
+                                              [(ngModel)]="editDataGroups.locationDetail">
+                                        <option selected="selected" [value]="''">Please select</option>
+                                        <option *ngFor="let item of locationDetailList" [value]="item">{{ item }}
+                                        </option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-sm-12">
+                                <div class="form-group col-sm-6">
+                                  <label class="col-sm-3 control-label">HN<span class="fontred">*</span></label>
+                                  <div
+                                    [ngClass]="{'has-error':!editGroupForm.controls.txtHn.valid&&editGroupForm.controls.txtHn.dirty,'col-sm-8':true}">
+                                    <input type="text" class="form-control" id="txtHn" name="txtHn" maxlength="50"
+                                           [(ngModel)]="editDataGroups.hn" formControlName="txtHn">
+                                  </div>
+                                </div>
+                                <div class="form-group col-sm-6"><label class="col-sm-3 control-label">Preferred
+                                  Language<span class="fontred">*</span></label>
+                                  <div
+                                    [ngClass]="{'has-error':!editGroupForm.controls.txtPreferredLanguage.valid&&editGroupForm.controls.txtPreferredLanguage.dirty,'col-sm-8':true}">
+                                    <dx-autocomplete id="txtPreferredLanguage" style="background-color: #FFF;"
+                                                     [ngModel]="editDataGroups.preferredLanguage"
+                                                     formControlName="txtPreferredLanguage"
+                                                     [dataSource]="ddlPreferredLanguage"
+                                                     valueExpr="name"
+                                                     (onItemClick)="updateValueAutoComplete($event,'preferredLanguage')"
+                                                     (onFocusOut)="onFocusOut($event,'preferredLanguage','txtPreferredLanguage')">
+                                    </dx-autocomplete>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-sm-12">
+                                <div class="form-group col-sm-6">
+                                  <label class="col-sm-3 control-label">Title<span class="fontred">*</span></label>
+                                  <div
+                                    [ngClass]="{'has-error':!editGroupForm.controls.txtTitle.valid&&editGroupForm.controls.txtTitle.dirty,'col-sm-8':true}">
+                                    <dx-autocomplete style="background-color: #FFF;" [ngModel]="editDataGroups.title"
+                                                     formControlName="txtTitle" [dataSource]="ddlTitle" valueExpr="name"
+                                                     (onItemClick)="updateValueAutoComplete($event,'title')"
+                                                     (onFocusOut)="onFocusOut($event,'title','txtTitle')">
+                                    </dx-autocomplete>
+                                  </div>
+                                </div>
+                                <div class="form-group col-sm-6"><label class="col-sm-3 control-label"> Address
+                                  Type</label>
+                                  <div class="col-sm-8">
+                                    <input [disabled]="true" type="text" class="form-control" id="txtAddressType"
+                                           maxlength="50" value="00 Main Address">
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-sm-12">
+                                <div class="form-group col-sm-6">
+                                  <label class="col-sm-3 control-label">Given Name<span class="fontred">*</span></label>
+                                  <div
+                                    [ngClass]="{'has-error':!editGroupForm.controls.txtGivenName.valid&&editGroupForm.controls.txtGivenName.dirty,'col-sm-8':true}">
+                                    <input type="text" class="form-control" id="txtGivenName" name="txtGivenName"
+                                           maxlength="125" [(ngModel)]="editDataGroups.givenName"
+                                           formControlName="txtGivenName" (change)="checkPatientName()">
+                                  </div>
+                                </div>
+                                <div class="form-group col-sm-6"><label class="col-sm-3 control-label"> Address</label>
+                                  <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="txtAddress" name="txtAddress"
+                                           maxlength="255" [(ngModel)]="editDataGroups.patientAddress[0].address"
+                                           formControlName="txtAddress">
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-sm-12">
+                                <div class="form-group col-sm-6">
+                                  <label class="col-sm-3 control-label">Other Name</label>
+                                  <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="txtOtherName" name="txtOtherName"
+                                           maxlength="125" [(ngModel)]="editDataGroups.otherName"
+                                           formControlName="txtOtherName">
+                                  </div>
+                                </div>
+                                <div class="form-group col-sm-6"><label class="col-sm-3 control-label">District</label>
+                                  <div class="col-sm-8">
+                                    <dx-autocomplete id="txtDistrict" style="background-color: #FFF;"
+                                                     [ngModel]="editDataGroups.patientAddress[0].district"
+                                                     formControlName="txtDistrict" [dataSource]="ddlDistrict"
+                                                     (onItemClick)="updateAddressAutoComplete($event,0)"
+                                                     (onValueChanged)="deleteAddressAutoComplete($event,0,'district')"
+                                                     valueExpr="district">
+                                      <div *dxTemplate="let items of 'item'">
+                                        <span>{{ items.district }} {{ items.subdistrict }} {{ items.province }} {{
+                                            items.postcode }}</span>
+                                      </div>
+                                    </dx-autocomplete>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-sm-12">
+                                <div class="form-group col-sm-6">
+                                  <label class="col-sm-3 control-label">Surname<span class="fontred">*</span></label>
+                                  <div
+                                    [ngClass]="{'has-error':!editGroupForm.controls.txtSurname.valid&&editGroupForm.controls.txtSurname.dirty,'col-sm-8':true}">
+                                    <input type="text" class="form-control" id="txtSurname" name="txtSurname"
+                                           (change)="checkPatientName()" maxlength="125"
+                                           [(ngModel)]="editDataGroups.surname"
+                                           formControlName="txtSurname">
+                                  </div>
+                                </div>
+                                <div class="form-group col-sm-6"><label
+                                  class="col-sm-3 control-label">Subdistrict</label>
+                                  <div class="col-sm-8">
+                                    <dx-autocomplete id="txtSubdistrict" style="background-color: #FFF;"
+                                                     [ngModel]="editDataGroups.patientAddress[0].subdistrict"
+                                                     formControlName="txtSubdistrict" [dataSource]="ddlSubdistrict"
+                                                     (onItemClick)="updateAddressAutoComplete($event,0)"
+                                                     (onValueChanged)="deleteAddressAutoComplete($event,0,'subdistrict')"
+                                                     valueExpr="subdistrict">
+                                      <div *dxTemplate="let items of 'item'">
+                                        <span>{{ items.district }} {{ items.subdistrict }} {{ items.province }} {{
+                                            items.postcode }}</span>
+                                      </div>
+                                    </dx-autocomplete>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-sm-12">
+                                <div class="form-group col-sm-6">
+                                  <label class="col-sm-3 control-label">Sex<span class="fontred">*</span></label>
+                                  <div
+                                    [ngClass]="{'has-error':!editGroupForm.controls.txtSex.valid&&editGroupForm.controls.txtSex.dirty,'col-sm-8':true}">
+                                    <div class="select-wrapper">
+                                      <select name="txtSex" id="txtSex" formControlName="txtSex"
+                                              [title]="editDataGroups.sex" class="form-control"
+                                              [(ngModel)]="editDataGroups.sex">
+                                        <option selected="selected" [value]="''">Please select</option>
+                                        <option *ngFor="let item of sexList" [value]="item.id">{{ item.name }}
+                                        </option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="form-group col-sm-6"><label class="col-sm-3 control-label">Province</label>
+                                  <div class="col-sm-8">
+                                    <dx-autocomplete id="txtProvince" style="background-color: #FFF;"
+                                                     [ngModel]="editDataGroups.patientAddress[0].province"
+                                                     formControlName="txtProvince" [dataSource]="ddlProvince"
+                                                     (onItemClick)="updateAddressAutoComplete($event,0)"
+                                                     (onValueChanged)="deleteAddressAutoComplete($event,0,'province')"
+                                                     valueExpr="province">
+                                      <div *dxTemplate="let items of 'item'">
+                                        <span>{{ items.district }} {{ items.subdistrict }} {{ items.province }} {{
+                                            items.postcode }}</span>
+                                      </div>
+                                    </dx-autocomplete>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-sm-12">
+                                <div class="form-group col-sm-6">
+                                  <label class="col-sm-3 control-label">Date Of Birth<span
+                                    class="fontred">*</span></label>
+                                  <div
+                                    [ngClass]="{'has-error':!editGroupForm.controls.txtDateOfBirth.valid&&editGroupForm.controls.txtDateOfBirth.dirty&&pageType !=='view','col-sm-8':true}">
+                                    <dx-date-box style="background-color: #FFF;" [(value)]="editDataGroups.dateOfBirth"
+                                                 [acceptCustomValue]="false" class="form-control cus-datebox"
+                                                 type="date"
+                                                 [max]="now" displayFormat="dd-MM-yyyy"
+                                                 [(ngModel)]="editDataGroups.dateOfBirth"
+                                                 formControlName="txtDateOfBirth"></dx-date-box>
+                                  </div>
+                                </div>
+                                <div class="form-group col-sm-6"><label class="col-sm-3 control-label">Postcode</label>
+                                  <div class="col-sm-8">
+                                    <dx-autocomplete id="txtPostcode" style="background-color: #FFF;"
+                                                     [(ngModel)]="editDataGroups.patientAddress[0].postcode"
+                                                     formControlName="txtPostcode" [dataSource]="ddlPostcode"
+                                                     (onItemClick)="updateAddressAutoComplete($event,0)"
+                                                     (onValueChanged)="deleteAddressAutoComplete($event,0,'postcode')"
+                                                     valueExpr="postcode">
+                                      <div *dxTemplate="let items of 'item'">
+                                        <span>{{ items.district }} {{ items.subdistrict }} {{ items.province }} {{
+                                            items.postcode }}</span>
+                                      </div>
+                                    </dx-autocomplete>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-sm-12">
+                                <div class="form-group col-sm-6">
+                                  <label class="col-sm-3 control-label">Nationality</label>
+                                  <div class="col-sm-8">
+                                    <dx-autocomplete id="txtNationality" style="background-color: #FFF;"
+                                                     [ngModel]="editDataGroups.nationality"
+                                                     formControlName="txtNationality"
+                                                     [dataSource]="ddlNationality" valueExpr="name"
+                                                     (onItemClick)="updateValueAutoComplete($event,'nationality')"
+                                                     (onFocusOut)="onFocusOut($event,'nationality','txtNationality')">
+                                    </dx-autocomplete>
+                                  </div>
+                                </div>
+                                <div class="form-group col-sm-6"><label class="col-sm-3 control-label">Phone</label>
+                                  <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="txtPhone" name="txtPhone"
+                                           maxlength="255"
+                                           [(ngModel)]="editDataGroups.phone" formControlName="txtPhone">
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-sm-12">
+                                <div class="form-group col-sm-6"><label class="col-sm-3 control-label">Favorite</label>
+                                  <div class="col-sm-8">
+                                    <dx-check-box id="chkFavorite" [disabled]="pageType == 'view'"
+                                                  (onValueChanged)="fnCheckFavorite(0)" class="checkbox-expense"
+                                                  [(value)]="editDataGroups.patientAddress[0].isFavorite">
+                                    </dx-check-box>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="hr-line-dashed"></div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" id="divOtherAddress">
+                  <div class="col-lg-12">
+                    <div class="ibox">
+                      <div class="custom-ibox">
+                        <div class="ibox-heading">
+                          <h5 class="ibox-title-text">Other Address</h5>
+                          <div class="ibox-graph-info collapse-link" (click)="clickCollapse('divOtherAddress')">
+                            <i class="far fa-chevron-down"></i>
+                          </div>
+                        </div>
+                        <div class="ibox-body">
+                          <div>
+                            <form class="form-horizontal" [formGroup]="editGroupForm">
+                              <div *ngIf="formOtherAddress.length === 0 && pageType !== 'view'"
+                                   class="row mb-20 mt-20 text-center">
+                                <button title="Add Other Address" class="btn btn-success btn-md" (click)="addAddress()">
+                                  <i class="fal fa-plus"></i><span>Add Other Address</span>
+                                </button>
+                              </div>
+                              <div *ngIf="formOtherAddress.length === 0 && pageType === 'view'"
+                                   class="row mb-20 mt-20 text-center">
+                                <span>No Data</span>
+                              </div>
+                              <div formArrayName="otherAddress">
+                                <div class="row mb-20" *ngFor="let item of formOtherAddress.controls; let i=index;">
+                                  <div class="col-sm-12">
+                                    <div class="col-sm-11">
+                                      <div class="row ml-30"
+                                           style="display: inline-block; padding:20px; width: 100%; background-color: #FFF; border-radius: 5px;"
+                                           [formGroupName]="i">
+                                        <div class="form-group col-sm-6 mt-20"><label
+                                          class="col-sm-3 control-label">Favorite</label>
+                                          <div class="col-sm-8">
+                                            <dx-check-box id="chkFavorite" [disabled]="pageType == 'view'"
+                                                          class="checkbox-expense"
+                                                          (onValueChanged)="fnCheckFavorite(i+1)"
+                                                          [(value)]="editDataGroups.patientAddress[i+1].isFavorite">
+                                            </dx-check-box>
+                                          </div>
+                                        </div>
+                                        <div class="form-group col-sm-6 mt-20"><label class="col-sm-3 control-label">
+                                          Province</label>
+                                          <div class="col-sm-8">
+                                            <dx-autocomplete id="txtOtherProvince" style="background-color: #FFF;"
+                                                             [ngModel]="editDataGroups.patientAddress[i+1].province"
+                                                             formControlName="txtOtherProvince"
+                                                             [dataSource]="ddlProvince"
+                                                             (onItemClick)="updateAddressAutoComplete($event,i+1)"
+                                                             (onValueChanged)="deleteAddressAutoComplete($event,i+1,'province')"
+                                                             valueExpr="province">
+                                              <div *dxTemplate="let items of 'item'">
+                                                <span>{{ items.district }} {{ items.subdistrict }} {{ items.province }}
+                                                  {{
+                                                    items.postcode }}</span>
+                                              </div>
+                                            </dx-autocomplete>
+                                          </div>
+                                        </div>
+
+                                        <div class="form-group col-sm-6">
+                                          <label class="col-sm-3 control-label">Address</label>
+                                          <div class="col-sm-8">
+                                            <input type="text" class="form-control" id="txtOtherAddress"
+                                                   name="txtOtherAddress" maxlength="255"
+                                                   [(ngModel)]="editDataGroups.patientAddress[i+1].address"
+                                                   formControlName="txtOtherAddress">
+                                          </div>
+                                        </div>
+                                        <div class="form-group col-sm-6"><label class="col-sm-3 control-label">
+                                          PostCode</label>
+                                          <div class="col-sm-8">
+                                            <dx-autocomplete id="txtOtherPostcode" style="background-color: #FFF;"
+                                                             [ngModel]="editDataGroups.patientAddress[i+1].postcode"
+                                                             formControlName="txtOtherPostcode"
+                                                             [dataSource]="ddlPostcode"
+                                                             (onItemClick)="updateAddressAutoComplete($event,i+1)"
+                                                             (onValueChanged)="deleteAddressAutoComplete($event,i+1,'postcode')"
+                                                             valueExpr="postcode">
+                                              <div *dxTemplate="let items of 'item'">
+                                                <span>{{ items.district }} {{ items.subdistrict }} {{ items.province }}
+                                                  {{
+                                                    items.postcode }}</span>
+                                              </div>
+                                            </dx-autocomplete>
+                                          </div>
+                                        </div>
+
+                                        <div class="form-group col-sm-6">
+                                          <label class="col-sm-3 control-label">District</label>
+                                          <div class="col-sm-8">
+                                            <dx-autocomplete id="txtOtherDistrict" style="background-color: #FFF;"
+                                                             [ngModel]="editDataGroups.patientAddress[i+1].district"
+                                                             formControlName="txtOtherDistrict"
+                                                             [dataSource]="ddlDistrict"
+                                                             (onItemClick)="updateAddressAutoComplete($event,i+1)"
+                                                             (onValueChanged)="deleteAddressAutoComplete($event,i+1,'district')"
+                                                             valueExpr="district">
+                                              <div *dxTemplate="let items of 'item'">
+                                                <span>{{ items.district }} {{ items.subdistrict }} {{ items.province }}
+                                                  {{
+                                                    items.postcode }}</span>
+                                              </div>
+                                            </dx-autocomplete>
+                                          </div>
+                                        </div>
+                                        <div class="form-group col-sm-6"><label class="col-sm-3 control-label"> Address
+                                          Type</label>
+                                          <div class="col-sm-8">
+                                            <div class="select-wrapper">
+                                              <select name="txtOtherAddressType" id="txtOtherAddressType"
+                                                      formControlName="txtOtherAddressType"
+                                                      [title]="editDataGroups.addressType" class="form-control"
+                                                      [(ngModel)]="editDataGroups.patientAddress[i+1].addressType">
+                                                <option selected="selected" [value]="undefined">Please select</option>
+                                                <option *ngFor="let item of otherAddressTypeList" [value]="item.id">{{
+                                                    item.name
+                                                  }}
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div class="form-group col-sm-12">
+                                          <div class="form-group col-sm-6">
+                                            <label class="col-sm-3 control-label"
+                                                   style="padding-right: 25px !important;">Subdistrict</label>
+                                            <div class="col-sm-8" style="padding-left:5px !important;">
+                                              <dx-autocomplete id="txtOtherSubdistrict" style="background-color: #FFF;"
+                                                               [ngModel]="editDataGroups.patientAddress[i+1].subdistrict"
+                                                               formControlName="txtOtherSubdistrict"
+                                                               [dataSource]="ddlSubdistrict"
+                                                               (onItemClick)="updateAddressAutoComplete($event,i+1)"
+                                                               (onValueChanged)="deleteAddressAutoComplete($event,i+1,'subdistrict')"
+                                                               valueExpr="subdistrict">
+                                                <div *dxTemplate="let items of 'item'">
+                                                  <span>{{ items.district }} {{ items.subdistrict }} {{ items.province
+                                                    }}
+                                                    {{
+                                                      items.postcode }}</span>
+                                                </div>
+                                              </dx-autocomplete>
+                                            </div>
+                                          </div>
+                                          <div class="form-group col-sm-6"><label
+                                            class="col-sm-3 control-label">Remark</label>
+                                            <div class="col-sm-8"
+                                                 style="padding-right: 0px !important; padding-left: 20px !important;;">
+                                              <textarea (keyup)="textAreaAutoHeight()" class="form-control"
+                                                        id="txtRemark" name="txtRemark" rows="3" placeholder=""
+                                                        style="resize: vertical; height: 83px; max-height: 83px;"
+                                                        [(ngModel)]="editDataGroups.patientAddress[i+1].remark"
+                                                        formControlName="txtRemark"></textarea>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                      </div>
+                                    </div>
+                                    <div class="col-sm-1">
+                                      <div *ngIf="pageType!=='view'" style="display: inline-block; margin-top: 120px !important;
+                                    margin-left: 15px; vertical-align: top;">
+                                        <div>
+                                          <button class="btn btn-success" (click)="deleteAddress(i)"
+                                                  title="Delete Other Address"
+                                                  style="padding:5px 10px; background-color: #646965 !important;">
+                                            <i class="fas fa-minus" style="margin:0;font-size:20px"></i>
+                                          </button>
+                                          <button *ngIf="i+2 === editDataGroups.patientAddress.length"
+                                                  title="Add Other Address" (click)="addAddress()"
+                                                  class="btn btn-success"
+                                                  style="padding:5px 10px;">
+                                            <i class="fas fa-plus" style="margin:0;font-size:20px"></i>
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                              </div>
+                            </form>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer no-bg">
+            <div class="ibox-footer-right">
+              <button *ngIf="pageType != 'view'" (click)="btnSubmit()" id="btnSaveTop" name="btnSaveTop"
+                      class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully"
+                      data-toggle="modal"
+                      data-placement="top" title="Save" [disabled]="disbledBtn.save">
+                <i class="fas fa-save"></i><span>Save</span>
+              </button>
+              <button *ngIf="pageType == 'view' && menuPermissions.edit"
+                      [routerLink]="['/master-data-management','patient', Id ,'edit']" id="btnEditTop" name="btnEditTop"
+                      class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top"
+                      title="Edit"
+                      [disabled]="disbledBtn.save">
+                <i class="fas fa-edit"></i><span>Edit</span>
+              </button>
+              <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop"
+                      class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel"
+                      style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                <i class="fal fa-times"></i><span>Cancel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()"
+           (onCloseModalWarning)="onCloseModalWarning()"></app-alert>

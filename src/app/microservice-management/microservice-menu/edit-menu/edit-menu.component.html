@@ -1,0 +1,296 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+    <div class="spiner-example-detail">
+        <div class="sk-spinner sk-spinner-double-bounce">
+            <div class="sk-double-bounce1"></div>
+            <div class="sk-double-bounce2"></div>
+        </div>
+    </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+    <div class="soc-breadcrumb">
+        <div class="row">
+            <div class="col-md-8 col-xs-12 align-self-center">
+                <h4 class="soc-title">Menu</h4>
+                <div class="d-flex align-items-center" style="margin-top: -10px;">
+                    <nav>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Menu Management</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a [routerLink]="['/microservice-menus']">Menu</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                Edit Menu Info
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 align-self-center text-right fix-bt">
+                <button (click)="btnEdit()" id="btnSaveTop" name="btnSaveTop"
+                        class="btn btn-success float-xs-left mr-10" [disabled]="editing || disbledBtn.save"
+                        data-toggle="modal" data-placement="top" title="Save">
+                    <i class="fas fa-save"></i><span>Save</span>
+                </button>
+                <button [routerLink]="['/microservice-menus']" id="btnCancelTop" name="btnCancelTop"
+                        class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel"
+                        style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                    <i class="fal fa-times"></i><span>Cancel</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox mb-0">
+                <div class="ibox-bg">
+                    <div class="ibox-heading">
+                        <h5 class="ibox-title-text">Menu Info<br><small>*Please enter data in the "Require Field"
+                            textbox.</small></h5>
+                    </div>
+                    <div class="ibox-body">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-content" style="border:0px;">
+                                                <form class="form-horizontal" [formGroup]="editMenuForm">
+
+                                                    <div class="form-group"><label class="col-sm-2 control-label">Menu
+                                                        Name<span class="fontred">*</span></label>
+                                                        <div [ngClass]="{'has-error':!editMenuForm.controls.txtMicroserviceName.valid&&editMenuForm.controls.txtMicroserviceName.dirty,'col-sm-10':true}">
+                                                            <input type="text" class="form-control"
+                                                                   id="txtMicroserviceName" name="txtMicroserviceName"
+                                                                   maxlength="255" [(ngModel)]="getDataMicroserviceName"
+                                                                   formControlName="txtMicroserviceName"
+                                                                   [title]="getDataMicroserviceName"></div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group"><label class="col-sm-2 control-label">Description</label>
+                                                        <div class="col-sm-10">
+                                                            <textarea (keyup)="textAreaAutoHeight()"
+                                                                      class="form-control" id="txtDescription"
+                                                                      name="txtDescription" rows="3" placeholder=""
+                                                                      style="resize: vertical"
+                                                                      [(ngModel)]="getDataMicroserviceDescription"
+                                                                      formControlName="txtDescription"></textarea>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">icon<span class="fontred">*</span>
+
+                                                            <div class="tooltip-i" style="margin-left:7px;">
+                                                                <img src="assets/remark-icon.png" width="16px"
+                                                                     height="16px">
+                                                                <span class="tooltiptext">Only fontawesome version 5.2.0 is supported</span>
+                                                            </div>
+
+
+                                                        </label>
+                                                        <div [ngClass]="{'has-error':!editMenuForm.controls.txtMenuIcon.valid && editMenuForm.controls.txtMenuIcon.dirty,'col-sm-10':true}">
+                                                            <input type="text" class="form-control" id="txtMenuIcon"
+                                                                   name="txtMenuIcon" maxlength="100"
+                                                                   [(ngModel)]="getDataMicroserviceMenuIcon"
+                                                                   formControlName="txtMenuIcon"></div>
+                                                    </div>
+                                                </form>
+                                                <div class="form-group" style="text-align: right">
+                                                    <div class="pull-left fontgroup-gray">Submenu</div>
+                                                    <button *ngIf="menuPermissions.add" [disabled]="editing"
+                                                            class="btn btn-default icon btn-sm2 ng-star-inserted"
+                                                            title="Create New Parent Menu" (click)="clickAdd('')">
+                                                        <i class="fal fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                                <div id="tree-list-demo">
+                                                    <dx-tree-list
+                                                        #gridMenus
+                                                        id="gridMenus"
+                                                        [(dataSource)]="dataMenus"
+                                                        keyExpr="subMenuId"
+                                                        parentIdExpr="subMenuParentId"
+                                                        [showRowLines]="true"
+                                                        [showBorders]="true"
+                                                        [columnAutoWidth]="true"
+                                                        [rootValue]="0"
+                                                        [autoExpandAll]="true"
+                                                        (onEditorPreparing)="editorPreparing($event)"
+                                                        (onInitNewRow)="initNewRow($event)"
+                                                        [(hint)]="hoverTootip"
+                                                        (onCellHoverChanged)="onCellHoverChanged($event)"
+                                                        (onCellPrepared)="cellPrepared($event)"
+                                                    >
+                                                        <dxo-editing
+                                                                mode="row"
+                                                                [allowUpdating]="false"
+                                                                [allowDeleting]="false"
+                                                                [allowAdding]="false">
+                                                        </dxo-editing>
+                                                        <dxi-column caption="Submenu"
+                                                                    cellTemplate="cellTemplateMicroserviceMenuName"></dxi-column>
+                                                        <div *dxTemplate="let data of 'cellTemplateMicroserviceMenuName';"
+                                                             [ngClass]="{'has-error': checkVarid.subMenuName}">
+                                                            <input type="text" class="form-control"
+                                                                   [(ngModel)]="data.data.subMenuName"
+                                                                   maxlength="255"
+                                                                   *ngIf="dataMenus && data.data &&  data.data.editor">
+                                                            <span *ngIf="dataMenus && data.data && !data.data.editor"> {{data.data.subMenuName}}</span>
+                                                        </div>
+                                                        <dxi-column caption="URL"
+                                                                    cellTemplate="cellTemplateUrl"></dxi-column>
+                                                        <div *dxTemplate="let data of 'cellTemplateUrl';"
+                                                             [ngClass]="{'has-error': checkVarid.url}">
+                                                            <input type="text" class="form-control"
+                                                                   [(ngModel)]="data.data.url"
+                                                                   *ngIf="dataMenus && data.data && data.data.editor">
+                                                            <span *ngIf="dataMenus && data.data && !data.data.editor"> {{data.data.url}}</span>
+                                                        </div>
+                                                        <dxi-column caption="Description"
+                                                                    cellTemplate="cellTemplateDescription"></dxi-column>
+                                                        <div *dxTemplate="let data of 'cellTemplateDescription';">
+                                                            <input type="text" class="form-control"
+                                                                   [(ngModel)]="data.data.description"
+                                                                   *ngIf="dataMenus && data.data && data.data.editor">
+                                                            <span *ngIf="dataMenus && data.data && !data.data.editor"> {{data.data.description}}</span>
+                                                        </div>
+                                                        <dxi-column caption="icon"
+                                                                    cellTemplate="cellTemplateIcon"></dxi-column>
+                                                        <div *dxTemplate="let data of 'cellTemplateIcon';"
+                                                             [ngClass]="{'has-error': checkVarid.menuIcon}">
+                                                            <input type="text" maxlength="100" id="txtMenuIcon"
+                                                                   name="txtMenuIcon" class="form-control"
+                                                                   [(ngModel)]="data.data.menuIcon"
+                                                                   *ngIf="dataMenus && data.data && data.data.editor">
+                                                            <span *ngIf="dataMenus && data.data && !data.data.editor"> {{data.data.menuIcon}}</span>
+                                                        </div>
+                                                        <dxi-column caption="New Tab" cellTemplate="cellTemplatenewTap"
+                                                                    width="170"></dxi-column>
+                                                        <div *dxTemplate="let data of 'cellTemplatenewTap';">
+                              <span *ngIf="dataMenus && data.data && !data.data.editor">
+                                {{!data.data.newTap ? 'default' : data.data.newTap}}
+                              </span>
+                                                            <div class="m-radio-inline">
+                                                                <div>
+                                                                    <label class="m-radio"
+                                                                           *ngIf="dataMenus && data.data && data.data.editor">
+                                                                        <input type="radio"
+                                                                               [checked]="!data.data.newTap || data.data.newTap == 'default'"
+                                                                               (change)="data.data.newTap = null"
+                                                                               id="newTap" name="newTap" class=""
+                                                                               *ngIf="dataMenus && data.data && data.data.editor">
+                                                                        default
+                                                                    </label>
+                                                                </div>
+                                                                <div>
+                                                                    <label class="m-radio"
+                                                                           *ngIf="dataMenus && data.data && data.data.editor">
+
+                                                                        <input type="radio"
+                                                                               [checked]="data.data.newTap=== 'new tab'"
+                                                                               (change)="data.data.newTap = 'new tab'"
+                                                                               id="newTap" name="newTap" class=""
+                                                                               *ngIf="dataMenus && data.data && data.data.editor">
+                                                                        new teb
+                                                                    </label>
+                                                                </div>
+                                                                <div>
+                                                                    <label class="m-radio"
+                                                                           *ngIf="dataMenus && data.data && data.data.editor">
+                                                                        <input type="radio"
+                                                                               [checked]="data.data.newTap=== 'new tab in portal'"
+                                                                               (change)="data.data.newTap = 'new tab in portal'"
+                                                                               id="newTap" name="new tab in portal"
+                                                                               class=""
+                                                                               *ngIf="dataMenus && data.data && data.data.editor">
+                                                                        new tab in portal
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <dxi-column caption="Action"
+                                                                    cellTemplate="cellTemplateSaveMenus"
+                                                                    width="130"></dxi-column>
+                                                        <div *dxTemplate="let data of 'cellTemplateSaveMenus';"
+                                                             style="text-align: left">
+                                                            <div *ngIf="dataMenus && data.data && data.data.editor">
+                                                                <button (click)="saveMenu(data.data)" id="btnSaveMenu"
+                                                                        style="margin-left: 3px;margin-top: 0px !important;margin-bottom: 0px !important;"
+                                                                        class="btn btn-default icon btn-sm mr-5"
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title="Save"><i class="fas fa-save"></i>
+                                                                </button>
+                                                                <button (click)="cancelMenu()" id="btnCancelMenu"
+                                                                        style="margin-left: 3px;"
+                                                                        class="btn btn-default icon btn-sm"
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title="Cancel"><i class="fal fa-times"></i>
+                                                                </button>
+                                                            </div>
+                                                            <div *ngIf="dataMenus && data.data && !data.data.editor">
+                                                                <button *ngIf="menuPermissions.add && data.data.subMenuParentId === null"
+                                                                        (click)="clickAdd(data.data.subMenuId)"
+                                                                        id="btnAddMenu" [disabled]="editing"
+                                                                        style="margin-left: 3px;margin-top: 0px !important;margin-bottom: 0px !important;"
+                                                                        class="btn btn-default icon btn-sm mr-5"
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title="Add">
+                                                                    <i class="fas fa-plus"></i>
+                                                                </button>
+                                                                <button *ngIf="menuPermissions.edit"
+                                                                        (click)="editMenu(data.data)" id="btnEditMenu"
+                                                                        [disabled]="editing"
+                                                                        style="margin-left: 3px;margin-top: 0px !important;margin-bottom: 0px !important;"
+                                                                        class="btn btn-default icon btn-sm mr-5"
+                                                                        data-toggle="tooltip" data-placement="top"
+                                                                        title="Edit">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </button>
+                                                                <button *ngIf="menuPermissions.delete"
+                                                                        (click)="confirmDelete(data.data)"
+                                                                        id="btnDeleteMenu" [disabled]="editing"
+                                                                        style="margin-left: 3px;margin-top: 0px !important;margin-bottom: 0px !important;"
+                                                                        class="btn btn-default icon btn-sm mr-5"
+                                                                        data-toggle="modal" data-target="#myModal88"
+                                                                        data-placement="top" title="Delete">
+                                                                    <i class="fas fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </dx-tree-list>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="ibox-footer no-bg">
+                      <div class="ibox-footer-right">
+                        <button (click)="btnEdit()" id="btnSaveBottom" [disabled]="editing || disbledBtn.save"  name="btnSaveBottom" class="btn btn-success float-xs-left mr-10" data-toggle="modal" data-placement="top" title="Save">
+                          <i class="fas fa-save"></i><span>Save</span>
+                        </button>
+                        <button [routerLink]="['/microservice-menus']" id="btnCancelBottom" name="btnCancelBottom"   class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                          <i class="fal fa-times"></i><span>Cancel</span>
+                        </button>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<app-alert #myModal (onOkDelete)="delete()" (onCancelDelete)="onCancelDelete()"
+           (onCancelViewWarning)="onCancelViewWarning()" (onCloseModalError)="onCloseModalError()"
+           (onCloseModalWarning)="onCloseModalWarning()" (onClickBack)="onClickBack()"></app-alert>

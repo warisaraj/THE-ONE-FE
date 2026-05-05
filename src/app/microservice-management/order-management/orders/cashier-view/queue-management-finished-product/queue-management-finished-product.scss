@@ -1,0 +1,8 @@
+@import 'src/assets/scss/theme';
+
+#txtDeliveryDate.dx-texteditor.dx-editor-outlined,
+#txtPatientName.dx-texteditor.dx-editor-outlined,
+#txtHn.dx-texteditor.dx-editor-outlined {
+  background-color: $inputBgColor;
+  border: $inputBorder;
+}

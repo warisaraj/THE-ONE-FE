@@ -1,0 +1,406 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">All Orders</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Order Management</a>
+              </li>
+              <li class="breadcrumb-item active">
+                All Order List
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-12 align-self-center text-right fix-bt">
+        <button *ngIf="menuPermissions.add  && (common.isRoleClinics(role) || this.role?.toLowerCase() ==='admin')"
+          id="btnImport" style="padding: 5px 10px 5px 5px !important;" name="btnImport"
+          class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Import"
+          (click)="fnUploadTemplate()">
+          <img src="assets/icon-md/c5.svg" alt="">
+        </button>
+        <button *ngIf="menuPermissions.add  && (common.isRoleClinics(role) || this.role?.toLowerCase() ==='admin')"
+          (click)="goCreate()" id="btnCreateNewGroup" name="btnCreateNewGroup" class="btn btn-success float-xs-left "
+          data-toggle="tooltip" data-placement="top" title="Create Order">
+          <i class="fal fa-plus"></i><span>Create Order</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text"><i class="fas fa-filter"></i>Filter</h5>
+            <div class="ibox-graph-info collapse-link" #collapseLink (click)="clickCollapse()">
+              <i class="far fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="ibox-body">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="panel-body">
+                  <form method="get" class="form-horizontal">
+                    <!-- Row 1 -->
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">HN</label>
+                      <div class="col-sm-3">
+                        <input id="txtHn" name="txtHn" maxlength="50" type="text" class="form-control"
+                          [(ngModel)]="filter.hn">
+                      </div>
+
+                      <label class="col-sm-2 control-label">Patient Name</label>
+                      <div class="col-sm-3">
+                        <input id="txtPatientName" name="txtPatientName" maxlength="255" type="text"
+                          class="form-control" [(ngModel)]="filter.patientName">
+                      </div>
+                      <!-- <label class="col-sm-1 control-label">Order Status</label>
+                      <div class="col-sm-2">
+                        <select name="txtOrderStatus" id="txtOrderStatus" class="form-control" [(ngModel)]="filter.orderStatus">
+                          <option selected="selected" [value]="''">Please select</option>
+                          <option *ngFor="let item of statusList" [value]="item">{{ item }}</option>
+                        </select>
+                      </div>
+                      <label class="col-sm-1 control-label">Location</label>
+                      <div class="col-sm-2">
+                        <select name="txtLocaltion" id="txtLocaltion" class="form-control" [(ngModel)]="filter.locationDetail">
+                          <option selected="selected" [value]="''">Please select</option>
+                          <option *ngFor="let item of locationDetailList" [ngValue]="item">{{ item.name }}</option>
+                        </select>
+                      </div> -->
+                    </div>
+                    <div class="form-group">
+                      <!-- <label class="col-sm-1 control-label">HN</label>
+                      <div class="col-sm-2">
+                        <input id="txtHn" name="txtHn" maxlength="50" type="text" class="form-control" [(ngModel)]="filter.hn">
+                      </div>
+                  
+                      <label class="col-sm-1 control-label">Patient Name</label>
+                      <div class="col-sm-2">
+                        <input id="txtPatientName" name="txtPatientName" maxlength="255" type="text" class="form-control"
+                          [(ngModel)]="filter.patientName">
+                      </div> -->
+                      <label class="col-sm-2 control-label">Location</label>
+                      <div class="col-sm-3">
+                        <select name="txtLocaltion" id="txtLocaltion" class="form-control"
+                          [(ngModel)]="filter.locationDetail">
+                          <option selected="selected" [value]="''">Please select</option>
+                          <option *ngFor="let item of locationDetailList" [ngValue]="item">{{ item.name }}</option>
+                        </select>
+                      </div>
+                      <label class="col-sm-2 control-label">Order Status</label>
+                      <div class="col-sm-3">
+                        <select name="txtOrderStatus" id="txtOrderStatus" class="form-control"
+                          [(ngModel)]="filter.orderStatus">
+                          <option selected="selected" [value]="''">Please select</option>
+                          <option *ngFor="let item of orderStatusList" [value]="item.name">{{ item.name }}</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">Order Date</label>
+                      <div class="col-sm-3">
+                        <dx-date-box style="width: 100%;" [openOnFieldClick]="true" [acceptCustomValue]="false"
+                          class="form-control cus-datebox" type="date" displayFormat="dd-MM-yyyy"
+                          [(value)]="filter.orderDate"></dx-date-box>
+                      </div>
+                      <label class="col-sm-2 control-label">Delivery Date</label>
+                      <div class="col-sm-3">
+                        <dx-date-box style="width: 100%;" [openOnFieldClick]="true" [acceptCustomValue]="false"
+                          class="form-control cus-datebox" type="date" displayFormat="dd-MM-yyyy"
+                          [(value)]="filter.deliveryDate"></dx-date-box>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">Production End Date</label>
+                      <div class="col-sm-3">
+                        <dx-date-box style="width: 100%;" [openOnFieldClick]="true" [acceptCustomValue]="false"
+                          class="form-control cus-datebox" type="date" displayFormat="dd-MM-yyyy"
+                          [(value)]="filter.productionDate"></dx-date-box>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer">
+            <div class="ibox-footer-right">
+              <button title="Search" (click)="clickSearch()" class="btn btn-success btn-md mr-10"
+                *ngIf="menuPermissions.view">
+                <span>Search</span>
+              </button>
+              <button title="Clear" (click)="clickClear()" class="btn btn-default btn-md" *ngIf="menuPermissions.view">
+                <span>Clear</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg" style="box-shadow : none !important">
+          <div class="ibox-heading-total">
+            <h5 class="ibox-title-text">{{textTotal}}</h5>
+          </div>
+          <div class="ibox-body">
+            <!--[selectedRowKeys]="selectRowKeyId" (onInitialized)="onInitialized($event)" (onSelectionChanged)="selectRow($event)"-->
+            <div class="table-responsive table-wrapper">
+              <dx-data-grid #gridDataPendingOrders id="gridDataPendingOrders" [(dataSource)]="dataPendingOrders"
+                showBorders="false" [hoverStateEnabled]="true" noDataText="No data" [rowAlternationEnabled]="true"
+                [columnAutoWidth]="true" [allowColumnResizing]="true" (onCellPrepared)="onCellPrepared($event)"
+                class="card-list-table" (onOptionChanged)="changePageIndex($event)">
+                <dxo-load-panel [enabled]="true"></dxo-load-panel>
+                <dxo-paging [pageSize]="dxgridPageSize" [pageIndex]="pageIndex"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="allowedPageSizes" [showInfo]="false"
+                  [visible]="true" [showNavigationButtons]="true">
+                </dxo-pager>
+                <dxo-scrolling showScrollbar="onHover"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-remote-operations [sorting]="true" [paging]="true">
+                </dxo-remote-operations>
+
+                <!--<dxi-column dataField="no" dataType="number" caption="No." alignment="left" width="10%"></dxi-column>-->
+                <dxi-column caption="No" cellTemplate="cellTemplateNo" [allowSorting]="false" [width]="50"
+                  alignment="center"></dxi-column>
+                <div *dxTemplate="let data of 'cellTemplateNo'" style="text-align: center;"
+                  title="{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}">
+                  <span>{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}</span>
+                </div>
+
+                <dxi-column dataField="orderId" dataType="string" caption="Order ID" alignment="center"></dxi-column>
+                <dxi-column dataField="hn" dataType="string" [width]="250" caption="HN" alignment="center"></dxi-column>
+                <dxi-column dataField="patientName" dataType="string" [width]="280" caption="Patient Name"></dxi-column>
+                <dxi-column dataField="locationDetail" dataType="string" caption="Location Detail"></dxi-column>
+                <dxi-column dataField="orderDate" dataType="string" caption="Order Date"></dxi-column>
+                <dxi-column dataField="orderStatus" dataType="string" caption="Order Status"></dxi-column>
+                <dxi-column dataField="csReason" dataType="string" [width]="250" caption="CS Note"></dxi-column>
+                <dxi-column dataField="updatedAt" caption="Updated At" sortOrder="desc" cssClass="wrapped-column"
+                  [width]="155" alignment="center"></dxi-column>
+                <dxi-column [visible]="!!menuPermissions.view && !common.isRoleClinics(role)" dataField=""
+                  dataType="string" caption="Action" cellTemplate="cellTemplateViewGroups" [width]="120"
+                  alignment="center" [allowSorting]="false"></dxi-column>
+
+                <div *dxTemplate="let data of 'cellTemplateViewGroups';let i=index;">
+                  <span>
+                    <!-- <a
+                      *ngIf="menuPermissions.view && data.data.item !== 2 && !(data.data.orderStatusNumber === 27 || data.data.orderStatusNumber === 28 || data.data.orderStatusNumber === 34 || data.data.orderStatusNumber === 35)"
+                      [routerLink]="['/order-management/all-orders',data.data.orderId,'view']"
+                       id="btnView{{i}}"
+                      class="btn btn-default icon btn-sm" data-toggle="tooltip" data-placement="top" title="View">
+                      <i class="fas fa-eye">1</i>
+                    </a> -->
+                    <a *ngIf="menuPermissions.view && data.data.item !== 2 && !(data.data.orderStatusNumber === 27 || data.data.orderStatusNumber === 28 || data.data.orderStatusNumber === 34 || data.data.orderStatusNumber === 35)"
+                      (click)="fnGoView(data.data,true)" id="btnView{{i}}" class="btn btn-default icon btn-sm"
+                      data-toggle="tooltip" data-placement="top" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a *ngIf="menuPermissions.view && (data.data.item === 2 || (data.data.orderStatusNumber === 27 || data.data.orderStatusNumber === 28 || data.data.orderStatusNumber === 34 || data.data.orderStatusNumber === 35))"
+                      class="btn btn-default icon btn-sm" data-toggle="tooltip" data-placement="top"
+                      (click)="fnGoView(data.data)" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+
+                    <!-- Reorder Button -->
+                    <!-- orderStatus = 26 Complete
+                    orderStatus = 8 Customer Rejected
+                    go to page Create Order -->
+                    <a *ngIf="(data.data.orderStatusNumber === 26 || data.data.orderStatusNumber === 8) && menuPermissionsPharmacist.add && (this.role ==='Pharmacist' || this.role ==='pharmacist' || this.role ==='Senior Pharmacist' || this.role ==='Senior pharmacist' || this.role ==='Pharmacy Technician'|| this.role ==='Pharmacy technician' || this.role ==='Admin' || this.role ==='admin')"
+                      (click)="fnReOrder(data.data.orderId ,data.data.hn, data.data.orderStatusNumber)"
+                      id="btnReOrder{{i}}" class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip"
+                      data-placement="top" title="ReOrder"><img src="assets/icon-md/c9.svg" alt=""></a>
+                    <!-- orderStatus = 28 Complete (Finished Product Delivery)
+                    go to page Create Finished Product Delivery -->
+                    <a *ngIf="(data.data.orderStatusNumber === 28 || data.data.orderStatusNumber === 35) && menuPermissionsPharmacist.add && (this.role ==='Pharmacist' || this.role ==='pharmacist' || this.role ==='Senior Pharmacist' || this.role ==='Senior pharmacist' || this.role ==='Pharmacy Technician'|| this.role ==='Pharmacy technician' || this.role ==='Admin' || this.role ==='admin')"
+                      (click)="fnReOrder(data.data.orderId ,data.data.hn, data.data.orderStatusNumber)"
+                      id="btnReOrder{{i}}" class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip"
+                      data-placement="top" title="ReOrder"><img src="assets/icon-md/c9.svg" alt=""></a>
+
+                    <a *ngIf="(role?.toLowerCase() === 'admin' || role?.toLocaleLowerCase() === 'super user') && menuPermissions.edit && (data.data.orderStatusNumber >= 1 && data.data.orderStatusNumber <= 28 || data.data.orderStatusNumber == 34 || data.data.orderStatusNumber == 35)"
+                      id="btnOrderInactive{{i}}" class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip"
+                      data-placement="top" title="Order Inactive" (click)="openOrderInactive(data.data.orderId)"><i
+                        class="fas fa-edit"></i></a>
+
+                  </span>
+
+                </div>
+              </dx-data-grid>
+            </div>
+          </div>
+          <!--End List-->
+        </div>
+        <!--End ibox-content-->
+      </div>
+      <!--End ibox-->
+    </div>
+    <!--End col-sm-12-->
+  </div>
+  <!--End row-->
+</div>
+<!--End Wrapper-->
+
+<div #modalImportDocument class="modal inmodal" id="modalImportDocument" tabindex="-1" role="dialog" aria-hidden="true">
+  <div *ngIf="step === 0" class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn" style="height: 240px;">
+      <div class="bgyellow" style="height: auto;">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Import Document
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <button class="btn pull-right" style="background-color: transparent;box-shadow: none;" (click)="close()">
+              <i class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </button>
+          </div>
+        </div>
+        <div style="padding: 0 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+      </div>
+      <br>
+      <form class="form-horizontal" [formGroup]="importForm">
+        <!--Supply Day-->
+        <div class="form-group">
+          <label class="col-sm-3 control-label">HN</label>
+          <div
+            [ngClass]="{'has-error':!importForm.controls.txtImportHn.valid&&importForm.controls.txtImportHn.dirty,'col-sm-6':true}">
+            <input type="text" class="form-control" id="txtImportHn" name="txtImportHn" formControlName="txtImportHn"
+              [(ngModel)]="hn" (keyup)="onChangeHn()">
+          </div>
+        </div>
+      </form>
+      <br>
+      <div class="col-sm-12 pull-center m-r" style="text-align: center; height: 60px;">
+        <button [disabled]="disbledBtnModal" style="margin-left:3px;" class="btn btn-success font-btn  width-btn-small"
+          (click)="clickNext()">Next
+        </button>
+
+      </div>
+    </div>
+  </div>
+  <div *ngIf="step === 1" class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn" style="height: 240px;">
+      <div class="bgyellow" style="height: auto;">
+        <div class="row"
+          style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;margin-left: 0 !important;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Import Document
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <button class="btn pull-right" style="background-color: transparent;box-shadow: none;" (click)="close()">
+              <i class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </button>
+          </div>
+        </div>
+        <div style="padding: 0 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+      </div>
+      <br>
+      <div class="pb-30 pl-30 pr-30 mr-30 ml-30">
+        <div class="col-sm-12 title-no-menu text-right pr-0">
+          <span style="float: left;padding-top: 10px;">Patient Info</span>
+          <!-- <button id="btnDocument"
+          style="padding: 5px 10px !important;" class="btn btn-success float-xs-left ml-10" data-toggle="tooltip"
+          data-placement="top" title="Print Delivery Detail" (click)="fnClickPrintDocument()">
+          <img src="assets/icon-md/print.svg" alt="">
+        </button> -->
+          <button id="btnDownloadTemplate" style="padding: 5px 10px !important;" name="btnDownloadTemplate"
+            class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Download Template"
+            (click)="fnDownloadPatientTemplate()">
+            <img src="assets/icon-md/c4.svg" alt="">
+          </button>
+          <button id="btnUploadTemplate" style="padding: 5px 10px 5px 5px !important;" name="btnUploadTemplate"
+            class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Import">
+            <label style="margin-bottom:0 !important">
+              <img src="assets/icon-md/c5.svg" alt="">
+              <input type="file" id="file" style="display: none" name="image" accept=".xlsx" multiple="false"
+                (change)="onFileChangePatient($event)">
+            </label>
+          </button>
+        </div>
+
+        <br>
+        <div class="col-sm-12 pull-center m-r mt-30" style="text-align: center; height: 60px;">
+          <button [disabled]="disbledBtnModal" style="margin-left:3px;"
+            class="btn btn-success font-btn  width-btn-small" (click)="clickNext()">Next
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="step === 2" class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn" style="height: 200px;">
+      <div class="bgyellow" style="height: auto;">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Import Document
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <button class="btn pull-right" style="background-color: transparent;box-shadow: none;" (click)="close()">
+              <i class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </button>
+          </div>
+        </div>
+        <div style="padding: 0 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+      </div>
+      <br>
+      <div class="pb-30 pl-30 pr-30 mr-30 ml-30">
+        <div class="col-sm-12 title-no-menu text-right pr-0">
+          <span style="float: left;padding-top: 10px;">Order</span>
+          <!-- <button id="btnDocument"
+          style="padding: 5px 10px !important;" class="btn btn-success float-xs-left ml-10" data-toggle="tooltip"
+          data-placement="top" title="Print Delivery Detail" (click)="fnClickPrintDocument()">
+          <img src="assets/icon-md/print.svg" alt="">
+        </button> -->
+          <button id="btnDownloadTemplate" style="padding: 5px 10px !important;" name="btnDownloadTemplate"
+            class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Download Template"
+            (click)="fnDownloadTemplate()">
+            <img src="assets/icon-md/c4.svg" alt="">
+          </button>
+          <button id="btnUploadTemplate" style="padding: 5px 10px 5px 5px !important;" name="btnUploadTemplate"
+            class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Import">
+            <label style="margin-bottom:0 !important">
+              <img src="assets/icon-md/c5.svg" alt="">
+              <input type="file" id="file" style="display: none" name="image" accept=".xlsx" multiple="false"
+                (change)="onFileChange($event)">
+            </label>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert #myModal (onCloseModalError)="onCloseModalError()" (onOkReOrderModal)="onOkReOrder()"
+  (onDownload)="onDownload()" (onOKOrderInactive)="onOKOrderInactive($event)"></app-alert>
+<dx-load-panel shadingColor="rgba(0,0,0,0.4)" [(visible)]="isLoadingPanel" [showIndicator]="true" [showPane]="true"
+  [shading]="true">
+</dx-load-panel>

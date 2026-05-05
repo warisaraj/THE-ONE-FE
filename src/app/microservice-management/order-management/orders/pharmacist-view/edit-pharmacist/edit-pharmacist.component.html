@@ -1,0 +1,1269 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">Orders</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Order Management</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a (click)="onClickBack()">Orders</a>
+              </li>
+              <li *ngIf="pageType == 'quotation'" class="breadcrumb-item">
+                <span style="font-size: 15px;">Edit Order Info</span>
+              </li>
+              <li class="breadcrumb-item active">
+                <span *ngIf="pageType == 'view'"> View Order Info </span>
+                <span *ngIf="pageType == 'new'"> Create Order Info </span>
+                <span *ngIf="pageType == 'edit'"> Edit Order Info </span>
+                <span *ngIf="pageType == 'quotation'"> View Nutraceuticals Quotation Info </span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <!-- *ngIf="menuPermissions.add" -->
+      <div class="col-md-4 col-xs-12 align-self-center text-right">
+        <!-- <button *ngIf="pageType == 'quotation' && menuPermissions.edit" id="btnPrint" name="btnPrint" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Print">
+          <i class="fas fa-print"></i><span>Print</span>
+        </button> -->
+        <button *ngIf="pageType == 'new'" (click)="btnSubmit()" id="btnSaveTop" name="btnSaveTop"
+          class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal"
+          data-placement="top" title="Save" [disabled]="disbledBtn.save">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button *ngIf="pageType == 'quotation'" (click)="confirmCreateQuotation()" id="btnSaveTop" name="btnSaveTop"
+          class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal"
+          data-placement="top" title="Save" [disabled]="disbledBtn.save">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button [disabled]="disbledBtn.save" *ngIf="pageType == 'edit'" id="btnSaveTop" (click)="previewQuotation()"
+          name="btnSaveTop" class="btn btn-success float-xs-left mr-10">
+          <i class="fas fa-save"></i><span>Preview Quotation</span>
+        </button>
+        <button *ngIf="pageType == 'view' && menuPermissions.edit" id="btnPrintVitallifeOrderSheet"
+          (click)="fnClickPrintDocument('printVitallifeOrderSheet')" data-toggle="tooltip"
+          class="btn btn-success float-xs-left mr-10" data-placement="top" title="Print Vitallife Order Sheet">
+          <i class="fas fa-print"></i><span>Print</span>
+        </button>
+        <button *ngIf="pageType == 'view' && menuPermissions.edit"
+          [routerLink]="['/order-management','orders-pharmacist-view', Id ,'edit']" id="btnEditTop" name="btnEditTop"
+          class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit"
+          [disabled]="disbledBtn.save">
+          <i class="fas fa-edit"></i><span>Edit</span>
+        </button>
+        <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right"
+          data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;"
+          [disabled]="disbledBtn.cancel">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text" style="font-weight:700;" *ngIf="pageType != 'quotation'">
+              Order Info<br>
+              <small *ngIf="pageType != 'view'">*Please enter data in the "Require Field" textbox.</small>
+            </h5>
+            <h5 class="ibox-title-text" style="font-weight:700;" *ngIf="pageType === 'quotation'">
+              Nutraceuticals Quotation
+            </h5>
+          </div>
+          <div class="ibox-body">
+            <div id="tab-1" class="tab-pane active">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                      <div class="ibox-content" style="border:0px;">
+                        <form class="form-horizontal" [formGroup]="orderForm">
+                          <div *ngIf="pageType == 'new'" class="row" id="divTariff">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Tariff</h5>
+                                    <div class="ibox-graph-info collapse-link" (click)="clickCollapse('divTariff')">
+                                      <i class="far fa-chevron-down"></i>
+                                    </div>
+                                  </div>
+                                  <div class="ibox-body" [ngStyle]="{display: isCollapseTariff ? 'none' : 'flex'}">
+                                    <div class="row" style="padding:30px">
+                                      <div class="m-radio-inline">
+                                        <div>
+                                          <label class="m-radio">
+                                            <input type="radio" [value]="1" id="txtTariff" name="txtTariff"
+                                              class="mr-15" [(ngModel)]="order.tariff" formControlName="txtTariff">
+                                            Thai, Expat
+                                          </label>
+                                        </div>
+                                        <div>
+                                          <label class="m-radio">
+                                            <input type="radio" [value]="2" id="txtTariff" name="txtTariff"
+                                              class="mr-15" [(ngModel)]="order.tariff" formControlName="txtTariff">
+                                            Inter exc. ME
+                                          </label>
+                                        </div>
+                                        <div>
+                                          <label class="m-radio">
+                                            <input type="radio" [value]="3" id="txtTariff" name="txtTariff"
+                                              class="mr-15" [(ngModel)]="order.tariff" formControlName="txtTariff">
+                                            Middle East
+                                          </label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row" id="divPatientInfo">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Patient Info</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row mb-15">
+                                      <div class="form-group"><label class="col-sm-2 control-label text-right">HN<span
+                                            *ngIf="pageType == 'new'" class="fontred">*</span></label>
+                                        <div
+                                          [ngClass]="{'has-error':(!orderForm.controls.txtHn.valid&&orderForm.controls.txtHn.dirty) || (order.hn == null && saved),'col-sm-4':true}">
+                                          <dx-autocomplete style="background:#fff" [ngModel]="order.hn"
+                                            formControlName="txtHn" [dataSource]="searchHn"
+                                            (onItemClick)="updateHn2($event)" (onFocusOut)="updateHn3($event)">
+                                            <div *dxTemplate="let items of 'item'">
+                                              <span>{{ items.hn }}</span>
+                                            </div>
+                                          </dx-autocomplete>
+
+                                          <!-- <input type="text" [disabled]="pageType != 'new'" class="form-control" maxlength="50" [(ngModel)]="order.hn" formControlName="txtHn"> -->
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row mb-15">
+                                      <div class="form-group"><label class="col-sm-2 control-label text-right">Patient
+                                          Name<span *ngIf="pageType == 'new'" class="fontred">*</span></label>
+                                        <div
+                                          [ngClass]="{'has-error':(!orderForm.controls.txtPatientName.valid&&orderForm.controls.txtPatientName.dirty) || (order.patientName == null && saved),'col-sm-4':true}">
+                                          <dx-autocomplete style="background:#fff" [ngModel]="order.patientName"
+                                            formControlName="txtPatientName" [dataSource]="searchPatients"
+                                            (onItemClick)="updateHn2($event)" (onFocusOut)="updateHn3($event)">
+                                            <div *dxTemplate="let items of 'item'">
+                                              <span>{{ items.patientName }}</span>
+                                            </div>
+                                          </dx-autocomplete>
+                                          <!-- <input type="text" [disabled]="pageType != 'new'" class="form-control" maxlength="50" [(ngModel)]="order.patientName" formControlName="txtPatientName"> -->
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row mb-15">
+                                      <div class="form-group"><label class="col-sm-2 control-label text-right">Order
+                                          Date<span *ngIf="pageType == 'new'" class="fontred">*</span></label>
+                                        <div
+                                          [ngClass]="{'has-error':!orderForm.controls.txtOrderDate.valid&&orderForm.controls.txtOrderDate.dirty && pageType == 'new','col-sm-4':true}">
+                                          <dx-date-box [(value)]="order.orderDate" [openOnFieldClick]="true"
+                                            [acceptCustomValue]="false" class="form-control cus-datebox" type="datetime"
+                                            displayFormat="dd/MM/yyyy HH:mm" [(ngModel)]="order.orderDate"
+                                            formControlName="txtOrderDate"></dx-date-box>
+                                          <!-- <input type="text" [disabled]="pageType != 'new'" class="form-control" maxlength="50" [(ngModel)]="order.orderDate" formControlName="txtOrderDate"> -->
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row mb-15">
+                                      <div class="form-group"><label class="col-sm-2 control-label text-right">Supply
+                                          Day<span
+                                            *ngIf="pageType == 'new' || (pageType === 'edit' && order.location != 'Trakcare')"
+                                            class="fontred">*</span></label>
+                                        <div
+                                          [ngClass]="{'has-error':!orderForm.controls.txtSupplyDay.valid&&orderForm.controls.txtSupplyDay.dirty,'col-sm-4':true}">
+                                          <input (change)="changeSupplyDay();fnCheckSumSupplyDay();"
+                                            (keypress)="numberOnly($event, true)" autocomplete="off"
+                                            onPaste="return false" type="text" [disabled]="pageType === 'view'"
+                                            class="form-control" maxlength="50" [(ngModel)]="order.supplyDay"
+                                            formControlName="txtSupplyDay">
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row mb-15">
+                                      <div class="form-group"
+                                        *ngIf="order.isSeparateMeal && +order.isSeparateMeal === 1 && pageType == 'quotation'">
+                                        <label class="col-sm-2 control-label">Calculated Day</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtCalculatedDay"
+                                            name="txtCalculatedDay" formControlName="txtCalculatedDay"
+                                            [ngModel]="order.calculatedDay">
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row mb-15">
+                                      <div class="form-group"><label
+                                          class="col-sm-2 control-label text-right">Physician<span
+                                            *ngIf="pageType == 'new'" class="fontred">*</span></label>
+                                        <div
+                                          [ngClass]="{'has-error':!orderForm.controls.txtPhysician.valid&&orderForm.controls.txtPhysician.dirty,'col-sm-4':true}">
+                                          <input type="text" class="form-control" maxlength="50"
+                                            [(ngModel)]="order.physician" formControlName="txtPhysician">
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div *ngIf="pageType != 'new' && pageType != 'quotation'" class="row mb-15">
+                                      <div class="form-group"><label
+                                          class="col-sm-2 control-label text-right">Location</label>
+                                        <div [ngClass]="{'col-sm-4':true}">
+                                          <input type="text" [disabled]="pageType != 'new'" class="form-control"
+                                            maxlength="50" [(value)]="order.locationDetail">
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div *ngIf="pageType != 'new' && pageType != 'quotation'" class="row mb-15">
+                                      <div class="form-group"><label class="col-sm-2 control-label text-right">Order
+                                          Type</label>
+                                        <div [ngClass]="{'col-sm-4':true}">
+                                          <input type="text" [disabled]="pageType != 'new'" class="form-control"
+                                            maxlength="50" [(value)]="order.location">
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div *ngIf="pageType != 'new' && order.location == 'Trakcare'" class="row mb-15">
+                                      <div class="form-group"><label
+                                          class="col-sm-2 control-label text-right">Plan</label>
+                                        <div [ngClass]="{'col-sm-4':true}">
+                                          <input type="text" [disabled]="true" class="form-control" maxlength="255"
+                                            [(value)]="order.plan">
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div *ngIf="pageType != 'new' && pageType != 'quotation'" class="row mb-15">
+                                      <div class="form-group"><label class="col-sm-2 control-label text-right">Shortest
+                                          RM EXP</label>
+                                        <div [ngClass]="{'col-sm-4':true}">
+                                          <input type="text" [disabled]="pageType != 'new'" class="form-control"
+                                            maxlength="50" [(value)]="bbf">
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <div *ngIf="pageType == 'quotation' && order.location != 'Trakcare'"
+                                      class="row mb-15">
+                                      <div class="form-group">
+                                        <label class="col-sm-2 control-label text-right">Tariff</label>
+                                        <div [ngClass]="{'col-sm-4':true}">
+                                          <!--                                          <input *ngIf=" pageType == 'edit' || order.location == 'Trakcare' " type="text" [disabled]="pageType != 'new'" class="form-control" maxlength="50" [(value)]="order.tariff">-->
+                                          <div class="m-radio-inline">
+                                            <div>
+                                              <label class="m-radio">
+                                                <input (change)="changeTariff(1)" type="radio" [value]="1"
+                                                  id="txtTariff" name="txtTariff" class="mr-15"
+                                                  [(ngModel)]="order.tariff" formControlName="txtTariff">
+                                                Thai, Expat
+                                              </label>
+                                            </div>
+                                            <div>
+                                              <label class="m-radio">
+                                                <input (change)="changeTariff(2)" type="radio" [value]="2"
+                                                  id="txtTariff" name="txtTariff" class="mr-15"
+                                                  [(ngModel)]="order.tariff" formControlName="txtTariff">
+                                                Inter exc. ME
+                                              </label>
+                                            </div>
+                                            <div>
+                                              <label class="m-radio">
+                                                <input (change)="changeTariff(3)" type="radio" [value]="3"
+                                                  id="txtTariff" name="txtTariff" class="mr-15"
+                                                  [(ngModel)]="order.tariff" formControlName="txtTariff">
+                                                Middle East
+                                              </label>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div *ngIf="pageType != 'new' && +order.orderStatus === 5" class="row mb-15">
+                                      <div class="form-group">
+                                        <label class="col-sm-2 control-label text-right">
+                                          Reason<br>
+                                          <span style="color: #51AF8B;font-size: 0.9em;">Customer need to change</span>
+                                        </label>
+                                        <div [ngClass]="{'col-sm-4':true}">
+                                          <textarea id="txtReason" rows="3" class="form-control" [disabled]="true"
+                                            style="resize: vertical;"
+                                            [value]="order.cusChangeAdditionalNote"></textarea>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="pageType != 'quotation'" class="row" id="divCompound">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Compound</h5>
+                                    <button *ngIf="pageType == 'view' && menuPermissions.edit"
+                                      id="btnPrintVitallifeOrderSheet"
+                                      (click)="fnClickPrintDocument('printVitallifeOrderSheet')" data-toggle="tooltip"
+                                      class="btn btn-success float-xs-left ng-star-inserted"
+                                      style="padding: 5px 10px !important; color :#FFFFFF !important;"
+                                      data-placement="top" title="Print Vitallife Order Sheet">
+                                      <i style="margin-right : 0 !important; font-size: 22px; "
+                                        class="fas fa-print"></i>
+                                    </button>
+                                    <div class="ibox-graph-info collapse-link" (click)="clickCollapse('divCompound')">
+                                      <i class="far fa-chevron-down"></i>
+                                    </div>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <ng-container *ngIf="pageType === 'view'">
+                                      <div style="color: #ed5565; margin-left: 10px;"
+                                        *ngFor="let item of errorCompoundText">
+                                        - {{item}}
+                                      </div>
+                                    </ng-container>
+                                    <div class="row" style="padding:20px;">
+                                      <table id="tblCompound" class="table table-bordered">
+                                        <thead>
+                                          <tr>
+                                            <th *ngIf="pageType==='edit' && formCompound.controls.length > 0">
+                                              <div class="form-group">
+                                                <dx-check-box [(value)]="allCheckedCompound"
+                                                  (onValueChanged)="onHeaderBcCompoundChanged($event)">
+                                                </dx-check-box>
+                                              </div>
+                                            </th>
+                                            <th>Name</th>
+                                            <th>Unit</th>
+                                            <th style="width: 200px;">Recommended Dose</th>
+                                            <th style="width: 200px;">Dose Per Day</th>
+                                            <th>Remark</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody formArrayName="compound">
+                                          <ng-container *ngFor="let item of formCompound.controls; let i = index;"
+                                            [formGroupName]="i">
+                                            <tr
+                                              *ngIf="order.orderCompound[i].rawMaterialName != 'Vivapur' && !order.orderCompound[i].isError">
+                                              <td *ngIf="pageType==='edit'" class="text-center">
+                                                <div class="form-group" style="margin-bottom: 0px;">
+                                                  <dx-check-box class="lbl-checkbox-require"
+                                                    formControlName="isCheckedCompound"
+                                                    (onValueChanged)="checkAllCompound()"></dx-check-box>
+                                                </div>
+                                              </td>
+                                              <td class="text-left">
+                                                <span class="mb-0">{{order.orderCompound[i].rawMaterialName}}</span>
+                                              </td>
+                                              <td class="text-center">
+                                                <span class="mb-0">{{order.orderCompound[i].unit}}</span>
+                                              </td>
+                                              <td class="text-center">
+                                                <span class="mb-0">{{order.orderCompound[i].recommendedDose}}</span>
+                                              </td>
+                                              <td>
+                                                <input (keypress)="numberOnly($event,true)" autocomplete="off"
+                                                  onPaste="return false" [disabled]="pageType != 'new'" type="text"
+                                                  [ngClass]="{'invalid-checkbox':order.orderCompound[i].invalidCheckbox && !order.orderCompound[i].dosePerDay,'invalid-bg':order.orderCompound[i].invalid, 'form-control':true, 'text-center':true}"
+                                                  maxlength="50" [(ngModel)]="order.orderCompound[i].dosePerDay"
+                                                  formControlName="txtDosePerDayCom"
+                                                  (change)="calDosePerDay();checkMinMax(i)">
+                                              </td>
+                                              <td>
+                                                <input type="text" class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.orderCompound[i].remark"
+                                                  formControlName="txtRemark">
+                                              </td>
+                                            </tr>
+                                            <tr class="errorTable"
+                                              *ngIf="order.orderCompound[i].rawMaterialName != 'Vivapur' && order.orderCompound[i].isError">
+                                              <td *ngIf="pageType==='edit'" class="text-center">
+                                                <div class="form-group" style="margin-bottom: 0px;">
+                                                  <dx-check-box class="lbl-checkbox-require"
+                                                    formControlName="isCheckedCompound"
+                                                    (onValueChanged)="checkAllCompound()"></dx-check-box>
+                                                </div>
+                                              </td>
+                                              <td class="text-left">
+                                                <span class="mb-0">{{order.orderCompound[i].rawMaterialName}}</span>
+                                              </td>
+                                              <td class="text-center">
+                                                <span class="mb-0">{{order.orderCompound[i].unit}}</span>
+                                              </td>
+                                              <td class="text-center">
+                                                <span class="mb-0">{{order.orderCompound[i].recommendedDose}}</span>
+                                              </td>
+                                              <td>
+                                                <input (keypress)="numberOnly($event,true)" autocomplete="off"
+                                                  onPaste="return false" [disabled]="pageType != 'new'" type="text"
+                                                  [ngClass]="{'invalid-bg':order.orderCompound[i].invalid, 'form-control':true, 'text-center':true}"
+                                                  maxlength="50" [(ngModel)]="order.orderCompound[i].dosePerDay"
+                                                  formControlName="txtDosePerDayCom"
+                                                  (change)="calDosePerDay();checkMinMax(i)">
+                                              </td>
+                                              <td>
+                                                <input type="text" class="form-control text-center" maxlength="255"
+                                                  [(ngModel)]="order.orderCompound[i].remark"
+                                                  formControlName="txtRemark">
+                                              </td>
+                                            </tr>
+                                          </ng-container>
+
+                                          <tr>
+                                            <td [attr.colspan]="(pageType === 'edit') && formCompound.controls.length > 0 ? 4 : 3"  class="text-right">
+                                              <span class="mb-0" style="font-weight: 700;">Total Compounded Capsule per
+                                                Day</span>
+                                            </td>
+                                            <td>
+                                              <input [disabled]="true" type="text" class="form-control text-center"
+                                                maxlength="50" [(value)]="order.totalCapPerDay">
+                                            </td>
+                                            <td>
+                                              <input [disabled]="pageType == 'view'" type="text"
+                                                class="form-control text-center" maxlength="50"
+                                                [(value)]="order.totalCapRemark" (change)="changeTotalRemark($event)">
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="pageType != 'quotation'" class="row" id="divDispensedPill">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Dispensed Pill</h5>
+                                    <div class="ibox-graph-info collapse-link"
+                                      (click)="clickCollapse('divDispensedPill')">
+                                      <i class="far fa-chevron-down"></i>
+                                    </div>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row" style="padding:20px;">
+                                      <button (click)="addDispensed()" title="Add Dispensed Pill"
+                                        *ngIf="pageType == 'new' || (pageType == 'edit' && (order.location == 'Manual' || order.location == 'Import'))"
+                                        class="btn btn-success mr-10" type="button"
+                                        style="padding:5px 10px;float:right;margin-right:30px !important">
+                                        <i class="fas fa-plus" style="margin:0;font-size:20px"></i>
+                                      </button>
+                                      <div style="color: #ed5565;" *ngFor="let item of errorDispensPillText">
+                                        - {{item.text}}
+                                      </div>
+                                      <table id="tblCompound" class="table table-bordered mt-10" style="border:none">
+                                        <thead>
+                                          <tr>
+                                            <th *ngIf="pageType==='edit' && formDispensedPill.controls.length > 0">
+                                              <div class="form-group" >
+                                                <dx-check-box class="lbl-checkbox-require"
+                                                  [value]="allCheckedDispensedPill"
+                                                  (onValueChanged)="onHeaderDpCompoundChanged($event)">
+                                                </dx-check-box>
+                                              </div>
+                                            </th>
+                                            <th>Name</th>
+                                            <th style="width: 150px;">Unit</th>
+                                            <th style="width: 200px;">Dose Per Day</th>
+                                            <th *ngIf="pageType != 'new'">Total Pill</th>
+                                            <th>Remark</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody formArrayName="dispensedPill">
+                                          <!-- <tr *ngFor="let item of dispensedPill; let i = index;"> -->
+                                          <ng-container *ngFor="let item of formDispensedPill.controls; let i = index;"
+                                            [formGroupName]="i">
+                                            <tr *ngIf="!order.orderDispensedPill[i].isError">
+                                              <td *ngIf="pageType==='edit'" class="text-center">
+                                                <div class="form-group" style="margin-bottom: 0px;">
+                                                  <dx-check-box class="lbl-checkbox-require"
+                                                    formControlName="isCheckedDispensedPill"
+                                                    (onValueChanged)="checkAllDispensedPill()"></dx-check-box>
+                                                </div>
+                                              </td>
+                                              <!-- Name -->
+                                              <td style="vertical-align: text-bottom;">
+                                                <dx-autocomplete
+                                                  *ngIf="pageType == 'new' || (pageType == 'edit' && (order.location == 'Manual' || order.location == 'Import'))"
+                                                  style="background:#fff"
+                                                  [ngStyle]="{'border-color':checkValid(item, 'txtFinishedProductName') || (order.orderDispensedPill[i].finishedProductName == null && saved) ? '#ff0000' : ''}"
+                                                  [ngModel]="order.orderDispensedPill[i].finishedProductName"
+                                                  formControlName="txtFinishedProductName"
+                                                  [dataSource]="finishedProduct"
+                                                  (onItemClick)="updateDispensedPill($event,i)"
+                                                  (onFocusOut)="onFocusOutDispensedPill($event, i, item,'finishedProductName','txtFinishedProductName')"
+                                                  (onValueChanged)="updateDispensedPill2($event,i)">
+                                                  <div *dxTemplate="let items of 'item'">
+                                                    <span>{{ items.finishedProductName }}</span>
+                                                  </div>
+                                                </dx-autocomplete>
+                                                <div class="fontred"
+                                                  *ngIf="order.orderDispensedPill[i].finishedProductName && isDuplicateDispensedPill[order.orderDispensedPill[i].finishedProductName] > 1">
+                                                  * Dispensed Pill is duplicate
+                                                </div>
+                                                <span
+                                                  *ngIf="pageType == 'view' || (pageType == 'edit' && order.location == 'Trakcare')"
+                                                  class="mb-0">{{order.orderDispensedPill[i].finishedProductName}}</span>
+                                              </td>
+                                              <!-- Unit -->
+                                              <td class="text-center" style="vertical-align: text-bottom;">
+                                                <input
+                                                  [ngStyle]="{'border-color':checkValid(item, 'txtUnit') ? '#ff0000' : ''}"
+                                                  *ngIf="pageType == 'new' || (pageType == 'edit' && (order.location == 'Manual' || order.location == 'Import'))"
+                                                  type="text" class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.orderDispensedPill[i].unit"
+                                                  formControlName="txtUnit">
+                                                <span
+                                                  *ngIf="pageType == 'view' || (pageType == 'edit' && order.location == 'Trakcare')"
+                                                  class="mb-0">{{order.orderDispensedPill[i].unit}}</span>
+                                              </td>
+                                              <!-- Dose Per Day -->
+                                              <td class="text-center" style="vertical-align: text-bottom;">
+                                                <input
+                                                 [ngClass]="{'invalid-checkbox':order.orderDispensedPill[i].invalidCheckbox && !order.orderDispensedPill[i].dosePerDay}"
+                                                  [ngStyle]="{'border-color':checkValid(item, 'txtDosePerDay') ? '#ff0000' : ''}"
+                                                  (change)="updateTotalPill(i)" (keypress)="numberOnly($event,true)"
+                                                  autocomplete="off" onPaste="return false"
+                                                  [disabled]="pageType == 'view'" type="text"
+                                                  class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.orderDispensedPill[i].dosePerDay"
+                                                  formControlName="txtDosePerDay">
+                                              </td>
+                                              <!-- Total Pill -->
+                                              <td *ngIf="pageType != 'new'" style="vertical-align: text-bottom;">
+                                                <input (keypress)="numberOnly($event,true)" autocomplete="off"
+                                                 [ngClass]="{'invalid-checkbox':order.orderDispensedPill[i].invalidCheckboxTotalPill && !order.orderDispensedPill[i].totalPill}"
+                                                  onPaste="return false" [disabled]="pageType == 'view'" type="text"
+                                                  class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.orderDispensedPill[i].totalPill"
+                                                  formControlName="txtTotalPill">
+                                              </td>
+                                              <!-- Remark -->
+                                              <td style="vertical-align: text-bottom;">
+                                                <input
+                                                  [ngStyle]="{'border-color':checkValid(item, 'txtRemark') ? '#ff0000' : ''}"
+                                                  type="text" class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.orderDispensedPill[i].remark"
+                                                  formControlName="txtRemark">
+                                              </td>
+                                              <div
+                                                *ngIf="pageType == 'new' || (pageType == 'edit' && (order.location == 'Manual' || order.location == 'Import'))"
+                                                style="width:20px">
+                                                <a data-toggle="tooltip" data-placement="top"
+                                                  title="Delete Dispensed Pill" (click)="delDispensed(i)"
+                                                  class="btn btn-default icon btn-sm"><i class="fas fa-trash"></i></a>
+                                              </div>
+                                            </tr>
+                                            <tr class="errorTable" *ngIf="order.orderDispensedPill[i].isError">
+                                              <!-- Name -->
+                                              <td *ngIf="pageType==='edit'" class="text-center">
+                                                <div class="form-group" style="margin-bottom: 0px;">
+                                                  <dx-check-box class="lbl-checkbox-require"
+                                                    formControlName="isCheckedDispensedPill"
+                                                    (onValueChanged)="checkAllDispensedPill()"></dx-check-box>
+                                                </div>
+                                              </td>
+                                              <td style="vertical-align: text-bottom;">
+                                                <dx-autocomplete
+                                                  *ngIf="pageType == 'new' || (pageType == 'edit' && (order.location == 'Manual' || order.location == 'Import'))"
+                                                  style="background:#fff"
+                                                  [ngStyle]="{'border-color':checkValid(item, 'txtFinishedProductName') || (order.orderDispensedPill[i].finishedProductName == null && saved) ? '#ff0000' : ''}"
+                                                  [ngModel]="order.orderDispensedPill[i].finishedProductName"
+                                                  formControlName="txtFinishedProductName"
+                                                  [dataSource]="finishedProduct"
+                                                  (onItemClick)="updateDispensedPill($event,i)"
+                                                  (onFocusOut)="onFocusOutDispensedPill($event, i, item,'finishedProductName','txtFinishedProductName')"
+                                                  (onValueChanged)="updateDispensedPill2($event,i)">
+                                                  <div *dxTemplate="let items of 'item'">
+                                                    <span>{{ items.finishedProductName }}</span>
+                                                  </div>
+                                                </dx-autocomplete>
+                                                <div class="fontred"
+                                                  *ngIf="order.orderDispensedPill[i].finishedProductName && isDuplicateDispensedPill[order.orderDispensedPill[i].finishedProductName] > 1">
+                                                  * Dispensed Pill is duplicate
+                                                </div>
+                                                <span
+                                                  *ngIf="pageType == 'view' || (pageType == 'edit' && order.location == 'Trakcare')"
+                                                  class="mb-0">{{order.orderDispensedPill[i].finishedProductName}}</span>
+                                              </td>
+                                              <!-- Unit -->
+                                              <td class="text-center" style="vertical-align: text-bottom;">
+                                                <input
+                                                  [ngStyle]="{'border-color':checkValid(item, 'txtUnit') ? '#ff0000' : ''}"
+                                                  *ngIf="pageType == 'new' || (pageType == 'edit' && (order.location == 'Manual' || order.location == 'Import'))"
+                                                  type="text" class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.orderDispensedPill[i].unit"
+                                                  formControlName="txtUnit">
+                                                <span
+                                                  *ngIf="pageType == 'view' || (pageType == 'edit' && order.location == 'Trakcare')"
+                                                  class="mb-0">{{order.orderDispensedPill[i].unit}}</span>
+                                              </td>
+                                              <!-- Dose Per Day -->
+                                              <td class="text-center" style="vertical-align: text-bottom;">
+                                                <div [ngStyle]="{'background':pageType==='view' ? 'none' : '#FFF'}"
+                                                  style="border-radius: 5px;">
+                                                  <input
+                                                    [ngStyle]="{'border-color':checkValid(item, 'txtDosePerDay') ? '#ff0000' : ''}"
+                                                    (change)="updateTotalPill(i)" (keypress)="numberOnly($event,true)"
+                                                    autocomplete="off" onPaste="return false"
+                                                    [disabled]="pageType != 'new'" type="text"
+                                                    class="form-control text-center" maxlength="50"
+                                                    [(ngModel)]="order.orderDispensedPill[i].dosePerDay"
+                                                    formControlName="txtDosePerDay">
+                                                </div>
+                                              </td>
+                                              <!-- Total Pill -->
+                                              <td *ngIf="pageType != 'new'" style="vertical-align: text-bottom;">
+                                                <div [ngStyle]="{'background':pageType==='view' ? 'none' : '#FFF'}"
+                                                  style="border-radius: 5px;">
+                                                  <input (keypress)="numberOnly($event,true)" autocomplete="off"
+                                                    onPaste="return false" [disabled]="pageType == 'view'" type="text"
+                                                    class="form-control text-center" maxlength="50"
+                                                    [(ngModel)]="order.orderDispensedPill[i].totalPill"
+                                                    formControlName="txtTotalPill">
+                                                </div>
+                                              </td>
+                                              <!-- Remark -->
+                                              <td style="vertical-align: text-bottom;">
+                                                <div [ngStyle]="{'background':pageType==='view' ? 'none' : '#FFF'}"
+                                                  style="border-radius: 5px;">
+                                                  <input
+                                                    [ngStyle]="{'border-color':checkValid(item, 'txtRemark') ? '#ff0000' : ''}"
+                                                    type="text" class="form-control text-center" maxlength="50"
+                                                    [(ngModel)]="order.orderDispensedPill[i].remark"
+                                                    formControlName="txtRemark">
+                                                </div>
+                                              </td>
+                                              <div
+                                                *ngIf="pageType == 'new' || (pageType == 'edit' && (order.location == 'Manual' || order.location == 'Import'))"
+                                                style="width:20px">
+                                                <a data-toggle="tooltip" data-placement="top"
+                                                  title="Delete Dispensed Pill" (click)="delDispensed(i)"
+                                                  class="btn btn-default icon btn-sm"><i class="fas fa-trash"></i></a>
+                                              </div>
+                                            </tr>
+                                          </ng-container>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="pageType == 'new'" class="row" id="divEstimatePrice">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Estimate Price</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row mb-15">
+                                      <div class="form-group"><label class="col-sm-2 control-label text-right">Estimate
+                                          Price</label>
+                                        <div [ngClass]="{'col-sm-4':true}">
+                                          <div style="display:flex">
+                                            <input type="text" [disabled]="true" class="form-control" maxlength="50"
+                                              [value]="estPrice">
+                                            <button (click)="updateEstimatePrice()"
+                                              style="padding: 5px 10px !important;margin:0 0 0 15px !important"
+                                              class="btn btn-success" data-toggle="tooltip" data-placement="top"
+                                              title="Update">
+                                              <i class="fas fa-redo" style="margin:0;font-size: 20px;"></i>
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="pageType != 'quotation'" class="row" id="divPharmacyNote">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Pharmacy Note</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row" style="padding:0 20px;">
+                                      <div class="form-group"><label class="control-label text-right">Pharmacy
+                                          Note</label>
+                                        <div>
+                                          <textarea class="form-control" rows="3" placeholder=""
+                                            style="resize: vertical; height: 83px; max-height: 83px;"
+                                            [(ngModel)]="order.orderPharmacyNote"
+                                            formControlName="txtOrderPharmacyNote"></textarea>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row" style="padding:0 20px;">
+                                      <div class="form-group"><label class="control-label text-right">Additional Note
+                                          from Doctor (TC) </label>
+                                        <div>
+                                          <textarea [disabled]="true" [value]="order.additionalNoteFromDoctor"
+                                            class="form-control" rows="3" placeholder=""
+                                            style="resize: vertical; min-height: 83px; max-height: 83px;"
+                                            formControlName="txtAdditionalNoteFromDoctor"></textarea>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row" style="padding:0 20px;">
+                                      <div class="form-group"><label class="control-label text-right">Remark</label>
+                                        <div>
+                                          <textarea class="form-control" rows="3" placeholder=""
+                                            style="resize: vertical; min-height: 83px; max-height: 83px;"
+                                            [(ngModel)]="order.orderPharmacyNoteRemark"
+                                            formControlName="txtOrderPharmacyNoteRemark"></textarea>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row" *ngIf="pageType == 'view' || pageType == 'edit'" id="divOrder"
+                            [hidden]="pageType == 'view' && order.isSeparateMeal == 0">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Order สั่งแยกมื้อ</h5>
+                                    <div class="ibox-graph-info collapse-link">
+                                      <dx-check-box (click)="changeIsSeperate()"
+                                        [readOnly]="pageType == 'view' || order.totalCapPerDay === 0 || !order.totalCapPerDay"
+                                        [ngStyle]="{cursor: pageType == 'view' ? 'default' : 'pointer'}"
+                                        [(ngModel)]="order.isSeparateMeal"
+                                        formControlName="txtIsSeparateMeal"></dx-check-box>
+                                    </div>
+                                  </div>
+                                  <div *ngIf="order.isSeparateMeal == 1" class="ibox-body">
+                                    <div class="row" style="padding:20px;">
+                                      <span style="color:red" *ngIf="pageType == 'edit'">Note : Please enter at least
+                                        two meals, and make sure that the sum of cap per day equals the total cap per
+                                        day.</span>
+                                      <table id="tblCompound" class="table table-bordered">
+                                        <thead>
+                                          <tr>
+                                            <th>Last Order</th>
+                                            <th>Cap per Day</th>
+                                            <th>Order</th>
+                                            <th>Supply Day</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <td>
+                                              <span class="mb-0">Morning</span>
+                                            </td>
+                                            <td class="text-center">
+                                              <div
+                                                [ngClass]="{'has-error':!orderForm.controls.txtMorningCap.valid || invalidMeal}">
+                                                <input [disabled]="pageType == 'view'"
+                                                  (keypress)="numberOnly($event,true)"
+                                                  (input)="changeOrder();checkValidSeparateMeal('txtMorningCap', 'txtMorningSupply');"
+                                                  autocomplete="off" onPaste="return false" type="text"
+                                                  class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.sepLastMorningCapPerDay"
+                                                  formControlName="txtMorningCap">
+                                              </div>
+                                            </td>
+                                            <td>
+                                              <span class="mb-0">Morning</span>
+                                            </td>
+                                            <td>
+                                              <div
+                                                [ngClass]="{'has-error':!orderForm.controls.txtMorningSupply.valid || invalidMeal || invalidMealSupplyDayMorning}">
+                                                <input [disabled]="pageType == 'view'"
+                                                  (keypress)="numberOnly($event,true)"
+                                                  (input)="changeOrder();checkValidSeparateMeal('txtMorningCap', 'txtMorningSupply');fnCheckSumSupplyDay();"
+                                                  autocomplete="off" onPaste="return false" type="text"
+                                                  class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.sepMorningSupplyDay"
+                                                  formControlName="txtMorningSupply">
+                                              </div>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td>
+                                              <span class="mb-0">Lunch</span>
+                                            </td>
+                                            <td class="text-center">
+                                              <div
+                                                [ngClass]="{'has-error':!orderForm.controls.txtLunchCap.valid || invalidMeal}">
+                                                <input [disabled]="pageType == 'view'"
+                                                  (keypress)="numberOnly($event,true)"
+                                                  (input)="changeOrder();checkValidSeparateMeal('txtLunchCap', 'txtLunchSupply');"
+                                                  autocomplete="off" onPaste="return false" type="text"
+                                                  class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.sepLastLunchCapPerDay"
+                                                  formControlName="txtLunchCap">
+                                              </div>
+                                            </td>
+                                            <td>
+                                              <span class="mb-0">Lunch</span>
+                                            </td>
+                                            <td>
+                                              <div
+                                                [ngClass]="{'has-error':!orderForm.controls.txtLunchSupply.valid || invalidMeal || invalidMealSupplyDayLunch}">
+                                                <input [disabled]="pageType == 'view'"
+                                                  (keypress)="numberOnly($event,true)"
+                                                  (input)="changeOrder();checkValidSeparateMeal('txtLunchCap', 'txtLunchSupply');fnCheckSumSupplyDay();"
+                                                  autocomplete="off" onPaste="return false" type="text"
+                                                  class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.sepLunchSupplyDay"
+                                                  formControlName="txtLunchSupply">
+                                              </div>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td>
+                                              <span class="mb-0">Evening</span>
+                                            </td>
+                                            <td class="text-center">
+                                              <div
+                                                [ngClass]="{'has-error':!orderForm.controls.txtEveningCap.valid || invalidMeal}">
+                                                <input [disabled]="pageType == 'view'"
+                                                  (keypress)="numberOnly($event,true)"
+                                                  (input)="changeOrder();checkValidSeparateMeal('txtEveningCap', 'txtEveningSupply')"
+                                                  autocomplete="off" onPaste="return false" type="text"
+                                                  class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.sepLastEveningCapPerDay"
+                                                  formControlName="txtEveningCap">
+                                              </div>
+                                            </td>
+                                            <td>
+                                              <span class="mb-0">Evening</span>
+                                            </td>
+                                            <td>
+                                              <div
+                                                [ngClass]="{'has-error':!orderForm.controls.txtEveningSupply.valid || invalidMeal || invalidMealSupplyDayEvening}">
+                                                <input [disabled]="pageType == 'view'"
+                                                  (keypress)="numberOnly($event,true)"
+                                                  (input)="changeOrder();checkValidSeparateMeal('txtEveningCap', 'txtEveningSupply');fnCheckSumSupplyDay();"
+                                                  autocomplete="off" onPaste="return false" type="text"
+                                                  class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.sepEveningSupplyDay"
+                                                  formControlName="txtEveningSupply">
+                                              </div>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td>
+                                              <span class="mb-0">Bedtime</span>
+                                            </td>
+                                            <td class="text-center">
+                                              <div
+                                                [ngClass]="{'has-error':!orderForm.controls.txtBedtimeCap.valid || invalidMeal}">
+                                                <input [disabled]="pageType == 'view'"
+                                                  (keypress)="numberOnly($event,true)"
+                                                  (input)="changeOrder();checkValidSeparateMeal('txtBedtimeCap', 'txtBedtimeSupply');"
+                                                  autocomplete="off" onPaste="return false" type="text"
+                                                  class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.sepLastBedtimeCapPerDay"
+                                                  formControlName="txtBedtimeCap">
+                                              </div>
+                                            </td>
+                                            <td>
+                                              <span class="mb-0">Bedtime</span>
+                                            </td>
+                                            <td>
+                                              <div
+                                                [ngClass]="{'has-error':!orderForm.controls.txtBedtimeSupply.valid || invalidMeal || invalidMealSupplyDayBedtime}">
+                                                <input [disabled]="pageType == 'view'"
+                                                  (keypress)="numberOnly($event,true)"
+                                                  (input)="changeOrder();checkValidSeparateMeal('txtBedtimeCap', 'txtBedtimeSupply');fnCheckSumSupplyDay();"
+                                                  autocomplete="off" onPaste="return false" type="text"
+                                                  class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.sepBedtimeSupplyDay"
+                                                  formControlName="txtBedtimeSupply">
+                                              </div>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td>
+                                              <span class="mb-0" style="font-weight: 700;">Total Cap per Day</span>
+                                            </td>
+                                            <td class="text-center">
+                                              <div [ngClass]="{'has-error-disable':invalidTotalCap}">
+                                                <input [disabled]="true" type="text" class="form-control text-center"
+                                                  maxlength="50" [(ngModel)]="order.sepTotalCap"
+                                                  formControlName="txtTotalCap">
+                                              </div>
+                                            </td>
+                                            <td>
+                                              <span class="mb-0" style="font-weight: 700;">Calculated Day</span>
+                                            </td>
+                                            <td>
+                                              <div [ngClass]="{'has-error-disable':invalidCalculatedDay}">
+                                                <input [disabled]="true" type="text"
+                                                  class="form-control text-center input-summary" maxlength="50"
+                                                  [(ngModel)]="order.calculatedDay" formControlName="txtTotalSupply">
+                                              </div>
+                                            </td>
+                                          </tr>
+                                      </table>
+                                    </div>
+                                  </div>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="pageType == 'edit'" class="row" id="divPharmacyCheck">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Pharmacy Check</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row mb-15" style="padding: 15px 30px">
+                                      <div class="form-group">
+                                        <dx-check-box [readOnly]="pageType == 'view'"
+                                          [(ngModel)]="order.isOrderPcCheckUrgent"
+                                          formControlName="txtIsOrderPcCheckUrgent" text="Urgent"></dx-check-box>
+                                      </div>
+                                      <div class="form-group">
+                                        <dx-check-box [readOnly]="pageType == 'view'"
+                                          [(ngModel)]="order.isOrderPcCheckRm" formControlName="txtIsOrderPcCheckRm"
+                                          text="RM"></dx-check-box>
+                                      </div>
+                                      <div class="form-group">
+                                        <dx-check-box name="pharmacyCheck"
+                                          style="color:red !important;font-weight: bold;"
+                                          [readOnly]="pageType == 'view'" [(ngModel)]="order.isOrderPcCheckAllergy"
+                                          formControlName="txtIsOrderPcCheckAllergy"
+                                          text="Check Tariff & Key Price"></dx-check-box>
+                                      </div>
+                                      <div class="form-group">
+                                        <dx-check-box name="pharmacyCheck"
+                                          style="color:red !important;font-weight: bold;"
+                                          [readOnly]="pageType == 'view'" [(ngModel)]="order.isOrderPcCheckMed"
+                                          formControlName="txtIsOrderPcCheckMed"
+                                          text="Allergy & Med Reconcile Checked "></dx-check-box>
+                                      </div>
+                                      <div class="form-group">
+                                        <dx-check-box [readOnly]="pageType == 'view'"
+                                          [(ngModel)]="order.isOrderPcCheckWf2" formControlName="txtIsOrderPcCheckWf2"
+                                          text="WF2"></dx-check-box>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="pageType == 'edit'" class="row" id="divQuotation">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Quotation</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row mb-15" style="padding: 15px 30px">
+                                      <div class="form-group">
+                                        <dx-check-box [readOnly]="pageType == 'view'"
+                                          [(ngModel)]="order.isOrderQtCheckNoBatch"
+                                          formControlName="txtIsOrderQtCheckNoBatch"
+                                          text="No Batch Charge"></dx-check-box>
+                                      </div>
+                                      <div class="form-group">
+                                        <dx-check-box [readOnly]="pageType == 'view'"
+                                          [(ngModel)]="order.isOrderQtCheckNoPack"
+                                          formControlName="txtIsOrderQtCheckNoPack"
+                                          text="No Pack Charge"></dx-check-box>
+                                      </div>
+                                      <div class="form-group">
+                                        <dx-check-box [readOnly]="pageType == 'view'"
+                                          [(ngModel)]="order.isOrderQtCheckStaff"
+                                          formControlName="txtIsOrderQtCheckStaff" text="Staff"></dx-check-box>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div *ngIf="pageType == 'quotation'" class="row" id="divDetails">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Details</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row" style="padding:20px;">
+                                      <table id="tblDetails" class="table table-bordered table-striped">
+                                        <thead>
+                                          <tr>
+                                            <th class="text-center" style="width: auto;">Description</th>
+                                            <th class="text-center" style="width: 10%;">Quantity</th>
+                                            <th class="text-center" style="width: 10%;">UOM</th>
+                                            <th class="text-center" style="width: 20%;">Unit Price</th>
+                                            <th class="text-center" style="width: 20%;">Amount</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr *ngFor="let detail of detailList; let i = index;"
+                                            [ngClass]="{'text-center': true, 'hide': detailList.length === 0}">
+                                            <td class="text-center">
+                                              <input type="text" class="form-control" id="txtDescription{{i}}"
+                                                name="txtDescription{{i}}" [ngModel]="detail.name"
+                                                [ngModelOptions]="{standalone: true}" disabled>
+                                            </td>
+                                            <td class="text-center">
+                                              <input type="text" class="form-control text-center" id="txtQuantity{{i}}"
+                                                name="txtQuantity{{i}}" [ngModel]="detail.quantity"
+                                                [ngModelOptions]="{standalone: true}" disabled>
+                                            </td>
+                                            <td class="text-center">
+                                              <input *ngIf="detail.uom != null" type="text"
+                                                class="form-control text-center" id="txtUOM{{i}}" name="txtUOM{{i}}"
+                                                [ngModel]="detail.uom" [ngModelOptions]="{standalone: true}" disabled>
+                                              <input *ngIf="detail.uom == null" type="text"
+                                                class="form-control text-center" id="txtUOM{{i}}" name="txtUOM{{i}}"
+                                                value="-" disabled>
+                                            </td>
+                                            <td class="text-center">
+                                              <input type="text" class="form-control text-right" id="txtUnitPrice{{i}}"
+                                                name="txtUnitPrice{{i}}" [ngModel]="detail.unitPrice | number:'1.2-2'"
+                                                [ngModelOptions]="{standalone: true}" disabled>
+                                            </td>
+                                            <td class="text-center">
+                                              <input type="text" class="form-control text-right" id="txtAmount{{i}}"
+                                                name="txtAmount{{i}}" [ngModel]="detail.amount | number:'1.2-2'"
+                                                [ngModelOptions]="{standalone: true}" disabled>
+                                            </td>
+                                          </tr>
+                                          <tr [ngClass]="{'hide': detailList.length === 0}">
+                                            <td colspan="4" class="text-right font-bold">
+                                              Total Amount
+                                            </td>
+                                            <td>
+                                              <input type="text" class="form-control text-right" id="txtSummary"
+                                                name="txtSummary" [ngModel]="summary | number:'1.2-2'"
+                                                [ngModelOptions]="{standalone: true}" disabled>
+                                            </td>
+                                          </tr>
+                                          <tr [ngClass]="{'hide': detailList.length > 0}">
+                                            <td colspan="6" class="text-center">
+                                              No Data
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer no-bg">
+            <div class="ibox-footer-right">
+              <button *ngIf="pageType == 'new'" (click)="btnSubmit()" id="btnSaveTop" name="btnSaveTop"
+                class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal"
+                data-placement="top" title="Save" [disabled]="disbledBtn.save">
+                <i class="fas fa-save"></i><span>Save</span>
+              </button>
+              <button *ngIf="pageType == 'quotation'" (click)="confirmCreateQuotation()" id="btnSaveTop"
+                name="btnSaveTop" class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully"
+                data-toggle="modal" data-placement="top" title="Save" [disabled]="disbledBtn.save">
+                <i class="fas fa-save"></i><span>Save</span>
+              </button>
+              <button [disabled]="disbledBtn.save" *ngIf="pageType == 'edit'" id="btnSaveTop"
+                (click)="previewQuotation()" name="btnSaveTop" class="btn btn-success float-xs-left mr-10">
+                <i class="fas fa-save"></i><span>Preview Quotation</span>
+              </button>
+              <button *ngIf="pageType == 'view' && menuPermissions.edit"
+                [routerLink]="['/order-management','orders-pharmacist-view', Id ,'edit']" id="btnEditTop"
+                name="btnEditTop" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top"
+                title="Edit" [disabled]="disbledBtn.save">
+                <i class="fas fa-edit"></i><span>Edit</span>
+              </button>
+              <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop"
+                class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel"
+                style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                <i class="fal fa-times"></i><span>Cancel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()"
+  (onCloseModalWarning)="onCloseModalWarning()" (onClosePrintDocument)="onClickBack()" (onOk)="createQuotation()"
+  (onClickEditOrder)="onClickEditOrder()" (onCloseEditOrder)="onCloseEditOrder()"></app-alert>
+
+<div id="print-section" style="display: none;">
+  <!-- <table style="width: 100%;font-size: 10pt;">
+    <tr>
+      <td style="width: 30%;">
+        <img src="assets/VTL Supplement Logo.png" alt="Logo" style="height: 56px;"><br>
+        <p class="text-print-logo">Nutraceuticals Quotation</p>
+      </td>
+      <td>
+        <div class="text-print-title font-bold text-right">Name :</div>
+        <div class="text-print-title font-bold text-right">HN :</div>
+        <div class="text-print-title font-bold text-right">Date Order :</div>
+        <div class="text-print-title font-bold text-right">Supply Day :</div>
+        <div class="text-print-title font-bold text-right">Physician :</div>
+      </td>
+      <td>
+        <div class="text-print">&nbsp;{{order.patientName||'-'}}</div>
+        <div class="text-print">&nbsp;{{order.hn||'-'}}</div>
+        <div class="text-print">&nbsp;{{order.orderDate | date:'dd/MM/yyyy HH:mm' ||'-'}}</div>
+        <div class="text-print">&nbsp;{{order.supplyDay||'-'}}</div>
+        <div class="text-print">&nbsp;{{order.physician||'-'}}</div>
+      </td>
+    </tr>
+  </table>
+  <br> -->
+  <table class="table">
+    <thead>
+      <tr>
+        <th colspan="7">
+          <table style="width: 100%;font-size: 10pt;">
+            <tr>
+              <td style="width: 30%;">
+                <img src="assets/VTL-2T.png" alt="Logo" style="height: 56px;"><br>
+                <p class="text-print-logo">Nutraceuticals Quotation</p>
+              </td>
+              <td>
+                <div class="text-print-title font-bold text-right">Name :</div>
+                <div class="text-print-title font-bold text-right">HN :</div>
+                <div class="text-print-title font-bold text-right">Date Order :</div>
+                <div class="text-print-title font-bold text-right">Supply Day :</div>
+                <div class="text-print-title font-bold text-right">Physician :</div>
+              </td>
+              <td>
+                <div class="text-print">&nbsp;{{order.patientName||'-'}}</div>
+                <div class="text-print">&nbsp;{{order.hn||'-'}}</div>
+                <div class="text-print">&nbsp;{{order.orderDate | date:'dd/MM/yyyy HH:mm' ||'-'}}</div>
+                <div class="text-print">&nbsp;{{order.supplyDay||'-'}}</div>
+                <div class="text-print">&nbsp;{{order.physician||'-'}}</div>
+              </td>
+            </tr>
+          </table>
+          <br>
+        </th>
+      </tr>
+      <tr>
+        <th class="text-print-title border-th text-center" style="width: 5%;">No</th>
+        <th class="text-print-title border-th text-left" style="width: auto;">Description</th>
+        <th class="text-print-title border-th text-center" style="width: 10%;">Quantity</th>
+        <th class="text-print-title border-th text-center" style="width: 10%;">UOM</th>
+        <th class="text-print-title border-th text-right" style="width: 20%;">Unit Price</th>
+        <th class="text-print-title border-th text-right" style="width: 20%;">Amount (Baht)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let detail of detailList; let i = index;" [ngClass]="{'text-center': true}">
+        <td class="text-center">
+          <span class="text-print">{{i + 1}}</span>
+        </td>
+        <td class="text-center">
+          <input type="text" class="text-print text-left no-borders pl-0 pr-0" style="width: 100%;"
+            [ngModel]="detail.name" disabled>
+        </td>
+        <td class="text-center">
+          <input type="text" class="text-print text-center no-borders pl-0 pr-0" style="width: 100%;"
+            [ngModel]="detail.quantity" disabled>
+        </td>
+        <td class="text-center">
+          <input type="text" class="text-print text-center no-borders pl-0 pr-0" style="width: 100%;"
+            [value]="detail.uom || '-'" disabled>
+        </td>
+        <td class="text-center">
+          <input type="text" class="text-print text-right no-borders pl-0 pr-0" style="width: 100%;"
+            [ngModel]="detail.unitPrice | number:'1.2-2'" disabled>
+        </td>
+        <td class="text-center">
+          <input type="text" class="text-print text-right no-borders pl-0 pr-0" style="width: 100%;"
+            [ngModel]="detail.amount | number:'1.2-2'" disabled>
+        </td>
+      </tr>
+      <!-- </tbody>
+    <tbody> -->
+      <tr *ngFor="let detail of lineData();" [ngClass]="{'hide': detailList.length === 0}">
+        <td colspan="7">&nbsp;</td>
+      </tr>
+      <tr [ngClass]="{'hide': detailList.length === 0}">
+        <td colspan="2"></td>
+        <td colspan="3" class="text-right font-bold"
+          style="border-left: 1px solid;border-bottom: 1px solid;border-top: 2px solid;">
+          จำนวนเงินรวม (Total Amount) :
+        </td>
+        <td style="border-right: 1px solid;border-bottom: 1px solid;border-top: 2px solid;">
+          <input type="text" class="text-right font-bold no-borders pl-0 pr-0" style="width: 100%;"
+            [ngModel]="summary | number:'1.2-2'" disabled>
+        </td>
+      </tr>
+      <tr [ngClass]="{'hide': detailList.length === 0}">
+        <td colspan="2"></td>
+        <td colspan="3" class="text-right font-bold"
+          style="border-left: 1px solid;border-bottom: 1px solid;border-top: 1px solid;">
+          Discount by Percentage :
+        </td>
+        <td style="border-right: 1px solid;border-bottom: 1px solid;border-top: 1px solid;">
+
+        </td>
+      </tr>
+      <tr [ngClass]="{'hide': detailList.length === 0}">
+        <td colspan="2"></td>
+        <td colspan="3" class="text-right font-bold"
+          style="border-left: 1px solid;border-bottom: 1px solid;border-top: 1px solid;">
+          Total Net Amount :
+        </td>
+        <td style="border-right: 1px solid;border-bottom: 1px solid;border-top: 1px solid;">
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<dx-load-panel shadingColor="rgba(0,0,0,0.4)" [(visible)]="isLoadingPanel" [showIndicator]="true" [showPane]="true"
+  [shading]="true">
+</dx-load-panel>

@@ -1,0 +1,55 @@
+::ng-deep .ant-tabs-bar.ng-star-inserted {
+    margin: 0 !important;
+}
+
+::ng-deep .ant-tabs.ant-tabs-card>.ant-tabs-bar .ant-tabs-tab-active {
+    font-size: 18px;
+    color: #646965;
+}
+
+::ng-deep .ant-tabs.ant-tabs-card>.ant-tabs-bar .ant-tabs-tab {
+    font-size: 18px;
+    margin: 0 0 0 0;
+    border-radius: 0 !important;
+}
+
+.form-control.dx-numberbox {
+    border: 1px solid #8A998D !important;
+    border-radius: 5px !important;
+    width: 100% !important;
+  }
+
+  .navbar {
+    margin-bottom: 0px;
+  }
+
+  .nav>li>a {
+    margin-bottom: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .nav>li>a>span {
+    font-size: 16px;
+  }
+
+  .nav>li>a>span .sub-label {
+    font-size: 12px;
+  }
+
+  .nav>li {
+    background-color: #F9F7F2;
+    &:hover, &:focus, &:active, &:active:hover {
+      background-color: #FFF;
+      outline: none;
+    }
+  }
+
+  .nav>li.active {
+    border-left: none;
+    background-color: #FFF;
+  }
+
+  .nav>li.active>a {
+    background-color: #FFF;
+  }

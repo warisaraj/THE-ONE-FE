@@ -1,0 +1,26 @@
+# Development environment using Node 10.23.0
+FROM node:10.23.0
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy package.json and package-lock.json (if available) first
+# This leverages Docker layer caching. If these files don't change,
+# Docker won't reinstall dependencies on every build.
+COPY package*.json ./
+
+# Install project dependencies
+RUN npm install
+
+# Copy the rest of the application code into the container
+# Changes in local code won't require rebuilding the image if using volumes
+COPY . .
+
+# Expose the default Angular development port
+EXPOSE 4200
+
+# Command to run when the container starts
+# Uses the "start" script from package.json which runs "ng serve"
+# --host 0.0.0.0 makes the server accessible from your host machine
+# --poll=1000 helps Angular detect file changes reliably within Docker volumes on some systems
+CMD ["npm", "start", "--", "--host", "0.0.0.0", "--poll=1000"]

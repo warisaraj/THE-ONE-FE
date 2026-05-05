@@ -1,0 +1,23 @@
+.table-bordered>thead>tr>td {
+  background-color: #FFF;
+  height: 60px;
+}
+
+.table>thead>tr>td {
+  border: 1px solid #EBEBEB;
+}
+
+tr.bg-brown >td {
+  background-color: #F9F7F2 !important;
+}
+
+tr.bg-grey >td {
+  background-color: #F6F6F6 !important;
+}
+
+.hr-line-light {
+  height: 0.5px;
+  background-color: #ae934f;
+  margin-top: 15px;
+  margin-bottom: 15px
+}

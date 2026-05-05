@@ -1,0 +1,43 @@
+.form-control.cus-datebox{
+  border: 1px solid #8A998D !important;
+  border-radius: 5px !important;
+  width: 100% !important;
+  
+  .dx-texteditor-input{
+    color: rgb(100, 105, 101) !important;
+  }
+  &.dx-state-disabled{
+    background-color: #eee !important;
+    opacity: 1 !important;
+  }
+}
+
+dx-number-box.cusnumbox.dx-texteditor.dx-editor-outlined{
+  padding: 0 !important;
+  border: 1px solid #8A998D !important;
+  border-radius: 5px !important;
+  &.dx-state-disabled{
+    border-color: #8A998D !important;
+    background-color: #eee !important;
+    opacity: 1 !important;
+  }
+}
+
+.has-error dx-number-box.cusnumbox.dx-texteditor.dx-editor-outlined{
+  border-color: #ed5565 !important;
+  &.dx-state-disabled{
+    border-color: #8A998D !important;
+  }
+}
+
+.has-error .form-control.cus-datebox{
+  border-color: #ed5565 !important;
+  &.dx-state-disabled{
+    border-color: #8A998D !important;
+  }
+}
+.dx-timeview-field .dx-texteditor.dx-numberbox-spin {
+  background: #fff !important;
+  border: 1px solid #ddd !important;
+  border-radius: 4px !important;
+}

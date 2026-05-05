@@ -1,0 +1,539 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">Orders</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Order Management</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a (click)="onClickBack()">Orders</a>
+              </li>
+              <li class="breadcrumb-item active">
+                <span *ngIf="pageType === 'view'"> View Order Info </span>
+                <span *ngIf="pageType === 'edit'"> Edit Order Info </span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-12 align-self-center text-right">
+        <!-- <button *ngIf="pageType == 'quotation' && menuPermissions.edit" id="btnPrint" name="btnPrint" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Print">
+          <i class="fas fa-print"></i><span>Print</span>
+        </button> -->
+        <button *ngIf="pageType !== 'view'" id="btnEditTop" name="btnEditTop"
+          class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Save"
+          [disabled]="disbledBtn.save" (click)="btnSubmit()">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button *ngIf="pageType === 'view' && menuPermissions.edit"
+          [routerLink]="['/order-management','orders-production', Id ,'edit']" id="btnEditTop" name="btnEditTop"
+          class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit"
+          [disabled]="disbledBtn.save">
+          <i class="fas fa-edit"></i><span>Edit</span>
+        </button>
+        <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right"
+          data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;"
+          [disabled]="disbledBtn.cancel">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text">Production Info<br><small *ngIf="pageType != 'view'">*Please enter data in the
+                "Require Field" textbox.</small></h5>
+            <!-- <button [routerLink]="['/master-data-management','capsules', Id ,'history']" *ngIf="pageType == 'view'" class="btn btn-success float-xs-left mr-10" style="padding:5px" data-toggle="tooltip" data-placement="top" title="History of data revisions">
+              <i class="fas fa-history" style="margin:0"></i>
+            </button> -->
+          </div>
+          <div class="ibox-body">
+            <div id="tab-1" class="tab-pane active">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                      <div class="ibox-content" style="border:0px;">
+                        <div class="custom-ibox">
+                          <div class="ibox-heading">
+                            <h5 class="ibox-title-text">Production Info</h5>
+                          </div>
+                          <div class="ibox-body">
+                            <form class="form-horizontal" [formGroup]="editGroupForm">
+                              <div class="form-group"><label class="col-sm-3 control-label">HN</label>
+                                <div class="col-sm-4">
+                                  <input type="text" class="form-control" id="txtHn" name="txtHn" maxlength="50"
+                                    [(ngModel)]="editDataGroups.hn" formControlName="txtHn">
+                                </div>
+                              </div>
+                              <div class="form-group"><label class="col-sm-3 control-label">Patient Name</label>
+                                <div class="col-sm-4">
+                                  <input type="text" formControlName="txtPatientName" class="form-control"
+                                    id="txtPatientName" name="txtPatientName" maxlength="255"
+                                    [(ngModel)]="editDataGroups.patientName">
+                                </div>
+                              </div>
+
+                              <div class="form-group"><label class="col-sm-3 control-label">Type</label>
+                                <div class="col-sm-4">
+                                  <input type="text" formControlName="txtType" class="form-control" id="txtType"
+                                    name="txtType" maxlength="255" [(ngModel)]="editDataGroups.type">
+                                </div>
+                              </div>
+
+                              <div class="form-group"><label class="col-sm-3 control-label">Supply Day</label>
+                                <div class="col-sm-4">
+                                  <input type="text" formControlName="txtSupplyDay" class="form-control"
+                                    id="txtSupplyDay" name="txtSupplyDay" maxlength="255"
+                                    [(ngModel)]="editDataGroups.supplyDay">
+                                </div>
+                              </div>
+
+                              <div class="form-group"><label class="col-sm-3 control-label"
+                                  style="padding-top: 0!important;">Production Booking
+                                  <br>
+                                  Slot (Date/Time)</label>
+                                <div class="col-sm-4">
+                                  <input type="text" formControlName="txtProductionBookingSlotDateTime"
+                                    class="form-control" id="txtProductionBookingSlotDateTime"
+                                    name="txtProductionBookingSlotDateTime" maxlength="255"
+                                    [(ngModel)]="editDataGroups.productionBookingSlot">
+                                </div>
+                              </div>
+
+                              <div class="form-group"><label class="col-sm-3 control-label"
+                                  style="padding-top: 0!important;">Delivery Detail <br>
+                                  Arrival
+                                  (Date/Time)</label>
+                                <div class="col-sm-4">
+                                  <input type="text" formControlName="txtArrivalDateTime" class="form-control"
+                                    id="txtArrivalDateTime" name="txtArrivalDateTime" maxlength="255"
+                                    [(ngModel)]="editDataGroups.arrivalDateTime">
+                                </div>
+                              </div>
+
+                              <div class="form-group"><label class="col-sm-3 control-label">Delivery Option</label>
+                                <div class="col-sm-4">
+                                  <input type="text" formControlName="txtDeliveryOption" class="form-control"
+                                    id="txtDeliveryOption" name="txtDeliveryOption" maxlength="255"
+                                    [(ngModel)]="editDataGroups.deliveryOption">
+                                </div>
+                              </div>
+
+                              <div class="form-group"><label class="col-sm-3 control-label">Delivery Note</label>
+                                <div class="col-sm-4">
+                                  <textarea formControlName="txtDeliveryNote" class="form-control" id="txtDeliveryNote"
+                                    name="txtDeliveryNote" rows="3" placeholder="" style="resize: vertical"
+                                    [(ngModel)]="editDataGroups.deliveryNote"></textarea>
+                                </div>
+                              </div>
+
+                              <div *ngIf="pageType === 'view'" class="form-group"><label
+                                  class="col-sm-3 control-label">Status</label>
+                                <div class="col-sm-4">
+                                  <input type="text" formControlName="txtStatus" class="form-control" id="txtStatus"
+                                    name="txtStatus" maxlength="255" [(ngModel)]="editDataGroups.status">
+                                </div>
+                              </div>
+
+                              <div *ngIf="pageType === 'edit'" class="form-group"><label
+                                  class="col-sm-3 control-label">Status <span class="fontred">*</span></label>
+                                <div
+                                  [ngClass]="{'has-error':!editGroupForm.controls.ddlStatus.valid&&editGroupForm.controls.ddlStatus.dirty,'col-sm-4':true}">
+                                  <select name="ddlStatus" id="ddlStatus" formControlName="ddlStatus"
+                                    (change)="fnChangeStatus()" class="form-control"
+                                    [(ngModel)]="editDataGroups.statusEdit">
+                                    <option [value]="''">Please select</option>
+                                    <option *ngFor="let item of statusList" [value]="item">{{item}}</option>
+                                  </select>
+                                </div>
+                              </div>
+
+                              <div *ngIf="pageType === 'edit' &&editDataGroups.statusEdit === 'Production Done'"
+                                class="form-group">
+                                <label class="col-sm-3 control-label">Production Note</label>
+                                <div class="col-sm-4">
+                                  <textarea class="form-control" id="txtProductionNote" name="txtProductionNote"
+                                    rows="3" placeholder="" style="resize: vertical"
+                                    [(ngModel)]="editDataGroups.productionNote"
+                                    formControlName="txtProductionNote"></textarea>
+                                </div>
+                              </div>
+
+                              <!-- <div *ngIf="pageType === 'edit' &&editDataGroups.statusEdit === 'Production Done'"
+                                class="form-group">
+                                <label class="col-sm-3 control-label">Packaging Note <span
+                                    class="fontred">*</span></label>
+                                <div
+                                  [ngClass]="{'has-error':!editGroupForm.controls.txtPackagingNote.valid&&editGroupForm.controls.txtPackagingNote.dirty,'col-sm-4':true}">
+                                  <textarea class="form-control" id="txtPackagingNote" name="txtPackagingNote" rows="3"
+                                    placeholder="" style="resize: vertical" [(ngModel)]="editDataGroups.packageNote"
+                                    formControlName="txtPackagingNote"></textarea>
+                                </div>
+
+                              </div> -->
+                              <div  *ngIf="pageType === 'edit' &&editDataGroups.statusEdit === 'Production Done'" class="form-group">
+                                <label class="col-sm-3 control-label">Packaging Note <span
+                                  class="fontred">*</span></label>
+                                <div class="col-sm-7 packaging-note-form">
+                                  <div formArrayName="txtPackageNoteList">
+                                    <div
+                                      *ngFor="let note of editGroupForm.get('txtPackageNoteList').controls; let i = index"
+                                      [formGroupName]="i">
+
+                                      <div class="packaging-note-form-list"
+                                        [ngStyle]="{backgroundColor: '#ffff',opacity: '1'}"
+                                        style="padding:8px; border:1px solid #8a998d; border-radius:5px; margin-bottom: 15px; position: relative;background-color: #ffff;">
+
+                                        <div class="delete-icon"
+                                          *ngIf="packagingNoteListLength > 1"
+                                          (click)="removePackagingNote(i)">
+                                          <img src="assets/icon-md/Vector.png" alt="Delete Icon" />
+                                        </div>
+
+                                        <!-- Qty -->
+                                        <div style="display: flex; gap: 10px;margin-bottom: 15px;">
+                                          <div class="form-group"
+                                            [ngClass]="{'has-error': editGroupForm.get('txtPackageNoteList').controls[i].get('qty').invalid && editGroupForm.get('txtPackageNoteList').controls[i].get('qty').dirty}"
+                                            style="display: flex; align-items: center;margin-bottom: 0px;">
+                                            <label class="control-label" style="margin-right: 5px;">Qty
+                                              =</label>
+                                            <input type="number" onwheel="this.blur()" min="1" step="1"
+                                              formControlName="qty" class="form-control no-spinner"
+                                              style="width: 100px; height: 25px; border-radius: 10px;">
+                                          </div>
+
+                                          <!-- Type -->
+                                          <div formArrayName="type" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                            <div *ngFor="let opt of typeOptions; let j = index"
+                                              class="checkbox-wrapper">
+                                              <dx-check-box [formControlName]="j" [text]="opt.text" [ngClass]="{
+                                                'dx-has-error': isCheckboxGroupInvalid(editGroupForm.get('txtPackageNoteList').controls[i].get('type'))
+                                              }" (onValueChanged)="onTypeChange(i, j)"></dx-check-box>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <!-- Supply Days / supType -->
+                                        <div
+                                          style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;margin-bottom: 15px;">
+                                          <!-- Supply Days = [input] x -->
+                                          <div class="form-group"
+                                            [ngClass]="{'has-error': editGroupForm.get('txtPackageNoteList').controls[i].get('supplyDays').invalid && editGroupForm.get('txtPackageNoteList').controls[i].get('supplyDays').dirty}"
+                                            style="display: flex; align-items: center; gap: 0px;margin-bottom: 0px;">
+                                            <label class="control-label"
+                                              style="padding-top: 0px;margin-right: 5px;">Supply Days =</label>
+                                            <input type="number" onwheel="this.blur()" min="1" step="1"
+                                              formControlName="supplyDays" class="form-control no-spinner"
+                                              style="width: 100px; height: 25px; border-radius: 10px;">
+                                            <span style="font-size: 14px;margin-left: 9px;">x</span>
+                                          </div>
+
+                                          <!-- ( checkbox checkbox ) -->
+                                          <div style="display: flex; align-items: center; gap: 5px;">
+                                            <span style="font-size: 14px;">(</span>
+                                            <div formArrayName="supType" style="display: flex; gap: 10px;">
+                                              <div *ngFor="let option of supTypeOptions; let j = index">
+                                                <dx-check-box [formControlName]="j" [text]="option.text" [ngClass]="{
+                                                  'dx-has-error': isCheckboxGroupInvalid(editGroupForm.get('txtPackageNoteList').controls[i].get('supType'))
+                                                }">
+                                                </dx-check-box>
+                                              </div>
+                                            </div>
+                                            <span style="font-size: 14px;">)</span>
+                                          </div>
+                                        </div>
+
+                                        <!-- Other -->
+                                        <div style="display: flex; gap: 10px;">
+                                          <div class="form-group"
+                                            [ngClass]="{'has-error': editGroupForm.get('txtPackageNoteList').controls[i].get('other').invalid && editGroupForm.get('txtPackageNoteList').controls[i].get('other').dirty}"
+                                            style="display: flex; align-items: center;">
+                                            <label class="control-label"
+                                              style="margin-right: 5px;padding-top: 0px;">Other
+                                              :</label>
+                                            <input type="text" formControlName="other" class="form-control "
+                                              style="width: 430px; height: 25px; border: none; border-bottom: 1px solid; border-radius: 0; outline: none; box-shadow: none;">
+                                          </div>
+                                        </div>
+
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-sm-2">
+                                  <button title="" class="btn btn-add-packaging-note" type="button"
+                                    (click)="addPackagingNote()">
+                                    <i class="fas fa-plus" style="margin:0; font-size:15px"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              <!-- <div *ngIf="pageType === 'edit' &&editDataGroups.statusEdit === 'Production Done'" -->
+                              <!--   class="form-group"> -->
+                              <!--   <label class="col-sm-3 control-label" style="padding-top: 0;">Picture -->
+                              <!--     <div class="sub-label">Max. 1MB</div> -->
+                              <!--   </label> -->
+                              <!--   <div class="col-sm-4"> -->
+                              <!--     <div class="custom-file-upload" style="background-color: #FFF;" -->
+                              <!--       (click)="imageInput.click()"> -->
+                              <!--       <input #imageInput type="file" accept="image/*" (change)="processFile(imageInput)" -->
+                              <!--         style="display: none"> -->
+                              <!--       <span class="upload-text"> {{editDataGroups.imageName}} </span> -->
+                              <!--       <a class="upload-bt"> Upload </a> -->
+                              <!--     </div> -->
+                              <!--   </div> -->
+                              <!-- </div> -->
+
+                              <div *ngIf="pageType === 'edit' &&editDataGroups.statusEdit === 'Production Done'">
+                                <div class="form-group">
+                                  <label class="col-sm-3 control-label" style="padding-top: 0px;">
+                                    Picture
+                                    <div class="tooltip-i tooltip-white" style="margin-left:7px;">
+                                      <img src="assets/remark-icon.png" width="16px" height="16px" alt="">
+                                      <span class="tooltiptext" style="width: 150px;text-align: left !important;">
+                                        <ul>
+                                          <li>Max. 5 files</li>
+                                          <li>Max. 1MB/pic</li>
+                                        </ul>
+                                      </span>
+                                    </div>
+                                  </label>
+
+                                  <div *ngFor="let item of imageList; let i = index" [ngClass]="{
+                                                'col-sm-2': true,
+                                                'col-sm-offset-3': i === 4  
+                                              }">
+                                    <div style="margin-top:10px;">
+                                      <div class="picture-preview">
+                                        <div class="delete-icon" (click)="removePicture(i)">
+                                          <img src="assets/icon-md/Vector.png" alt="Delete Icon" />
+                                        </div>
+                                        <img [attr.src]="item | resolveImageUrl" alt="" (click)="popupImg(item)" />
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="form-group" style="text-align: right;">
+                                  <div class="col-sm-7">
+                                    <button class="btn btn-success float-xs-right" data-toggle="tooltip"
+                                      data-placement="top" title="Upload" style="margin-left: 3px;"
+                                      (click)="triggerFileInput()">
+                                      Upload
+                                    </button>
+                                  </div>
+                                </div>
+
+                                <input type="file" #fileInput style="display: none" accept="image/*" multiple
+                                  (change)="upload($event)" />
+                              </div>
+                            </form>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div *ngIf="pageType === 'view'" class="row" id="divPrintDocument">
+                  <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                      <div class="ibox-content" style="border:0px;">
+                        <div class="custom-ibox">
+                          <div class="ibox-heading">
+                            <h5 class="ibox-title-text">Print Document</h5>
+                            <button id="btnDownloadAll"
+                              style="padding: 5px 10px !important; color :#FFFFFF !important; float: right;"
+                              title="Download All" class="btn btn-success"
+                              (click)="fnDownloadAll()"
+                              [disabled]="!printAllurl">
+                              Download All
+                            </button>
+                          </div>
+                          <div class="ibox-body">
+                            <form class="form-horizontal">
+                              <div class="form-group mt-20">
+                                <div class="col-sm-2">
+                                  <button id="btnPrintPharmacyProductionSheet" data-toggle="tooltip"
+                                    data-placement="top" title="Print Pharmacy Production Sheet"
+                                    style="padding: 5px 10px !important; color :#FFFFFF !important; float: right;"
+                                    class="btn btn-success" (click)="fnClickPrintDocument('pharmacyProductionSheet')">
+                                    <i style="margin-right : 0 !important; font-size: 22px; " class="fas fa-print"></i>
+                                  </button>
+                                </div>
+                                <label class="col-sm-3 control-label"
+                                  style="width : 20% !important; margin-top: 7px; float: left; text-align: left !important;;">
+                                  Pharmacy Production Sheet
+                                </label>
+                                <div class="col-sm-1">
+                                  <button id="btnPrintWorkingFormulaWF" data-toggle="tooltip" data-placement="top"
+                                    title="Print Working Formula (WF)"
+                                    style="padding: 5px 10px !important; color :#FFFFFF !important; float: right;"
+                                    class="btn btn-success" (click)="fnClickPrintDocument('workingFormulaWF')">
+                                    <i style="margin-right : 0 !important; font-size: 22px; " class="fas fa-print"></i>
+                                  </button>
+                                </div>
+                                <label class="col-sm-3 control-label"
+                                  style="width : 20% !important; margin-top: 7px; float: left; text-align: left !important;;">
+                                  Working Formula (WF)
+                                </label>
+                                <div class="col-sm-1">
+                                  <button id="btnPrintWorkingFormulaWF2" data-toggle="tooltip" data-placement="top"
+                                    title="Print Working Formula (WF2)"
+                                    style="padding: 5px 10px !important; color :#FFFFFF !important; float: right;"
+                                    class="btn btn-success" (click)="fnClickPrintDocument('workingFormulaWF2')">
+                                    <i style="margin-right : 0 !important; font-size: 22px; " class="fas fa-print"></i>
+                                  </button>
+                                </div>
+                                <label class="col-sm-3 control-label"
+                                  style="width : 20% !important; margin-top: 7px; float: left; text-align: left !important;;">
+                                  Working Formula (WF2)
+                                </label>
+                              </div>
+                              <div class="form-group mt-20">
+                                <div class="col-sm-2">
+                                  <button id="btnPrintPatientInformation" data-toggle="tooltip" data-placement="top"
+                                    title="Print Patient Information"
+                                    style="padding: 5px 10px !important; color :#FFFFFF !important; float: right;"
+                                    class="btn btn-success" (click)="fnClickPrintDocument('patientInformation')">
+                                    <i style="margin-right : 0 !important; font-size: 22px; " class="fas fa-print"></i>
+                                  </button>
+                                </div>
+                                <label class="col-sm-3 control-label"
+                                  style="width : 20% !important; margin-top: 7px; float: left; text-align: left !important;;">
+                                  Patient Information
+                                </label>
+                                <div class="col-sm-1">
+                                  <button id="btnPrintSupplementInformation" data-toggle="tooltip" data-placement="top"
+                                    title="Print Supplement Information"
+                                    style="padding: 5px 10px !important; color :#FFFFFF !important; float: right;"
+                                    class="btn btn-success" (click)="fnClickPrintDocument('supplementInformation')">
+                                    <i style="margin-right : 0 !important; font-size: 22px; " class="fas fa-print"></i>
+                                  </button>
+                                </div>
+                                <label class="col-sm-3 control-label"
+                                  style="width : 20% !important; margin-top: 7px; float: left; text-align: left !important;;">
+                                  Supplement Information
+                                </label>
+                                <div class="col-sm-1">
+                                  <button id="btnPrintLabel" data-toggle="tooltip" data-placement="top"
+                                    title="Print Label"
+                                    style="padding: 5px 10px !important; color :#FFFFFF !important; float: right;"
+                                    class="btn btn-success" (click)="fnClickPrintDocument('label')">
+                                    <i style="margin-right : 0 !important; font-size: 22px; " class="fas fa-print"></i>
+                                  </button>
+                                </div>
+                                <label class="col-sm-3 control-label"
+                                  style="width : 20% !important; margin-top: 7px; float: left; text-align: left !important;;">
+                                  Label
+                                </label>
+                              </div>
+                              <div class="form-group mt-20">
+                                <div class="col-sm-2">
+                                  <button id="btnPrintLabelSmall" data-toggle="tooltip" data-placement="top"
+                                    title="Print Label Small"
+                                    style="padding: 5px 10px !important; color :#FFFFFF !important; float: right;"
+                                    class="btn btn-success" (click)="fnClickPrintDocument('labelSmall')">
+                                    <i style="margin-right : 0 !important; font-size: 22px; " class="fas fa-print"></i>
+                                  </button>
+                                </div>
+                                <label class="col-sm-3 control-label"
+                                  style="width : 20% !important; margin-top: 7px; float: left; text-align: left !important;;">
+                                  Label Small
+                                </label>
+                                <div class="col-sm-1">
+                                  <button id="btnPrintRMChargeDetail" data-toggle="tooltip" data-placement="top"
+                                    title="Print RM Charge Detail"
+                                    style="padding: 5px 10px !important; color :#FFFFFF !important; float: right;"
+                                    class="btn btn-success" (click)="fnClickPrintDocument('rmChargeDetail')">
+                                    <i style="margin-right : 0 !important; font-size: 22px; " class="fas fa-print"></i>
+                                  </button>
+                                </div>
+                                <label class="col-sm-3 control-label"
+                                  style="width : 20% !important; margin-top: 7px; float: left; text-align: left !important;;">
+                                  RM Charge Detail
+                                </label>
+                                <div class="col-sm-1">
+                                  <button id="btnPrintLabelSachet" data-toggle="tooltip" data-placement="top"
+                                    title="Print Label Sachet"
+                                    style="padding: 5px 10px !important; color :#FFFFFF !important; float: right;"
+                                    class="btn btn-success" (click)="fnClickPrintDocument('labelSachet')">
+                                    <i style="margin-right : 0 !important; font-size: 22px; " class="fas fa-print"></i>
+                                  </button>
+                                </div>
+                                <label class="col-sm-3 control-label"
+                                  style="width : 20% !important; margin-top: 7px; float: left; text-align: left !important;;">
+                                  Label Sachet
+                                </label>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer no-bg">
+            <div class="ibox-footer-right">
+              <button *ngIf="pageType !== 'view'" id="btnEditTop" name="btnEditTop"
+                class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Save"
+                [disabled]="disbledBtn.save" (click)="btnSubmit()">
+                <i class="fas fa-save"></i><span>Save</span>
+              </button>
+              <button *ngIf="pageType === 'view' && menuPermissions.edit"
+                [routerLink]="['/order-management','orders-production', Id ,'edit']" id="btnEditTop" name="btnEditTop"
+                class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit"
+                [disabled]="disbledBtn.save">
+                <i class="fas fa-edit"></i><span>Edit</span>
+              </button>
+              <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop"
+                class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel"
+                style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                <i class="fal fa-times"></i><span>Cancel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()"
+    (onCloseModalWarning)="onCloseModalWarning()" (onClickEditOrder)="onClickEditOrder()"
+    (onCloseEditOrder)="onCloseEditOrder()"></app-alert>
+
+
+
+  <dx-load-panel shadingColor="rgba(0,0,0,0.4)" [(visible)]="isLoadingPanel" [showIndicator]="true" [showPane]="true"
+    [shading]="true">
+  </dx-load-panel>
+
+  <dx-popup [fullScreen]="true" [dragEnabled]="false" [showTitle]="true" [showCloseButton]="true"
+    [(visible)]="popupVisible">
+    <div *dxTemplate="let data of 'content'" class="text-center">
+      <img [src]="filePicture | resolveImageUrl" style="height:100%;" />
+    </div>
+  </dx-popup>

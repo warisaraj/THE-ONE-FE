@@ -1,0 +1,202 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">Assign Role & Permission</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>User Management</a>
+              </li>
+              <li class="breadcrumb-item active">
+                Assign Role & Permission
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text"><i class="fas fa-filter"></i>Filter</h5>
+            <div class="ibox-graph-info collapse-link" #collapseLink (click)="clickCollapse()">
+              <i class="far fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="ibox-body">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="panel-body">
+                  <form method="get" class="form-horizontal">
+                    <div class="form-group">
+                      <div class="col-sm-4">
+                        <label class="col-sm-5 control-label">Username</label>
+                        <div class="col-sm-7">
+                          <input id="txtUsername" name="txtUsername" maxlength="50"
+                                 type="text" class="form-control"
+                                 [(ngModel)]="filterData.username">
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <label class="col-sm-5 control-label">Firstname</label>
+                        <div [ngClass]="{'col-sm-7':true}">
+                          <input id="txtFirstname" name="txtFirstname" maxlength="255"
+                                 type="text" class="form-control"
+                                 [(ngModel)]="filterData.firstname">
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <label class="col-sm-5 control-label">Lastname</label>
+                        <div [ngClass]="{'col-sm-7':true}">
+                          <input id="txtLastname" name="txtLastname" maxlength="255"
+                                 type="text" class="form-control"
+                                 [(ngModel)]="filterData.lastname">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-sm-4">
+                        <label class="col-sm-5 control-label">E-mail</label>
+                        <div class="col-sm-7">
+                          <input id="txtEmail" name="txtEmail" maxlength="255" type="text"
+                                 class="form-control" [(ngModel)]="filterData.email">
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <label class="col-sm-5 control-label">Mobile number</label>
+                        <div
+                          [ngClass]="{'has-error':filterData.telephoneNumber && common.checkInvalidText(filterData.telephoneNumber, 'num'),'col-sm-7':true}">
+                          <input id="txtTelephonenumber" name="txtTelephonenumber"
+                                 maxlength="100" type="text" class="form-control"
+                                 [(ngModel)]="filterData.telephoneNumber">
+                          <div
+                            *ngIf="filterData.telephoneNumber && common.checkInvalidText(filterData.telephoneNumber, 'num')"
+                            class="fontred text-right">Mobile number is Invalid Format.
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <label class="col-sm-5 control-label">Position</label>
+                        <div [ngClass]="{'col-sm-7':true}">
+                          <div class="select-wrapper">
+                            <select
+                              name="txtPosition"
+                              id="txtPosition"
+                              [title]="filterData.position"
+                              class="form-control "
+                              [(ngModel)]="filterData.position">
+                              <option *ngFor="let item of positionList"
+                                      [value]="item">{{ item }}</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer">
+            <div class="ibox-footer-right">
+              <button *ngIf="menuPermissions.view" title="Search" (click)="clickSearch()"
+                      class="btn btn-success btn-md mr-10">
+                <span>Search</span>
+              </button>
+              <button *ngIf="menuPermissions.view" title=" Clear" (click)="clickClear()"
+                      class="btn btn-default btn-md">
+                <span> Clear</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading-total">
+            <h5 class="ibox-title-text">{{textTotal}}</h5>
+          </div>
+          <div class="ibox-body">
+            <div class="table-responsive table-wrapper">
+              <dx-data-grid #gridUsers id="gridUsers"
+                            [(dataSource)]="dataUsers"
+                            keyExpr="usersId"
+                            showBorders="false"
+                            [hoverStateEnabled]="true"
+                            noDataText="No data"
+                            [rowAlternationEnabled]="true"
+                            columnResizingMode="widget"
+                            [columnAutoWidth]="true"
+                            [allowColumnResizing]="true"
+                            [(hint)]="hoverTootip"
+                            (onOptionChanged)="changePageIndex($event)"
+                            (onCellPrepared)="onCellPrepared($event)"
+                            (onCellHoverChanged)="onCellHoverChanged($event)" [columnMinWidth]="'100%'"
+                            class="card-list-table">
+                <dxo-paging [pageSize]="dxgridPageSize" [pageIndex]="pageIndex"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="allowedPageSizes"
+                           [showInfo]="false" [visible]="true" [showNavigationButtons]="true">
+                </dxo-pager>
+                <dxo-scrolling showScrollbar="onHover"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-remote-operations [sorting]="true" [paging]="true">
+                </dxo-remote-operations>
+
+                <dxi-column caption="No" cellTemplate="cellTemplateNo"
+                            [allowSorting]="false" [width]="50"></dxi-column>
+                <div *dxTemplate="let data of 'cellTemplateNo'" style="text-align: center;">
+                  <span>{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}</span>
+                </div>
+                <dxi-column dataField="username" dataType="string" caption="Username" width="10%"></dxi-column>
+                <dxi-column dataField="firstname" dataType="string" caption="Firstname" width="25%"></dxi-column>
+                <dxi-column dataField="lastname" dataType="string" caption="Lastname" width="25%"></dxi-column>
+                <dxi-column dataField="email" dataType="string" caption=" E-mail" width="15%"></dxi-column>
+                <dxi-column dataField="telephoneNumber" dataType="string"
+                            caption="Mobile number" width="12%"></dxi-column>
+                <dxi-column dataField="position" dataType="string" caption="Position" width="13%"></dxi-column>
+                <!--<dxi-column dataField="description" dataType="string" caption="Description"></dxi-column>-->
+                <dxi-column [visible]="false" dataField="updatedAt" caption="Updated At"
+                            sortOrder="desc" cssClass="wrapped-column"></dxi-column>
+                <dxi-column dataField="" dataType="string" caption="Action"
+                            cellTemplate="cellTemplateViewGroups" [width]="80"></dxi-column>
+                <div  *dxTemplate="let data of 'cellTemplateViewGroups';let i=index;"
+                     style="text-align:center;">
+                  <a *ngIf="menuPermissions.view"
+                     [routerLink]="['/assign-microservice-permission', data.data.username,'assign-microservice-permission-info' ]"
+                     id="btnView{{i}}" class="btn btn-default icon btn-sm" data-toggle="tooltip"
+                     data-placement="top" title="View" style="margin-left: 3px;">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                </div>
+              </dx-data-grid>
+            </div>
+          </div>
+          <!--End List-->
+        </div><!--End ibox-content-->
+      </div><!--End ibox-->
+    </div><!--End col-sm-12-->
+  </div><!--End row-->
+</div><!--End Wrapper-->
+
+<app-alert #myModal (onOkDelete)="onOkDelete()" (onCancelDelete)="onCancelDelete()"
+           (onCancelViewWarning)="onCancelViewWarning()" (onCloseModalError)="onCloseModalError()"></app-alert>

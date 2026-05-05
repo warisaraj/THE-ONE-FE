@@ -1,0 +1,203 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-6 col-xs-12 align-self-center">
+        <h4 class="soc-title">Orders</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Order Management</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a (click)="onClickBack()">Orders</a>
+              </li>
+              <li class="breadcrumb-item active">
+                <span *ngIf="pageType == 'new'"> Create Reservation </span>
+                <span *ngIf="pageType == 'edit'"> Edit Reservation </span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-6 col-xs-12 align-self-center text-right">
+        <button *ngIf="pageType === 'new'" (click)="fnSave()" id="btnSave" name="btnSave" class="btn btn-success float-xs-left mr-10" title="Save" [disabled]="disbledBtn.save">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text">Reservation</h5>
+          </div>
+          <div class="ibox-body">
+            <div class="panel-body">
+              <!--Patient Info-->
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="ibox float-e-margins">
+                    <div class="ibox-content" style="border:0px;">
+                      <div style="background-color: #F9F7F2 !important; width: 100%;margin-bottom: 20px; padding: 20px;">
+                        <label style="font-size: 18px;"> Patient Info </label>
+                        <div class="hr-line-solid" style="margin-top: 10px !important; margin-bottom: 30px !important; color: #AE934F!important;">
+                        </div>
+                        <form class="form-horizontal" [formGroup]="patientInfoForm">
+                          <!--HN-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              HN
+                              <span class="fontred">*</span>
+                            </label>
+                            <div [ngClass]="{'has-error':!patientInfoForm.controls.txtHn.valid&&patientInfoForm.controls.txtHn.dirty,'col-sm-4':true}">
+                              <dx-autocomplete id="txtHn" name="txtHn" [ngModel]="patientInfo.hn" valueExpr="hn" (onItemClick)="onItemClick($event)" (onFocusOut)="onFocusOut($event,'hn')" (onValueChanged)="onValueChanged($event,'hn')" formControlName="txtHn" [dataSource]="patientInfoDataSource">
+                              </dx-autocomplete>
+                            </div>
+                          </div>
+                          <!--Patient Name-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Patient Name
+                              <span class="fontred">*</span>
+                            </label>
+                            <div [ngClass]="{'has-error':!patientInfoForm.controls.txtPatientName.valid&&patientInfoForm.controls.txtPatientName.dirty,'col-sm-4':true}">
+                              <dx-autocomplete id="txtPatientName" name="txtPatientName" [ngModel]="patientInfo.patientName" valueExpr="patientName" (onItemClick)="onItemClick($event)" (onFocusOut)="onFocusOut($event,'patientName')" (onValueChanged)="onValueChanged($event,'patientName')" formControlName="txtPatientName" [dataSource]="patientInfoDataSource">
+                              </dx-autocomplete>
+                            </div>
+                          </div>
+                          <!--Supply Day-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Supply Day
+                              <span class="fontred">*</span>
+                            </label>
+                            <div [ngClass]="{'has-error':!patientInfoForm.controls.txtSupplyDay.valid&&patientInfoForm.controls.txtSupplyDay.dirty,'col-sm-4':true}">
+                              <input type="text" class="form-control" id="txtSupplyDay" name="txtSupplyDay" maxlength="11" [(ngModel)]="patientInfo.supplyDay" (focusout)="fnCalReserveTime()" (keypress)="numberOnly($event)" formControlName="txtSupplyDay">
+                            </div>
+                          </div>
+                          <div class="hr-line-dashed"></div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--Reservation-->
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="ibox float-e-margins">
+                    <div class="ibox-content" style="border:0;background-color: #F9F7F2 !important;margin: 0 20px;">
+                      <div style="width: 100%;margin-bottom: 20px;">
+                        <div class="row">
+                          <div class="col-sm-12"><label style="font-size: 18px;"> Reservation </label></div>
+                        </div>
+                        <div class="hr-line-solid" style="margin-top: 10px !important; color: #AE934F!important;">
+                        </div>
+                        <div class="row" style="margin-bottom: 10px !important;" *ngIf="isChangeBookingMode">
+                          <div class="col-sm-12" style="font-weight: 700;color: #FF0000;font-size: 18px;">
+                            Remark : Before making a new reservation, please cancel the previous one.
+                          </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 10px !important;">
+                          <div class="col-sm-12" style="font-weight: 700;color: #FF0000;font-size: 18px;">
+                            Note : Please check the details on the Master data - production schedule page if you are unable to select the booking time.
+                          </div>
+                        </div>
+                        <div *ngFor="let item of remarkMsg; index as i">
+                          <div *ngIf="i === 0" class="row" style="margin-bottom: 10px !important;">
+                            <div style="margin-left:15px;font-weight: 700;color: #FF0000;font-size: 18px; float:left;">
+                              Remark : {{item}}
+                            </div>
+                          </div>
+                          <div *ngIf="i !== 0" class="row" style="margin-bottom: 10px !important;">
+                            <div style="margin-left:96px; font-weight: 700;color: #FF0000;font-size: 18px;">
+                              {{item}}
+                            </div>
+                          </div>
+                        </div>
+                        <dx-scheduler id="schedulerReservationBooking" timeZone="Asia/Bangkok"
+                                      [dataSource]="appointmentsData" currentView="Week" [currentDate]="currentDate"
+                                      [groupByDate]="true" [startDayHour]="startDayHour" [endDayHour]="endDayHour"
+                                      [groups]="['priorityId']" [crossScrollingEnabled]="true" [showAllDayPanel]="false"
+                                      [timeCellTemplate]="timeCellTemplate" dataCellTemplate="dataCellTemplate"
+                                      dateCellTemplate="dateCellTemplate" [maxAppointmentsPerCell]="1"
+                                      [firstDayOfWeek]="1"
+                                      [showCurrentTimeIndicator]="false" appointmentTooltipTemplate="tooltip-template"
+                                      (onInitialized)="onInitialized($event)"
+                                      (onOptionChanged)="onOptionChanged($event)"
+                                      (onAppointmentRendered)="onAppointmentRendered($event)"
+                                      (onAppointmentDblClick)="onAppointmentDblClick($event)"
+                                      (onAppointmentClick)="onAppointmentClick($event)"
+                                      (onAppointmentUpdating)="onAppointmentUpdating($event)">
+                          <dxi-view type="week" name="Week" [maxAppointmentsPerCell]="1"></dxi-view>
+                          <dxi-resource [dataSource]="prioritiesData" fieldExpr="priorityId" label="Priority"
+                                        [allowMultiple]="false">
+                          </dxi-resource>
+                          <dxo-editing [allowAdding]="false" [allowDeleting]="false" [allowResizing]="false">
+                          </dxo-editing>
+                          <dxo-appointment-dragging [onDragStart]="onDragStart">
+                          </dxo-appointment-dragging>
+                          <div *dxTemplate="let dataCell of 'dataCellTemplate'"
+                               [ngClass]="{ 'disable-date': isDisableDate(dataCell)}">
+                          </div>
+                          <div *dxTemplate="let dateCell of 'dateCellTemplate'">
+                            {{ dateCell.text }}
+                          </div>
+                          <div *dxTemplate="let model of 'tooltip-template'" class="ml-15">
+                            <div class="col-sm-12 text-left mb-5 mt-20">
+                              <span class="pr-5 font-bold">HN</span>
+                              <span class="pr-5 font-bold">:</span>
+                              <span>{{model.appointmentData.data.hn}}</span>
+                            </div>
+                            <div class="col-sm-12 text-left mb-5">
+                              <span class="pr-5 font-bold">Name</span>
+                              <span class="pr-5 font-bold">:</span>
+                              <span>{{model.appointmentData.data.name}}</span>
+                            </div>
+                            <div class="col-sm-12 text-left mb-20">
+                              <span class="pr-5 font-bold">Supply Day</span>
+                              <span class="pr-5 font-bold">:</span>
+                              <span>{{model.appointmentData.data.supplyDay}}</span>
+                            </div>
+                          </div>
+                        </dx-scheduler>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer no-bg">
+            <div class="ibox-footer-right">
+              <button *ngIf="pageType === 'new'" (click)="fnSave()" id="btnSave" name="btnSave" class="btn btn-success float-xs-left mr-10" title="Save" [disabled]="disbledBtn.save">
+                <i class="fas fa-save"></i><span>Save</span>
+              </button>
+              <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                <i class="fal fa-times"></i><span>Cancel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()" (onOk)="onOk()" (onOkSuccess)="onOkSuccess()" (onCloseModalWarning)="onCloseModalWarning()"></app-alert>

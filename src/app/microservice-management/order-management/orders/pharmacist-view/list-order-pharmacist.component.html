@@ -1,0 +1,965 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-6 col-xs-12 align-self-center">
+        <h4 class="soc-title">Orders</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Order Management</a>
+              </li>
+              <li class="breadcrumb-item active">
+                Orders
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-6 col-xs-12 align-self-center text-right fix-bt">
+        <button
+          *ngIf="menuPermissions.add  && (this.role ==='Pharmacist' || this.role ==='pharmacist' || this.role ==='Senior Pharmacist' || this.role ==='Senior pharmacist' || this.role ==='Pharmacy Technician'|| this.role ==='Pharmacy technician' || this.role ==='Admin' || this.role ==='admin')"
+          id="btnImport" style="padding: 5px 10px 5px 5px !important;" name="btnImport"
+          class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Import"
+          (click)="fnUploadTemplate()">
+          <img src="assets/icon-md/c5.svg" alt="">
+        </button>
+        <!-- <button  *ngIf="menuPermissions.add" id="btnUploadTemplate" style="padding: 5px 10px 5px 5px !important;" name="btnUploadTemplate" class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Import">
+          <label style="margin-bottom:0 !important">
+            <img src="assets/icon-md/c5.svg" alt="">
+            <input type="file" id="file" style="display: none" name="image" accept=".xlsx" multiple="false" (change)="onFileChange($event,0,'add')">
+          </label>
+        </button> -->
+        <button *ngIf="menuPermissions.view" id="btnExportAll" name="btnExportAll" class="btn btn-success float-xs-left"
+          data-toggle="tooltip" data-placement="top" title="Export All" (click)="onClickExportAll()">
+          <span>Export All</span>
+        </button>
+        <button *ngIf="menuPermissions.view" id="btnViewAllOrders" name="btnViewAllOrders"
+          class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="View All Orders"
+          [routerLink]="['/order-management/all-orders']">
+          <span>View All Orders</span>
+        </button>
+        <button
+          *ngIf="menuPermissions.add && (this.role ==='Pharmacist' || this.role ==='pharmacist' || this.role ==='Senior Pharmacist' || this.role ==='Senior pharmacist' || this.role ==='Pharmacy Technician'|| this.role ==='Pharmacy technician' || this.role ==='Admin' || this.role ==='admin')"
+          (click)="goCreate()" id="btnCreateNewGroup" name="btnCreateNewGroup" class="btn btn-success float-xs-left "
+          data-toggle="tooltip" data-placement="top" title="Create Order">
+          <i class="fal fa-plus"></i><span>Create Order</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text"><i class="fas fa-filter"></i>Filter</h5>
+            <div class="ibox-graph-info collapse-link" #collapseLink (click)="clickCollapse()">
+              <i class="far fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="ibox-body">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="panel-body">
+                  <form method="get" class="form-horizontal">
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">HN</label>
+                      <div class="col-sm-3">
+                        <input id="txtHn" name="txtHn" maxlength="50" type="text" class="form-control"
+                          [(ngModel)]="filter.hn">
+                      </div>
+                      <label class="col-sm-2 control-label">Patient Name</label>
+                      <div class="col-sm-3">
+                        <input id="txtPatientName" name="txtPatientName" maxlength="255" type="text"
+                          class="form-control" [(ngModel)]="filter.patientName">
+                      </div>
+                    </div>
+                    <div *ngIf="tabIndex == 0" class="form-group">
+                      <label class="col-sm-2 control-label">Order Date From</label>
+                      <div class="col-sm-3">
+                        <dx-date-box style="width: 100%;" [openOnFieldClick]="true" [acceptCustomValue]="false"
+                          class="form-control cus-datebox" type="date" displayFormat="dd-MM-yyyy"
+                          [(value)]="filter.orderDateFrom"></dx-date-box>
+                      </div>
+                      <label class="col-sm-2 control-label">Order Date To</label>
+                      <div class="col-sm-3">
+                        <dx-date-box style="width: 100%;" [openOnFieldClick]="true" [acceptCustomValue]="false"
+                          class="form-control cus-datebox" type="date" displayFormat="dd-MM-yyyy"
+                          [(value)]="filter.orderDateTo"></dx-date-box>
+                      </div>
+                    </div>
+                    <div *ngIf="tabIndex == 1 || tabIndex == 2" class="form-group">
+                      <label class="col-sm-2 control-label">Production Date</label>
+                      <div class="col-sm-3">
+                        <dx-date-box style="width: 100%;" [openOnFieldClick]="true" [acceptCustomValue]="false"
+                          class="form-control cus-datebox" type="date" displayFormat="dd-MM-yyyy"
+                          [(value)]="filter.productionDate"></dx-date-box>
+                      </div>
+                    </div>
+                    <div *ngIf="tabIndex == 3 || tabIndex == 4 || tabIndex == 5" class="form-group">
+                      <label class="col-sm-2 control-label">Delivery Date From</label>
+                      <div class="col-sm-3">
+                        <dx-date-box style="width: 100%;" [openOnFieldClick]="true" [acceptCustomValue]="false"
+                          class="form-control cus-datebox" type="date" displayFormat="dd-MM-yyyy"
+                          [(value)]="filter.deliveryDateFrom"></dx-date-box>
+                      </div>
+                      <label class="col-sm-2 control-label">Delivery Date To</label>
+                      <div class="col-sm-3">
+                        <dx-date-box style="width: 100%;" [openOnFieldClick]="true" [acceptCustomValue]="false"
+                          class="form-control cus-datebox" type="date" displayFormat="dd-MM-yyyy"
+                          [(value)]="filter.deliveryDateTo"></dx-date-box>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer">
+            <div class="ibox-footer-right">
+              <button title="Search" (click)="clickSearch()" class="btn btn-success btn-md mr-10"
+                *ngIf="menuPermissions.view">
+                <span>Search</span>
+              </button>
+              <button title="Clear" (click)="clickClear()" class="btn btn-default btn-md" *ngIf="menuPermissions.view">
+                <span>Clear</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light"
+    style="text-align: center; background-color: #F9F7F2; margin-top: 5px;">
+    <ul class="nav navbar-nav">
+      <li (click)="changeTab(0)" [ngClass]="{'active':tabIndex===0}"><a class="navbar-brand"><span class="control-label"
+            style="margin-top: 10px;">Order Review</span></a>
+      </li>
+      <li (click)="changeTab(1)" [ngClass]="{'active':tabIndex===1}"><a class="navbar-brand"><span class="control-label"
+            style="margin-top: 10px;">Production Review</span></a>
+      </li>
+      <li (click)="changeTab(2)" [ngClass]="{'active':tabIndex===2}"><a class="navbar-brand"><span class="control-label"
+            style="margin-top: 10px;">Phar Tech</span></a>
+      </li>
+      <li (click)="changeTab(3)" [ngClass]="{'active':tabIndex===3}"><a class="navbar-brand"><span class="control-label"
+            style="margin-top: 10px;">Dispensing</span></a>
+      </li>
+      <li (click)="changeTab(4)" [ngClass]="{'active':tabIndex===4}"><a class="navbar-brand"><span class="control-label"
+            style="margin-top: 10px;">(Pre-Order) Finished Product </span></a>
+      </li>
+      <li (click)="changeTab(5)" [ngClass]="{'active':tabIndex===5}"><a class="navbar-brand"><span class="control-label"
+            style="margin-top: 10px;">Complete</span></a>
+      </li>
+
+    </ul>
+
+  </nav>
+
+  <!-- <nz-tabset nzType="card" [(nzSelectedIndex)]="tabIndex"> -->
+  <!-- <nz-tab nzTitle="Pending" (nzClick)="changeTab()"> -->
+  <div *ngIf="tabIndex === 0" class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg" style="box-shadow : none !important;">
+          <div class="ibox-heading-total" style="padding-top: 10px !important;">
+            <div class="col-sm-6">
+              <h5 class="ibox-title-text mb-10">{{textTotal}}</h5>
+            </div>
+            <div class="col-sm-6 form-inline text-right" style="padding-right: 0;">
+              <div class="form-group mb-10" style="margin-top: -7px;">
+                <label class="control-label mr-5" style="margin-top: 12px; font-size:16px">Order Status</label>
+                <select style="margin-top: 8px;min-width: 200px;" name="ddlStatus" id="ddlStatus" class="form-control"
+                  [(ngModel)]="orderStatus" (change)="fnChangeStatus()">
+                  <option selected="selected" [value]="''">Please select</option>
+                  <option *ngFor="let item of statusOrderReview" [value]="item">{{ item }}</option>
+                </select>
+              </div>
+              <button *ngIf="menuPermissions.view" id="btnExportPending"
+                style="padding: 5px 10px !important; margin-top: -4px !important;" name="btnExportPending"
+                class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Export"
+                (click)="onClickExport()">
+                <img src="assets/icon-md/c5.svg" alt="">
+              </button>
+            </div>
+          </div>
+          <div class="ibox-body" style="padding-top: 0 !important;">
+            <!--[selectedRowKeys]="selectRowKeyId" (onInitialized)="onInitialized($event)" (onSelectionChanged)="selectRow($event)"-->
+            <div class="table-responsive table-wrapper">
+              <dx-data-grid #gridDataPendingOrders id="gridDataPendingOrders" [(dataSource)]="dataPendingOrders"
+                showBorders="false" [hoverStateEnabled]="true" noDataText="No data" [rowAlternationEnabled]="true"
+                [columnAutoWidth]="true" [allowColumnResizing]="true" (onCellPrepared)="onCellPrepared($event)"
+                (onRowPrepared)="onRowPrepared($event)" class="card-list-table"
+                (onOptionChanged)="changePageIndex($event)">
+                <dxo-load-panel [enabled]="true"></dxo-load-panel>
+                <dxo-paging [pageSize]="dxgridPageSize" [pageIndex]="pageIndex"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="allowedPageSizes" [showInfo]="false"
+                  [visible]="true" [showNavigationButtons]="true">
+                </dxo-pager>
+                <dxo-scrolling showScrollbar="onHover"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-remote-operations [sorting]="true" [paging]="true">
+                </dxo-remote-operations>
+
+                <!--<dxi-column dataField="no" dataType="number" caption="No." alignment="left" width="10%"></dxi-column>-->
+                <dxi-column caption="No" cellTemplate="cellTemplateNo" [allowSorting]="false" [width]="50"
+                  alignment="center"></dxi-column>
+                <div *dxTemplate="let data of 'cellTemplateNo'" style="text-align: center;"
+                  title="{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}">
+                  <span>{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}</span>
+                </div>
+
+                <dxi-column dataField="orderId" dataType="string" caption="Order ID" alignment="center"></dxi-column>
+                <dxi-column dataField="hn" dataType="string" caption="HN"></dxi-column>
+                <dxi-column dataField="patientName" dataType="string" caption="Patient Name"></dxi-column>
+                <dxi-column dataField="locationDetail" dataType="string" caption="Location Detail"></dxi-column>
+                <dxi-column dataField="orderDate" dataType="string" caption="Order Date" [width]="160"></dxi-column>
+                <dxi-column dataField="orderStatus" dataType="string" caption="Order Status"></dxi-column>
+                <dxi-column dataField="updatedAt" caption="Updated At" sortOrder="desc" cssClass="wrapped-column"
+                  [width]="160" alignment="center"></dxi-column>
+                <dxi-column dataField="workingBy" dataType="string" caption="Working By"
+                  [allowSorting]="false"></dxi-column>
+                <!-- <dxi-column dataField="cashierSupNote" dataType="string" caption="Note from Cashier"
+                  [allowSorting]="false"></dxi-column> -->
+                <dxi-column *ngIf="menuPermissions.view || menuPermissions.edit" dataField="" dataType="string"
+                  caption="Action" cellTemplate="cellTemplateViewGroups" [width]="60" alignment="center"></dxi-column>
+
+                <div *dxTemplate="let data of 'cellTemplateViewGroups';let i=index;">
+
+                  <!-- <a [routerLink]="['/master-data-management/bin', data.data.id ,'view']"  id="btnView{{i}}" class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip" data-placement="top" title="View"><i class="fas fa-eye"></i></a> -->
+                  <!-- <span *ngIf="!data.data.isDisbled"> -->
+                  <span *ngIf="data.data.orderStatus != 'Urgent Request'">
+                    <a *ngIf="data.data.orderStatus != 'Order Reviewed' &&  menuPermissions.view"
+                      (click)="fnClickView(data.data)" id="btnView{{i}}" class="btn btn-default icon btn-sm"
+                      data-toggle="tooltip" data-placement="top" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a *ngIf="data.data.orderStatus == 'Order Reviewed' &&  menuPermissions.view"
+                      [routerLink]=" ['/order-management/orders-pharmacist-view',data.data.orderId,'quotation']"
+                      id="btnView{{i}}" class="btn btn-default icon btn-sm" data-toggle="tooltip" data-placement="top"
+                      title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </span>
+                  <span *ngIf="data.data.orderStatus == 'Urgent Request' &&  menuPermissions.edit">
+                    <a (click)="fnConfirmUrgentRequest(data.data)" id="btnCheckUrgentOrder {{i}}"
+                      class="btn btn-default icon btn-sm" data-toggle="tooltip" data-placement="top"
+                      title="Check urgent order">
+                      <i class="fas fa-clipboard-check"></i>
+                    </a></span>
+
+                </div>
+              </dx-data-grid>
+            </div>
+          </div>
+          <!--End List-->
+        </div>
+        <!--End ibox-content-->
+      </div>
+      <!--End ibox-->
+    </div>
+    <!--End col-sm-12-->
+  </div>
+
+  <div *ngIf="tabIndex === 1" class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg" style="box-shadow : none !important;">
+          <div class="ibox-heading-total" style="padding-top: 10px !important;">
+            <div class="col-sm-6">
+              <h5 class="ibox-title-text mb-10">{{textTotal}}</h5>
+            </div>
+            <div class="col-sm-6 form-inline text-right" style="padding-right: 0;">
+              <div class="form-group mb-10" style="margin-top: -7px;">
+                <label class="control-label mr-5" style="margin-top: 12px; font-size:16px">Order Status</label>
+                <select style="margin-top: 8px;min-width: 200px;" name="ddlStatus" id="ddlStatus" class="form-control"
+                  [(ngModel)]="orderStatus" (change)="fnChangeStatus()">
+                  <option selected="selected" [value]="''">Please select</option>
+                  <option *ngFor="let item of statusListProductionReview" [value]="item">{{ item }}</option>
+                </select>
+              </div>
+              <button *ngIf="menuPermissions.view" id="btnExportPending"
+                style="padding: 5px 10px !important; margin-top: -4px !important;" name="btnExportPending"
+                class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Export"
+                (click)="onClickExport()">
+                <img src="assets/icon-md/c5.svg" alt="">
+              </button>
+            </div>
+          </div>
+          <div class="ibox-body" style="padding-top: 0 !important;">
+            <!--[selectedRowKeys]="selectRowKeyId" (onInitialized)="onInitialized($event)" (onSelectionChanged)="selectRow($event)"-->
+            <div class="table-responsive table-wrapper">
+              <dx-data-grid #gridDataPendingOrders id="gridDataPendingOrders" [(dataSource)]="dataPendingOrders"
+                showBorders="false" [hoverStateEnabled]="true" noDataText="No data" [rowAlternationEnabled]="true"
+                [columnAutoWidth]="true" [allowColumnResizing]="true" (onCellPrepared)="onCellPrepared($event)"
+                (onRowPrepared)="onRowPrepared($event)" class="card-list-table"
+                (onOptionChanged)="changePageIndex($event)">
+                <dxo-load-panel [enabled]="true"></dxo-load-panel>
+                <dxo-paging [pageSize]="dxgridPageSize" [pageIndex]="pageIndex"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="allowedPageSizes" [showInfo]="false"
+                  [visible]="true" [showNavigationButtons]="true">
+                </dxo-pager>
+                <dxo-scrolling showScrollbar="onHover"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-remote-operations [sorting]="true" [paging]="true">
+                </dxo-remote-operations>
+
+                <!--<dxi-column dataField="no" dataType="number" caption="No." alignment="left" width="10%"></dxi-column>-->
+                <dxi-column caption="No" cellTemplate="cellTemplateNo" [allowSorting]="false" [width]="50"
+                  alignment="center"></dxi-column>
+                <div *dxTemplate="let data of 'cellTemplateNo'" style="text-align: center;"
+                  title="{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}">
+                  <span>{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}</span>
+                </div>
+
+                <dxi-column dataField="orderId" dataType="string" caption="Order ID" alignment="center"></dxi-column>
+                <dxi-column dataField="hn" dataType="string" caption="HN"></dxi-column>
+                <dxi-column dataField="patientName" dataType="string" caption="Patient Name"></dxi-column>
+                <dxi-column dataField="locationDetail" dataType="string" caption="Location Detail"></dxi-column>
+                <dxi-column dataField="productionStartDate" dataType="string"
+                  caption="Production Start (Date/Time)"></dxi-column>
+                <dxi-column dataField="productionEndDate" dataType="string" caption="Production End (Date/Time)"
+                  sortOrder="asc"></dxi-column>
+                <dxi-column dataField="orderStatus" dataType="string" caption="Order Status"></dxi-column>
+                <dxi-column dataField="workingBy" dataType="string" caption="Working By"
+                  [allowSorting]="false"></dxi-column>
+                <dxi-column dataField="cashierSupNote" dataType="string" caption="Note from Cashier"></dxi-column>
+                <dxi-column *ngIf="menuPermissions.view || menuPermissions.edit" dataField="" dataType="string"
+                  caption="Action" cellTemplate="cellTemplateViewGroups" [width]="100" alignment="center"></dxi-column>
+
+                <div *dxTemplate="let data of 'cellTemplateViewGroups';let i=index;">
+
+                  <!-- <a [routerLink]="['/master-data-management/bin', data.data.id ,'view']"  id="btnView{{i}}" class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip" data-placement="top" title="View"><i class="fas fa-eye"></i></a> -->
+                  <!-- <span *ngIf="!data.data.isDisbled"> -->
+                  <span>
+                    <!-- <a [routerLink]="['/order-management/orders-pharmacist-view',data.data.orderId,'view']" id="btnView{{i}}" class="btn btn-default icon btn-sm" data-toggle="tooltip" data-placement="top" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a> -->
+                    <a *ngIf="data.data.orderStatus !== 'Printed' &&  menuPermissions.view"
+                      (click)="fnGoView(data.data)" id="btnView{{i}}" class="btn btn-default icon btn-sm"
+                      data-toggle="tooltip" data-placement="top" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+
+                    <a *ngIf="data.data.orderStatus === 'Printed' &&  menuPermissions.edit"
+                      (click)="fnGoView(data.data)" id="btnReservation{{i}}" class="btn btn-default icon btn-sm"
+                      data-toggle="tooltip" data-placement="top" title="Second Check ">
+                      <i class="fas fa-check-double"></i>
+                    </a>
+
+                    <a *ngIf="(data.data.orderStatus === 'Order Inserted in TC' || data.data.orderStatus === 'Printed') &&  menuPermissions.edit"
+                      id="btnReservation{{i}}" class="btn btn-default icon btn-sm" data-toggle="tooltip"
+                      data-placement="top" title="Change Booking" (click)="fnClickChangeBooking(data.data.orderId)">
+                      <i class="fas fa-calendar"></i>
+                    </a>
+                  </span>
+                  <!-- <span *ngIf="data.data.isDisbled">
+                            <a  *ngIf="menuPermissions.edit" class="btn btn-default icon btn-sm mr-5 disabled" disabled><i class="fas fa-edit"></i></a>
+                            <a  *ngIf="menuPermissions.delete" class="btn btn-default icon btn-sm disabled" disabled><i class="fas fa-trash"></i></a>
+                        </span> -->
+
+                </div>
+              </dx-data-grid>
+            </div>
+          </div>
+          <!--End List-->
+        </div>
+        <!--End ibox-content-->
+      </div>
+      <!--End ibox-->
+    </div>
+    <!--End col-sm-12-->
+  </div>
+
+  <div *ngIf="tabIndex === 2" class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg" style="box-shadow : none !important;">
+          <!-- <div class="ibox-heading-total" style="padding-top: 10px !important;">
+            <h5 class="ibox-title-text">{{textTotal}}</h5>
+            <div class="form-group">
+              <label class="col-sm-4 control-label" style="margin-top: 12px; font-size:16px">Order Status</label>
+              <div class="col-sm-6">
+                <select style="margin-top: 8px;" name="txtStatus" id="txtStatus" class="form-control" [(ngModel)]="orderStatus" (change)="fnChangeStatus()">
+                  <option selected="selected" [value]="''">Please select</option>
+                  <option *ngFor="let item of statusListPharTech" [value]="item">{{ item }}</option>
+                </select>
+              </div>
+              <button *ngIf="menuPermissions.view" id="btnExport" style="padding: 5px 10px !important;" name="btnExport" class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Export" (click)="onClickExport()">
+                <img src="assets/icon-md/c4.svg" alt="">
+              </button>
+            </div>
+          </div> -->
+          <div class="ibox-heading-total" style="padding-top: 10px !important;">
+            <div class="col-sm-6">
+              <h5 class="ibox-title-text mb-10">{{textTotal}}</h5>
+            </div>
+            <div class="col-sm-6 form-inline text-right" style="padding-right: 0;">
+              <div class="form-group mb-10" style="margin-top: -7px;">
+                <label class="control-label mr-5" style="margin-top: 12px; font-size:16px">Order Status</label>
+                <select style="margin-top: 8px;min-width: 200px;" name="ddlStatus" id="ddlStatus" class="form-control"
+                  [(ngModel)]="orderStatus" (change)="fnChangeStatus()">
+                  <option selected="selected" [value]="''">Please select</option>
+                  <option *ngFor="let item of statusListPharTech" [value]="item">{{ item }}</option>
+                </select>
+              </div>
+              <button *ngIf="menuPermissions.view" id="btnExportPending"
+                style="padding: 5px 10px !important; margin-top: -4px !important;" name="btnExportPending"
+                class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Export"
+                (click)="onClickExport()">
+                <img src="assets/icon-md/c5.svg" alt="">
+              </button>
+            </div>
+          </div>
+          <div class="ibox-body" style="padding-top: 0 !important;">
+            <!--[selectedRowKeys]="selectRowKeyId" (onInitialized)="onInitialized($event)" (onSelectionChanged)="selectRow($event)"-->
+            <div class="table-responsive table-wrapper">
+              <dx-data-grid #gridDataPendingOrders id="gridDataPendingOrders" [(dataSource)]="dataPendingOrders"
+                showBorders="false" [hoverStateEnabled]="true" noDataText="No data" [rowAlternationEnabled]="true"
+                [columnAutoWidth]="true" [allowColumnResizing]="true" (onCellPrepared)="onCellPrepared($event)"
+                (onRowPrepared)="onRowPrepared($event)" class="card-list-table"
+                (onOptionChanged)="changePageIndex($event)">
+                <dxo-load-panel [enabled]="true"></dxo-load-panel>
+                <dxo-paging [pageSize]="dxgridPageSize" [pageIndex]="pageIndex"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="allowedPageSizes" [showInfo]="false"
+                  [visible]="true" [showNavigationButtons]="true">
+                </dxo-pager>
+                <dxo-scrolling showScrollbar="onHover"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-remote-operations [sorting]="true" [paging]="true">
+                </dxo-remote-operations>
+
+                <!--<dxi-column dataField="no" dataType="number" caption="No." alignment="left" width="10%"></dxi-column>-->
+                <dxi-column caption="No" cellTemplate="cellTemplateNo" [allowSorting]="false" [width]="50"
+                  alignment="center"></dxi-column>
+                <div *dxTemplate="let data of 'cellTemplateNo'" style="text-align: center;"
+                  title="{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}">
+                  <span>{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}</span>
+                </div>
+
+                <dxi-column dataField="orderId" dataType="string" caption="Order ID" alignment="center"></dxi-column>
+                <dxi-column dataField="hn" dataType="string" caption="HN"></dxi-column>
+                <dxi-column dataField="patientName" dataType="string" caption="Patient Name"></dxi-column>
+                <dxi-column dataField="locationDetail" dataType="string" caption="Location Detail"></dxi-column>
+                <dxi-column dataField="productionStartDate" dataType="string"
+                  caption="Production Start (Date/Time)"></dxi-column>
+                <dxi-column dataField="productionEndDate" dataType="string" caption="Production End (Date/Time)"
+                  sortOrder="asc"></dxi-column>
+                <dxi-column dataField="orderStatus" dataType="string" caption="Order Status"></dxi-column>
+                <dxi-column dataField="workingBy" dataType="string" caption="Working By"
+                  [allowSorting]="false"></dxi-column>
+                <dxi-column dataField="cashierSupNote" dataType="string" caption="Note from Cashier"></dxi-column>
+                <dxi-column *ngIf="menuPermissions.view || menuPermissions.edit" dataField="" dataType="string"
+                  caption="Action" cellTemplate="cellTemplateViewGroups" [width]="150" alignment="center"></dxi-column>
+
+                <div *dxTemplate="let data of 'cellTemplateViewGroups';let i=index;">
+
+                  <!-- <a [routerLink]="['/master-data-management/bin', data.data.id ,'view']"  id="btnView{{i}}" class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip" data-placement="top" title="View"><i class="fas fa-eye"></i></a> -->
+                  <!-- <span *ngIf="!data.data.isDisbled"> -->
+                  <span>
+                    <a *ngIf="menuPermissions.view" (click)="fnGoView(data.data)" id="btnView{{i}}"
+                      class="btn btn-default icon btn-sm" data-toggle="tooltip" data-placement="top" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <button
+                      *ngIf="data.data.orderStatus == 'First Review Done' && +data.data.isSplitProduction === 0 && menuPermissions.edit"
+                      id="btnSplitProduction{{i}}" class="btn btn-default icon btn-sm" data-toggle="tooltip"
+                      data-placement="top" title="Split Production" (click)="fnClickSplitProduction(data.data.orderId)">
+                      <img src="assets/icon-md/c17.svg" style="height: 21px; margin-top: -3px;" alt="">
+                    </button>
+                    <a *ngIf="(data.data.orderStatus == 'Production Booked' || data.data.orderStatus == 'First Review Done') && menuPermissions.edit"
+                      id="btnReservation{{i}}" class="btn btn-default icon btn-sm" data-toggle="tooltip"
+                      data-placement="top" title="Change Booking" (click)="fnClickChangeBooking(data.data.orderId)">
+                      <i class="fas fa-calendar"></i>
+                    </a>
+                  </span>
+                  <!-- <span *ngIf="data.data.isDisbled">
+                            <a  *ngIf="menuPermissions.edit" class="btn btn-default icon btn-sm mr-5 disabled" disabled><i class="fas fa-edit"></i></a>
+                            <a  *ngIf="menuPermissions.delete" class="btn btn-default icon btn-sm disabled" disabled><i class="fas fa-trash"></i></a>
+                        </span> -->
+
+                </div>
+              </dx-data-grid>
+            </div>
+          </div>
+          <!--End List-->
+        </div>
+        <!--End ibox-content-->
+      </div>
+      <!--End ibox-->
+    </div>
+    <!--End col-sm-12-->
+  </div>
+
+  <div *ngIf="tabIndex === 3" class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg" style="box-shadow : none !important;">
+          <div class="ibox-heading-total" style="padding-top: 10px !important;">
+            <div class="col-sm-6">
+              <h5 class="ibox-title-text mb-10">{{textTotal}}</h5>
+            </div>
+            <div class="col-sm-6 form-inline text-right" style="padding-right: 0;">
+              <div class="form-group mb-10" style="margin-top: -7px;">
+                <label class="control-label mr-5" style="margin-top: 12px; font-size:16px">Order Status</label>
+                <select style="margin-top: 8px;min-width: 200px;" name="ddlStatus" id="ddlStatus" class="form-control"
+                  [(ngModel)]="orderStatus" (change)="fnChangeStatus()">
+                  <option selected="selected" [value]="''">Please select</option>
+                  <option *ngFor="let item of statusListDispensing" [value]="item">{{ item }}</option>
+                </select>
+              </div>
+              <button *ngIf="menuPermissions.view" id="btnExportPending"
+                style="padding: 5px 10px !important; margin-top: -4px !important;" name="btnExportPending"
+                class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Export"
+                (click)="onClickExport()">
+                <img src="assets/icon-md/c5.svg" alt="">
+              </button>
+            </div>
+          </div>
+          <div class="ibox-body" style="padding-top: 0 !important;">
+            <!--[selectedRowKeys]="selectRowKeyId" (onInitialized)="onInitialized($event)" (onSelectionChanged)="selectRow($event)"-->
+            <div class="table-responsive table-wrapper">
+              <dx-data-grid #gridDataPendingOrders id="gridDataPendingOrders" [(dataSource)]="dataPendingOrders"
+                showBorders="false" [hoverStateEnabled]="true" noDataText="No data" [rowAlternationEnabled]="true"
+                [columnAutoWidth]="true" [allowColumnResizing]="true" (onCellPrepared)="onCellPrepared($event)"
+                class="card-list-table" (onOptionChanged)="changePageIndex($event)"
+                (onRowPrepared)="onRowPreparedDispensing($event)">
+                <dxo-load-panel [enabled]="true"></dxo-load-panel>
+                <dxo-paging [pageSize]="dxgridPageSize" [pageIndex]="pageIndex"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="allowedPageSizes" [showInfo]="false"
+                  [visible]="true" [showNavigationButtons]="true">
+                </dxo-pager>
+                <dxo-scrolling showScrollbar="onHover"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-remote-operations [sorting]="true" [paging]="true">
+                </dxo-remote-operations>
+
+                <!--<dxi-column dataField="no" dataType="number" caption="No." alignment="left" width="10%"></dxi-column>-->
+                <dxi-column caption="No" cellTemplate="cellTemplateNo" [allowSorting]="false" [width]="50"
+                  alignment="center"></dxi-column>
+                <div *dxTemplate="let data of 'cellTemplateNo'" style="text-align: center;"
+                  title="{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}">
+                  <span>{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}</span>
+                </div>
+
+                <dxi-column dataField="orderId" dataType="string" caption="Order ID" alignment="center"></dxi-column>
+                <dxi-column dataField="hn" dataType="string" caption="HN"></dxi-column>
+                <dxi-column dataField="patientName" dataType="string" caption="Patient Name"></dxi-column>
+                <dxi-column dataField="locationDetail" dataType="string" caption="Location Detail"></dxi-column>
+                <dxi-column dataField="productionEndDate" dataType="string"
+                  caption="Production End (Date/Time)"></dxi-column>
+                <dxi-column dataField="deliveryDate" dataType="string" caption="Delivery Date"
+                  sortOrder="asc"></dxi-column>
+                <dxi-column dataField="arrivalTime" dataType="string" caption="Arrival Time"></dxi-column>
+                <dxi-column dataField="deliveryMethod" dataType="string" caption="Delivery Method"></dxi-column>
+                <dxi-column dataField="orderStatus" dataType="string" caption="Order Status"></dxi-column>
+                <dxi-column dataField="workingBy" dataType="string" caption="Working By"
+                  [allowSorting]="false"></dxi-column>
+                <dxi-column dataField="cashierSupNote" dataType="string" caption="Note from Cashier"></dxi-column>
+                <dxi-column *ngIf="menuPermissions.view" dataField="" dataType="string" caption="Action"
+                  cellTemplate="cellTemplateViewGroups" [width]="60" alignment="center"></dxi-column>
+
+                <div *dxTemplate="let data of 'cellTemplateViewGroups';let i=index;">
+
+                  <!-- <a [routerLink]="['/master-data-management/bin', data.data.id ,'view']"  id="btnView{{i}}" class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip" data-placement="top" title="View"><i class="fas fa-eye"></i></a> -->
+                  <!-- <span *ngIf="!data.data.isDisbled"> -->
+                  <span>
+                    <a *ngIf="menuPermissions.view && data.data.orderStatus !== 'Finished Product Delivery'"
+                      (click)="fnGoView(data.data)" id="btnView{{i}}" class="btn btn-default icon btn-sm"
+                      data-toggle="tooltip" data-placement="top" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+
+                    <a *ngIf="menuPermissions.view && data.data.orderStatus === 'Finished Product Delivery'"
+                      (click)="fnGoView(data.data)" id="btnView{{i}}" class="btn btn-default icon btn-sm"
+                      data-toggle="tooltip" data-placement="top" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+
+                  </span>
+                  <!-- <span *ngIf="data.data.isDisbled">
+                            <a  *ngIf="menuPermissions.edit" class="btn btn-default icon btn-sm mr-5 disabled" disabled><i class="fas fa-edit"></i></a>
+                            <a  *ngIf="menuPermissions.delete" class="btn btn-default icon btn-sm disabled" disabled><i class="fas fa-trash"></i></a>
+                        </span> -->
+
+                </div>
+              </dx-data-grid>
+            </div>
+          </div>
+          <!--End List-->
+        </div>
+        <!--End ibox-content-->
+      </div>
+      <!--End ibox-->
+    </div>
+    <!--End col-sm-12-->
+  </div>
+
+  <div *ngIf="tabIndex === 4" class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg" style="box-shadow : none !important;">
+          <div class="ibox-heading-total" style="padding-top: 10px !important;">
+            <div class="col-sm-6">
+              <h5 class="ibox-title-text mb-10">{{textTotal}}</h5>
+            </div>
+            <div class="col-sm-6 form-inline text-right" style="padding-right: 0;">
+              <!-- <div class="form-group mb-10" style="margin-top: -7px;">
+                <label class="control-label mr-5" style="margin-top: 12px; font-size:16px">Order Status</label>
+                <select style="margin-top: 8px;min-width: 200px;" name="ddlStatus" id="ddlStatus" class="form-control"
+                  [(ngModel)]="orderStatus" (change)="fnChangeStatus()">
+                  <option selected="selected" [value]="''">Please select</option>
+                  <option *ngFor="let item of statusListPreOrder" [value]="item">{{ item }}</option>
+                </select>
+              </div> -->
+              <button *ngIf="menuPermissions.view" id="btnExportPending"
+                style="padding: 5px 10px !important; margin-top: -4px !important;" name="btnExportPending"
+                class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Export"
+                (click)="onClickExport()">
+                <img src="assets/icon-md/c5.svg" alt="">
+              </button>
+            </div>
+          </div>
+          <div class="ibox-body" style="padding-top: 0 !important;">
+            <!--[selectedRowKeys]="selectRowKeyId" (onInitialized)="onInitialized($event)" (onSelectionChanged)="selectRow($event)"-->
+            <div class="table-responsive table-wrapper">
+              <dx-data-grid #gridDataPendingOrders id="gridDataPendingOrders" [(dataSource)]="dataPendingOrders"
+                showBorders="false" [hoverStateEnabled]="true" noDataText="No data" [rowAlternationEnabled]="true"
+                [columnAutoWidth]="true" [allowColumnResizing]="true" (onCellPrepared)="onCellPrepared($event)"
+                class="card-list-table" (onOptionChanged)="changePageIndex($event)"
+                (onRowPrepared)="onRowPreparedDispensing($event)">
+                <dxo-load-panel [enabled]="true"></dxo-load-panel>
+                <dxo-paging [pageSize]="dxgridPageSize" [pageIndex]="pageIndex"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="allowedPageSizes" [showInfo]="false"
+                  [visible]="true" [showNavigationButtons]="true">
+                </dxo-pager>
+                <dxo-scrolling showScrollbar="onHover"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-remote-operations [sorting]="true" [paging]="true">
+                </dxo-remote-operations>
+
+                <!--<dxi-column dataField="no" dataType="number" caption="No." alignment="left" width="10%"></dxi-column>-->
+                <dxi-column caption="No" cellTemplate="cellTemplateNo" [allowSorting]="false" [width]="50"
+                  alignment="center"></dxi-column>
+                <div *dxTemplate="let data of 'cellTemplateNo'" style="text-align: center;"
+                  title="{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}">
+                  <span>{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}</span>
+                </div>
+
+                <dxi-column dataField="orderId" dataType="string" caption="Order ID" alignment="center"></dxi-column>
+                <dxi-column dataField="hn" dataType="string" caption="HN"></dxi-column>
+                <dxi-column dataField="patientName" dataType="string" caption="Patient Name"></dxi-column>
+                <!-- <dxi-column dataField="locationDetail" dataType="string" caption="Location Detail"></dxi-column> -->
+
+                <dxi-column dataField="deliveryDate" dataType="string" caption="Delivery Date"
+                  sortOrder="asc"></dxi-column>
+                <dxi-column dataField="arrivalTime" dataType="string" caption="Arrival Time"></dxi-column>
+                <dxi-column dataField="deliveryMethod" dataType="string" caption="Delivery Method"></dxi-column>
+
+                <dxi-column dataField="orderStatus" dataType="string" caption="Order Status"></dxi-column>
+                <dxi-column dataField="workingBy" dataType="string" caption="Working By"
+                  [allowSorting]="false"></dxi-column>
+                <dxi-column dataField="orderPharmacyNoteRemark" dataType="string" caption="Remark"></dxi-column>
+                <!-- <dxi-column dataField="cashierSupNote" dataType="string" caption="Note from Cashier"></dxi-column> -->
+                <dxi-column *ngIf="menuPermissions.view" dataField="" dataType="string" caption="Action"
+                  cellTemplate="cellTemplateViewGroups" [width]="60" alignment="center"></dxi-column>
+
+                <div *dxTemplate="let data of 'cellTemplateViewGroups';let i=index;">
+
+                  <!-- <a [routerLink]="['/master-data-management/bin', data.data.id ,'view']"  id="btnView{{i}}" class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip" data-placement="top" title="View"><i class="fas fa-eye"></i></a> -->
+                  <!-- <span *ngIf="!data.data.isDisbled"> -->
+                  <span>
+                    <a *ngIf="menuPermissions.view" (click)="fnGoView(data.data)" id="btnView{{i}}"
+                      class="btn btn-default icon btn-sm" data-toggle="tooltip" data-placement="top" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </span>
+                  <!-- <span *ngIf="data.data.isDisbled">
+                            <a  *ngIf="menuPermissions.edit" class="btn btn-default icon btn-sm mr-5 disabled" disabled><i class="fas fa-edit"></i></a>
+                            <a  *ngIf="menuPermissions.delete" class="btn btn-default icon btn-sm disabled" disabled><i class="fas fa-trash"></i></a>
+                        </span> -->
+
+                </div>
+              </dx-data-grid>
+            </div>
+          </div>
+          <!--End List-->
+        </div>
+        <!--End ibox-content-->
+      </div>
+      <!--End ibox-->
+    </div>
+    <!--End col-sm-12-->
+  </div>
+
+  <div *ngIf="tabIndex === 5" class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg" style="box-shadow : none !important;">
+          <div class="ibox-heading-total" style="padding-top: 10px !important;">
+            <div class="col-sm-6">
+              <h5 class="ibox-title-text mb-10">{{textTotal}}</h5>
+            </div>
+            <div class="col-sm-6 form-inline text-right" style="padding-right: 0;">
+              <div class="form-group mb-10" style="margin-top: -7px;">
+                <label class="control-label mr-5" style="margin-top: 12px; font-size:16px">Order Status</label>
+                <select style="margin-top: 8px;min-width: 200px; width: 206.4px;" name="ddlStatus" id="ddlStatus"
+                  class="form-control" [(ngModel)]="orderStatus" (change)="fnChangeStatus()">
+                  <option selected="selected" [value]="''">Please select</option>
+                  <option *ngFor="let item of statusListComplete" [value]="item">{{ item }}</option>
+                </select>
+              </div>
+              <button *ngIf="menuPermissions.view" id="btnExportPending"
+                style="padding: 5px 10px !important; margin-top: -4px !important;" name="btnExportPending"
+                class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Export"
+                (click)="onClickExport()">
+                <img src="assets/icon-md/c5.svg" alt="">
+              </button>
+            </div>
+          </div>
+          <div class="ibox-body" style="padding-top: 0 !important;">
+            <!--[selectedRowKeys]="selectRowKeyId" (onInitialized)="onInitialized($event)" (onSelectionChanged)="selectRow($event)"-->
+            <div class="table-responsive table-wrapper">
+              <dx-data-grid #gridDataPendingOrders id="gridDataPendingOrders" [(dataSource)]="dataPendingOrders"
+                showBorders="false" [hoverStateEnabled]="true" noDataText="No data" [rowAlternationEnabled]="true"
+                [columnAutoWidth]="true" [allowColumnResizing]="true" (onCellPrepared)="onCellPrepared($event)"
+                class="card-list-table" (onOptionChanged)="changePageIndex($event)">
+                <dxo-load-panel [enabled]="true"></dxo-load-panel>
+                <dxo-paging [pageSize]="dxgridPageSize" [pageIndex]="pageIndex"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="allowedPageSizes" [showInfo]="false"
+                  [visible]="true" [showNavigationButtons]="true">
+                </dxo-pager>
+                <dxo-scrolling showScrollbar="onHover"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-remote-operations [sorting]="true" [paging]="true">
+                </dxo-remote-operations>
+
+                <!--<dxi-column dataField="no" dataType="number" caption="No." alignment="left" width="10%"></dxi-column>-->
+                <dxi-column caption="No" cellTemplate="cellTemplateNo" [allowSorting]="false" [width]="50"
+                  alignment="center"></dxi-column>
+                <div *dxTemplate="let data of 'cellTemplateNo'" style="text-align: center;"
+                  title="{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}">
+                  <span>{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}</span>
+                </div>
+
+                <dxi-column dataField="orderId" dataType="string" caption="Order ID" alignment="center"></dxi-column>
+                <dxi-column dataField="hn" dataType="string" caption="HN"></dxi-column>
+                <dxi-column dataField="patientName" dataType="string" caption="Patient Name"></dxi-column>
+                <dxi-column dataField="locationDetail" dataType="string" caption="Location Detail"></dxi-column>
+                <dxi-column dataField="deliveryDate" sortOrder="asc" dataType="string"
+                  caption="Delivery Date"></dxi-column>
+                <dxi-column dataField="arrivalTime" dataType="string" caption="Arrival Time"></dxi-column>
+                <dxi-column dataField="deliveryMethod" dataType="string" caption="Delivery Method"></dxi-column>
+                <dxi-column dataField="completedAt" dataType="string" [allowSorting]="false"
+                  caption="Complete At"></dxi-column>
+                <dxi-column dataField="orderStatus" dataType="string" caption="Order Status"></dxi-column>
+                <!-- <dxi-column dataField="workingBy" dataType="string" caption="Working By"
+                  [allowSorting]="false"></dxi-column> -->
+                <dxi-column dataField="cashierSupNote" dataType="string" caption="Note from Cashier"></dxi-column>
+                <dxi-column *ngIf="menuPermissions.view" dataField="" dataType="string" caption="Action"
+                  cellTemplate="cellTemplateViewGroups" [width]="60" alignment="center"></dxi-column>
+
+                <div *dxTemplate="let data of 'cellTemplateViewGroups';let i=index;">
+
+                  <!-- <a [routerLink]="['/master-data-management/bin', data.data.id ,'view']"  id="btnView{{i}}" class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip" data-placement="top" title="View"><i class="fas fa-eye"></i></a> -->
+                  <!-- <span *ngIf="!data.data.isDisbled"> -->
+                  <span *ngIf="data.data.orderStatus === 'Complete'">
+                    <a *ngIf="menuPermissions.view" (click)="fnGoView(data.data)" id="btnView{{i}}"
+                      class="btn btn-default icon btn-sm" data-toggle="tooltip" data-placement="top" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </span>
+
+                  <span
+                    *ngIf="data.data.orderStatus === 'Complete (Finished Product Delivery)' || data.data.orderStatus === 'Complete (Pre-Order) Finished Product'">
+                    <a *ngIf="menuPermissions.view" (click)="fnGoView(data.data)" id="btnView{{i}}"
+                      class="btn btn-default icon btn-sm" data-toggle="tooltip" data-placement="top" title="View"
+                      (click)="setRedirect()">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </span>
+                  <!-- <span *ngIf="data.data.isDisbled">
+                            <a  *ngIf="menuPermissions.edit" class="btn btn-default icon btn-sm mr-5 disabled" disabled><i class="fas fa-edit"></i></a>
+                            <a  *ngIf="menuPermissions.delete" class="btn btn-default icon btn-sm disabled" disabled><i class="fas fa-trash"></i></a>
+                        </span> -->
+
+                </div>
+              </dx-data-grid>
+            </div>
+          </div>
+          <!--End List-->
+        </div>
+        <!--End ibox-content-->
+      </div>
+      <!--End ibox-->
+    </div>
+    <!--End col-sm-12-->
+  </div>
+
+
+
+  <!--End row-->
+</div>
+<!--End Wrapper-->
+
+<div #modalImportDocument class="modal inmodal" id="modalImportDocument" tabindex="-1" role="dialog" aria-hidden="true">
+  <div *ngIf="step === 0" class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn" style="height: 240px;">
+      <div class="bgyellow" style="height: auto;">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Import Document
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <button class="btn pull-right" style="background-color: transparent;box-shadow: none;" (click)="close()">
+              <i class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </button>
+          </div>
+        </div>
+        <div style="padding: 0 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+      </div>
+      <br>
+      <form class="form-horizontal" [formGroup]="importForm">
+        <!--Supply Day-->
+        <div class="form-group">
+          <label class="col-sm-3 control-label">HN</label>
+          <div
+            [ngClass]="{'has-error':!importForm.controls.txtImportHn.valid&&importForm.controls.txtImportHn.dirty,'col-sm-6':true}">
+            <input type="text" class="form-control" id="txtImportHn" name="txtImportHn" formControlName="txtImportHn"
+              [(ngModel)]="hn" (keyup)="onChangeHn()">
+          </div>
+        </div>
+      </form>
+      <br>
+      <div class="col-sm-12 pull-center m-r" style="text-align: center; height: 60px;">
+        <button [disabled]="disbledBtnModal" style="margin-left:3px;" class="btn btn-success font-btn  width-btn-small"
+          (click)="clickNext()">Next
+        </button>
+
+      </div>
+    </div>
+  </div>
+  <div *ngIf="step === 1" class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn" style="height: 240px;">
+      <div class="bgyellow" style="height: auto;">
+        <div class="row"
+          style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;margin-left: 0 !important;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Import Document
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <button class="btn pull-right" style="background-color: transparent;box-shadow: none;" (click)="close()">
+              <i class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </button>
+          </div>
+        </div>
+        <div style="padding: 0 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+      </div>
+      <br>
+      <div class="pb-30 pl-30 pr-30 mr-30 ml-30">
+        <div class="col-sm-12 title-no-menu text-right pr-0">
+          <span style="float: left;padding-top: 10px;">Patient Info</span>
+          <!-- <button id="btnDocument"
+          style="padding: 5px 10px !important;" class="btn btn-success float-xs-left ml-10" data-toggle="tooltip"
+          data-placement="top" title="Print Delivery Detail" (click)="fnClickPrintDocument()">
+          <img src="assets/icon-md/print.svg" alt="">
+        </button> -->
+          <button id="btnDownloadTemplate" style="padding: 5px 10px !important;" name="btnDownloadTemplate"
+            class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Download Template"
+            (click)="fnDownloadPatientTemplate()">
+            <img src="assets/icon-md/c4.svg" alt="">
+          </button>
+          <button id="btnUploadTemplate" style="padding: 5px 10px 5px 5px !important;" name="btnUploadTemplate"
+            class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Import">
+            <label style="margin-bottom:0 !important">
+              <img src="assets/icon-md/c5.svg" alt="">
+              <input type="file" id="file" style="display: none" name="image" accept=".xlsx" multiple="false"
+                (change)="onFileChangePatient($event)">
+            </label>
+          </button>
+        </div>
+
+        <br>
+        <div class="col-sm-12 pull-center m-r mt-30" style="text-align: center; height: 60px;">
+          <button [disabled]="disbledBtnModal" style="margin-left:3px;"
+            class="btn btn-success font-btn  width-btn-small" (click)="clickNext()">Next
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="step === 2" class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn" style="height: 200px;">
+      <div class="bgyellow" style="height: auto;">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Import Document
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <button class="btn pull-right" style="background-color: transparent;box-shadow: none;" (click)="close()">
+              <i class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </button>
+          </div>
+        </div>
+        <div style="padding: 0 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+      </div>
+      <br>
+      <div class="pb-30 pl-30 pr-30 mr-30 ml-30">
+        <div class="col-sm-12 title-no-menu text-right pr-0">
+          <span style="float: left;padding-top: 10px;">Order</span>
+          <!-- <button id="btnDocument"
+          style="padding: 5px 10px !important;" class="btn btn-success float-xs-left ml-10" data-toggle="tooltip"
+          data-placement="top" title="Print Delivery Detail" (click)="fnClickPrintDocument()">
+          <img src="assets/icon-md/print.svg" alt="">
+        </button> -->
+          <button id="btnDownloadTemplate" style="padding: 5px 10px !important;" name="btnDownloadTemplate"
+            class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Download Template"
+            (click)="fnDownloadTemplate()">
+            <img src="assets/icon-md/c4.svg" alt="">
+          </button>
+          <button id="btnUploadTemplate" style="padding: 5px 10px 5px 5px !important;" name="btnUploadTemplate"
+            class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Import">
+            <label style="margin-bottom:0 !important">
+              <img src="assets/icon-md/c5.svg" alt="">
+              <input type="file" id="file" style="display: none" name="image" accept=".xlsx" multiple="false"
+                (change)="onFileChange($event)">
+            </label>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert #myModal (onOkDelete)="onOkDelete()" (onCancelDelete)="onCancelDelete()"
+  (onCloseModalError)="onCloseModalError()" (onClickApproveModal)="onClickApprove()"
+  (onClickRejectModal)="onClickReject()" (onOkChangeBooking)="onOkChangeBooking()"
+  (onClickEditOrder)="onClickEditOrder()" (onClickEditOrAcceptOrder)="onClickEditOrAcceptOrder()"
+  (onCloseEditOrder)="onCloseEditOrder()" (onDownload)="onDownload()"></app-alert>
+<app-alert-split-production #modalSplitProduction></app-alert-split-production>
+<dx-load-panel shadingColor="rgba(0,0,0,0.4)" [(visible)]="isLoadingPanel" [showIndicator]="true" [showPane]="true"
+  [shading]="true">
+</dx-load-panel>

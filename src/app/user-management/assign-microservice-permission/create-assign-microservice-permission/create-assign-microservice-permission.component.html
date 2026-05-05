@@ -1,0 +1,195 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+    <div class="spiner-example-detail">
+        <div class="sk-spinner sk-spinner-double-bounce">
+            <div class="sk-double-bounce1"></div>
+            <div class="sk-double-bounce2"></div>
+        </div>
+    </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone">
+    <div class="soc-breadcrumb">
+        <div class="row">
+            <div class="col-md-8 col-xs-12 align-self-center">
+                <h4 class="soc-title">Assign Role & Permission</h4>
+                <div class="d-flex align-items-center" style="margin-top: -10px;">
+                    <nav>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>User Management</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a [routerLink]="['/assign-microservice-permission']">Assign Role & Permission</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                Assign Role & Permission Info
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 align-self-center text-right">
+                <button (click)="btnSave()" id="btnSaveTop" name="btnSaveTop"
+                        class="btn btn-success float-xs-left mr-10" [disabled]="editing || disbledBtn.save"
+                        data-toggle="modal" data-placement="top" title="Save">
+                    <i class="fas fa-save"></i><span>Save</span>
+                </button>
+                <button [routerLink]="['/assign-microservice-permission']" id="btnCancelTop" name="btnCancelTop"
+                        class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title=" Clear"
+                        style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                    <i class="fal fa-times"></i><span> Cancel</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox mb-0">
+                <div class="ibox-bg">
+                    <div class="ibox-heading">
+                        <h5 class="ibox-title-text">Assign Role & Permission Info<br>
+                            <!-- <small>*Please enter data in the "Require Field" textbox.</small> -->
+                        </h5>
+                    </div>
+                    <div class="ibox-body">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="ibox float-e-margins">
+                                            <div class="ibox-content" style="border:0px;">
+                                                <form method="get" class="form-horizontal">
+                                                    <div class="form-group"><label class="col-sm-2 control-label">Username </label>
+                                                        <div class="col-sm-4">
+                                                            <div>
+                                                                <input maxlength="50" type="text" class="form-control"
+                                                                       id="txtUsername" name="txtUsername"
+                                                                       [(ngModel)]="username" [title]="username"
+                                                                       disabled="true">
+                                                            </div>
+                                                            <div *ngIf="updatedAt">
+                                                                Updated at : {{updatedAt}}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="hr-line-dashed"></div>
+                                                    <!-- <div class="row fontgroup-area">
+                                                    </div> -->
+
+                                                </form>
+                                                <div class="col-lg-12" style="padding: 12px 0px;">
+                                                    <div class="col-lg-8">
+                                                        <div class="row">
+                                                            <div class="fontpink">Select Multiple Roles </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="dx-treelist-headers dx-treelist-nowrap">
+                                                    <div class="dx-treelist-content dx-treelist-scroll-container table-responsive ">
+                                                        <div class="table-responsive">
+                                                            <table class="table table-striped table-bordered table-hover dataTables-example dataTable no-footer"
+                                                                   *ngIf="microserviceMenuGroup && microserviceMenuGroup.menu"
+                                                                   width="100%">
+                                                                <thead>
+                                                                <tr>
+                                                                    <td width="40px">
+                                                                        <!-- <label class="i-checkboxchecks-ex"><input [ngClass]="{ 'checked': userMicroservice.length == microserviceMenuGroup.microservice.length}"type="checkbox" (click)="addMicroserviceAll()"><span class="checkmark"></span></label> -->
+                                                                        <div (click)="addMicroserviceAll()"
+                                                                             [ngClass]="{'dx-checkbox-indeterminate':userMicroservice.length > 0 && userMicroservice.length != microserviceMenuGroup.menu.length,'dx-checkbox-checked': userMicroservice.length == microserviceMenuGroup.menu.length,'dx-select-checkbox dx-treelist-checkbox-size dx-checkbox dx-widget':true}"
+                                                                             role="checkbox" aria-checked="false"
+                                                                             tabindex="-1"><input type="hidden"
+                                                                                                  value="false">
+                                                                            <div class="dx-checkbox-container"><span
+                                                                                    class="dx-checkbox-icon"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td style="text-align: center;"><strong
+                                                                            style="color:#4b4b4b;"> Menu </strong></td>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody *ngFor="let menu of microserviceMenuGroup.menu">
+                                                                <tr class="dx-row dx-column-lines dx-header-row">
+                                                                    <td>
+                                                                        <div (click)="addMicroservice(menu.menuId)"
+                                                                             [ngClass]="{ 'dx-checkbox-checked': userMicroservice.indexOf(menu.menuId) > -1,'dx-select-checkbox dx-treelist-checkbox-size dx-checkbox dx-widget':true}"
+                                                                             role="checkbox" aria-checked="false"
+                                                                             tabindex="-1"><input type="hidden"
+                                                                                                  value="false">
+                                                                            <div class="dx-checkbox-container"><span
+                                                                                    class="dx-checkbox-icon"></span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                    <td style="position: absolute;width: 90%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"
+                                                                        [title]="menu.menuName">
+                                                                        <span>{{menu.menuName}}</span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="dx-row dx-column-lines dx-header-row"
+                                                                    *ngIf="userMicroservice.indexOf(menu.menuId) > -1">
+                                                                    <td colspan="2">
+                                                                        <div class="row col-sm-12 col-md-12 col-lg-12">
+                                                                            <dx-tree-list
+                                                                                    id="treeListMenu"
+                                                                                    inputId="treeListMenu"
+                                                                                    name="treeListMenu"
+                                                                                    [dataSource]="menu.roles"
+                                                                                    keyExpr="roleId"
+                                                                                    [showRowLines]="true"
+                                                                                    [showBorders]="true"
+                                                                                    [(selectedRowKeys)]="userMicroserviceGroup[menu.menuId]"
+                                                                            >
+                                                                                <dxo-selection
+                                                                                        id="chkMenu"
+                                                                                        inputId="chkMenu"
+                                                                                        name="chkMenu"
+                                                                                        mode="multiple"
+                                                                                        [recursive]="recursiveSelectionEnabled">
+                                                                                </dxo-selection>
+                                                                                <dxi-column caption="Role"
+                                                                                            dataField="roleName"
+                                                                                            align="left"></dxi-column>
+                                                                            </dx-tree-list>
+
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ibox-footer no-bg">
+                        <div class="ibox-footer-right">
+                            <button (click)="btnSave()" id="btnSaveTop" name="btnSaveTop"
+                                class="btn btn-success float-xs-left mr-10" [disabled]="editing || disbledBtn.save"
+                                data-toggle="modal" data-placement="top" title="Save">
+                            <i class="fas fa-save"></i><span>Save</span>
+                        </button>
+                        <button [routerLink]="['/assign-microservice-permission']" id="btnCancelTop" name="btnCancelTop"
+                                class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title=" Clear"
+                                style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                            <i class="fal fa-times"></i><span> Cancel</span>
+                        </button>
+                        </div>
+                      </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--<app-alert #myModal (onClickBack)="onClickBack()"> </app-alert>-->
+
+<app-alert #myModal (onOkDelete)="delete()" (onCancelDelete)="onCancelDelete()"
+           (onCancelViewWarning)="onCancelViewWarning()" (onCloseModalError)="onCloseModalError()"
+           (onClickBack)="onClickBack()"></app-alert>

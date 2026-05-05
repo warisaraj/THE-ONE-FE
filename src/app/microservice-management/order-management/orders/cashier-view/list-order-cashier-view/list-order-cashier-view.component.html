@@ -1,0 +1,293 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-3 col-xs-12 align-self-center">
+        <h4 class="soc-title">Orders</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Order Management</a>
+              </li>
+              <li class="breadcrumb-item active">
+                Orders
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-9 col-xs-12 align-self-center text-right fix-bt">
+        <button *ngIf="menuPermissions.view" id="btnExportAll" name="btnExportAll" class="btn btn-success float-xs-left"
+          title="Export All" (click)="onClickExportAll()">
+          <span>Export All</span>
+        </button>
+        <button *ngIf="menuPermissions.view" id="btnViewAllOrders" name="btnViewAllOrders"
+          class="btn btn-success float-xs-left" title="View All Orders"
+          [routerLink]="['/order-management','all-orders']">
+          <span>View All Orders</span>
+        </button>
+        <button *ngIf="menuPermissions.add"
+          [routerLink]="['/order-management','orders-cashier-view','queue-management-finished-product','new']"
+          id="btnCreateFinishedProduct" name="btnCreateFinishedProduct" class="btn btn-success float-xs-left "
+          data-toggle="tooltip" data-placement="top" title="Create Finished Product">
+          <i class="fal fa-plus"></i><span>Create Finished Product</span>
+        </button>
+        <button *ngIf="menuPermissions.add"
+          [routerLink]="['/order-management','orders-cashier-view','queue-management-create-reservation']"
+          id="btnCreateReservation" name="btnCreateReservation" class="btn btn-success float-xs-left "
+          data-toggle="tooltip" data-placement="top" title="Create Reservation">
+          <i class="fal fa-plus"></i><span>Create Reservation</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text"><i class="fas fa-filter"></i>Filter</h5>
+            <div class="ibox-graph-info collapse-link" #collapseLink (click)="clickCollapse()">
+              <i class="far fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="ibox-body">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="panel-body">
+                  <form method="get" class="form-horizontal">
+                    <div class="form-group">
+                      <!--HN-->
+                      <label class="col-sm-2 control-label">HN</label>
+                      <div class="col-sm-3">
+                        <input id="txtHn" name="txtHn" maxlength="50" type="text" class="form-control"
+                          [(ngModel)]="filter.hn">
+                      </div>
+                      <!--Patient Name-->
+                      <label class="col-sm-2 control-label">Patient Name</label>
+                      <div class="col-sm-3">
+                        <input id="txtPatientName" name="txtPatientName" maxlength="255" type="text"
+                          class="form-control" [(ngModel)]="filter.patientName">
+                      </div>
+                    </div>
+                    <div class="form-group"
+                      *ngIf="selectedTabName == tabList[0] || selectedTabName == tabList[1]|| selectedTabName == tabList[2] || selectedTabName == tabList[4]">
+                      <label class="col-sm-2 control-label">Order Date From</label>
+                      <div class="col-sm-3">
+                        <dx-date-box style="width: 100%;" [openOnFieldClick]="true" [acceptCustomValue]="false"
+                          class="form-control cus-datebox" type="date" displayFormat="dd-MM-yyyy"
+                          [(value)]="filter.orderDateFrom"></dx-date-box>
+                      </div>
+                      <label class="col-sm-2 control-label">Order Date To</label>
+                      <div class="col-sm-3">
+                        <dx-date-box style="width: 100%;" [openOnFieldClick]="true" [acceptCustomValue]="false"
+                          class="form-control cus-datebox" type="date" displayFormat="dd-MM-yyyy"
+                          [(value)]="filter.orderDateTo"></dx-date-box>
+                      </div>
+                    </div>
+                    <div class="form-group" *ngIf="selectedTabName == tabList[3]">
+                      <label class="col-sm-2 control-label">Production End Date From</label>
+                      <div class="col-sm-3">
+                        <dx-date-box style="width: 100%;" [openOnFieldClick]="true" [acceptCustomValue]="false"
+                          class="form-control cus-datebox" type="date" displayFormat="dd-MM-yyyy"
+                          [(value)]="filter.productionEndDateFrom"></dx-date-box>
+                      </div>
+                      <label class="col-sm-2 control-label">Production End Date To</label>
+                      <div class="col-sm-3">
+                        <dx-date-box style="width: 100%;" [openOnFieldClick]="true" [acceptCustomValue]="false"
+                          class="form-control cus-datebox" type="date" displayFormat="dd-MM-yyyy"
+                          [(value)]="filter.productionEndDateTo"></dx-date-box>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer">
+            <div class="ibox-footer-right">
+              <button title="Search" (click)="clickSearch()" class="btn btn-success btn-md mr-10"
+                *ngIf="menuPermissions.view">
+                <span>Search</span>
+              </button>
+              <button title="Clear" (click)="clickClear()" class="btn btn-default btn-md" *ngIf="menuPermissions.view">
+                <span>Clear</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav id="tabCashierView" class="navbar navbar-expand-lg navbar-light bg-light"
+    style="text-align: center; background-color: #F9F7F2; margin-top: 5px;">
+    <ul class="nav navbar-nav">
+      <li *ngFor="let tab of tabList;" (click)="changeTab(tab)" [ngClass]="{'active':selectedTabName===tab}">
+        <a class="navbar-brand">
+          <span class="control-label" style="margin-top: 10px;">
+            {{tab}}
+          </span>
+        </a>
+      </li>
+    </ul>
+
+  </nav>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg" style="box-shadow: none !important;">
+          <div class="ibox-heading-total" style="padding-top: 10px !important;">
+            <div class="col-sm-6">
+              <h5 class="ibox-title-text mb-10">{{textTotal}}</h5>
+            </div>
+            <div class="col-sm-6 form-inline text-right" style="padding-right: 0;">
+              <div class="form-group mb-10" style="margin-top: -7px;" *ngIf="statusList.length > 1">
+                <label class="control-label mr-5" style="margin-top: 12px; font-size:16px">Order Status</label>
+                <select style="margin-top: 8px;min-width: 200px; width: 206.4px;" name="ddlStatus" id="ddlStatus"
+                  class="form-control" [(ngModel)]="orderStatus" (change)="fnChangeStatus()">
+                  <option selected="selected" [value]="''">Please select</option>
+                  <option *ngFor="let item of statusList" [value]="item">{{ item }}</option>
+                </select>
+              </div>
+              <button *ngIf="menuPermissions.view" id="btnExportPending"
+                style="padding: 5px 10px !important; margin-top: -4px !important;" name="btnExportPending"
+                class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Export"
+                (click)="onClickExport()">
+                <img src="assets/icon-md/c5.svg" alt="">
+              </button>
+            </div>
+          </div>
+          <div class="ibox-body" style="padding-top: 0 !important;">
+            <div class="table-responsive table-wrapper">
+              <dx-data-grid #tblCashierView id="tblCashierView" [(dataSource)]="dataSource" showBorders="false"
+                [hoverStateEnabled]="true" noDataText="No data" [rowAlternationEnabled]="true" [columnAutoWidth]="true"
+                [allowColumnResizing]="true" (onRowPrepared)="onRowPrepared($event)"
+                (onCellPrepared)="onCellPrepared($event)" class="card-list-table"
+                (onOptionChanged)="changePageIndex($event)">
+                <dxo-load-panel [enabled]="true"></dxo-load-panel>
+                <dxo-paging [pageSize]="dxgridPageSize" [pageIndex]="pageIndex"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="allowedPageSizes" [showInfo]="false"
+                  [visible]="true" [showNavigationButtons]="true">
+                </dxo-pager>
+                <dxo-scrolling showScrollbar="onHover"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-remote-operations [sorting]="true" [paging]="true">
+                </dxo-remote-operations>
+
+                <dxi-column caption="No" cellTemplate="cellTemplateNo" [allowSorting]="false" [width]="50"
+                  alignment="center"></dxi-column>
+                <div *dxTemplate="let data of 'cellTemplateNo'" style="text-align: center;"
+                  title="{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}">
+                  <span>{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}</span>
+                </div>
+                <dxi-column *ngIf="selectedTabName !== tabList[3]" dataField="orderId" dataType="string"
+                  caption="Order ID" alignment="center"></dxi-column>
+                <dxi-column *ngIf="selectedTabName === tabList[3]" dataField="reserveId" dataType="string"
+                  caption="Reserve ID" alignment="center"></dxi-column>
+                <dxi-column dataField="hn" dataType="string" caption="HN"></dxi-column>
+                <dxi-column dataField="patientName" dataType="string" caption="Patient Name"></dxi-column>
+                <dxi-column dataField="locationDetail" dataType="string" caption="Location Detail"
+                  [visible]="selectedTabName !== tabList[3]"></dxi-column>
+                <dxi-column dataField="supplyDay" dataType="string" caption="Supply Day"
+                  [visible]="selectedTabName === tabList[3]"></dxi-column>
+                <dxi-column dataField="productionStartDate" dataType="string" caption="Production Start (Date/Time)"
+                  *ngIf="selectedTabName === tabList[3]" sortOrder="desc"></dxi-column>
+                <dxi-column dataField="productionEndDate" dataType="string" caption="Production End (Date/Time)"
+                  *ngIf="selectedTabName === tabList[3]"></dxi-column>
+                <dxi-column dataField="orderDate" dataType="string" caption="Order Date"
+                  [visible]="selectedTabName !== tabList[3]"></dxi-column>
+                <dxi-column dataField="orderStatus" dataType="string" caption="Order Status"
+                  *ngIf="selectedTabName !== tabList[3] && selectedTabName !== tabList[4]"></dxi-column>
+                <dxi-column dataField="orderStatus" dataType="string" caption="Order Status"
+                  *ngIf="selectedTabName === tabList[4]" calculateSortValue="deliveryStatus"></dxi-column>
+                <dxi-column dataField="updatedAt" caption="Updated At" sortOrder="desc" cssClass="wrapped-column"
+                  [width]="155" alignment="center" *ngIf="selectedTabName !== tabList[3]"></dxi-column>
+                <dxi-column dataField="workingBy" dataType="string" caption="Working By" [allowSorting]="false"
+                  [visible]="selectedTabName !== tabList[3]"></dxi-column>
+                <dxi-column dataField="" dataType="string" caption="Action" cellTemplate="cellTemplateViewGroups"
+                  [width]="85" alignment="center"></dxi-column>
+                <div *dxTemplate="let data of 'cellTemplateViewGroups';let i=index;">
+                  <div *ngIf="selectedTabName === tabList[0]">
+                    <a [routerLink]="['/order-management/orders-cashier-view','nutraceuticals-quotation-info',data.data.orderId,'view']"
+                      [queryParams]="{orderStatus: data.data.orderStatus}" id="btnView{{i}}"
+                      class="btn btn-default icon btn-sm" data-toggle="tooltip"
+                      *ngIf="data.data.orderStatus != statusListPending[2] && data.data.orderStatus != statusListPending[3] && menuPermissions.view"
+                      data-placement="top" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a [routerLink]="['/order-management/orders-cashier-view','queue-management-booking', data.data.orderId]"
+                      [queryParams]="{orderStatus: data.data.orderStatus}" id="btnReservation{{i}}"
+                      class="btn btn-default icon btn-sm" data-toggle="tooltip"
+                      *ngIf="(data.data.orderStatus == statusListPending[2] || data.data.orderStatus == statusListPending[3]) && menuPermissions.edit"
+                      data-placement="top" title="Booking">
+                      <i class="fas fa-calendar"></i>
+                    </a>
+                  </div>
+                  <div *ngIf="selectedTabName === tabList[1]">
+                    <a *ngIf="menuPermissions.edit"
+                      [routerLink]="['/order-management/orders-cashier-view','queue-management-booking', data.data.orderId, 'edit']"
+                      [queryParams]="{orderStatus: data.data.orderStatus}" id="btnReservation{{i}}"
+                      class="btn btn-default icon btn-sm" data-toggle="tooltip" data-placement="top"
+                      title="Change Booking">
+                      <img src="assets/icon-md/c11.svg" style="width: 21px;" alt="">
+                    </a>
+                  </div>
+                  <div *ngIf="selectedTabName === tabList[2]">
+                    <a *ngIf="menuPermissions.view"
+                      [routerLink]="['/order-management/orders-cashier-view','nutraceuticals-quotation-info',data.data.orderId,'view']"
+                      [queryParams]="{orderStatus: data.data.orderStatus}" id="btnView{{i}}"
+                      class="btn btn-default icon btn-sm" data-toggle="tooltip" data-placement="top" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                  </div>
+                  <div *ngIf="selectedTabName === tabList[3]">
+                    <a *ngIf="menuPermissions.edit"
+                      [routerLink]="['/order-management','orders-cashier-view','queue-management-create-reservation',data.data.reserveId]"
+                      id="btnView{{i}}" class="btn btn-default icon btn-sm" data-toggle="tooltip" data-placement="top"
+                      title="Edit Reservation">
+                      <img src="assets/icon-md/c12.svg" style="width: 21px;" alt="">
+                    </a>
+                  </div>
+                  <div *ngIf="selectedTabName === tabList[4]">
+                    <a *ngIf="menuPermissions.edit" (click)="fnClickEditDeliveryDetail(data)" id="btnView{{i}}"
+                      class="btn btn-default icon btn-sm" data-toggle="tooltip" data-placement="top"
+                      title="Edit Delivery Detail">
+                      <img src="assets/icon-md/c12.svg" style="width: 21px;" alt="">
+                    </a>
+                  </div>
+                </div>
+              </dx-data-grid>
+            </div>
+          </div>
+          <!--End List-->
+        </div>
+        <!--End ibox-content-->
+      </div>
+      <!--End ibox-->
+    </div>
+  </div>
+  <!--End row-->
+</div>
+<!--End Wrapper-->
+
+<app-alert #myModal (onCancelDelete)="onCancelDelete()" (onCloseModalError)="onCloseModalError()"
+  (onDownload)="ondDownload()"></app-alert>
+
+<dx-load-panel shadingColor="rgba(0,0,0,0.4)" [(visible)]="isLoadingPanel" [showIndicator]="true" [showPane]="true"
+  [shading]="true">
+</dx-load-panel>

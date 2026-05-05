@@ -1,0 +1,454 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">Price</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Master Data Management</a>
+              </li>
+              <li *ngIf="pageType == 'update'" class="breadcrumb-item">
+                <a (click)="onClickBack()">Price</a>
+              </li>
+              <li *ngIf="pageType == 'update'" class="breadcrumb-item active">
+                Edit Price Info
+              </li>
+              <li *ngIf="pageType == 'view'" class="breadcrumb-item active">
+                Price
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-12 align-self-center text-right fix-bt">
+        <!-- <button *ngIf="pageType == 'view' && priceData.priceId"
+                [routerLink]="['/master-data-management/price', priceData.priceId ,'history']"
+                class="btn btn-success float-xs-left mr-10" style="padding:5px" data-toggle="tooltip"
+                data-placement="top" title="History of data revisions">
+          <i class="fas fa-history" style="margin:0"></i>
+        </button> -->
+        <button *ngIf="pageType == 'view' && priceData.priceId && menuPermissions.view"
+          [routerLink]="['/master-data-management','price', priceData.priceId ,'history']"
+          style="padding: 5px 10px !important;" id="btnHistory" name="btnHistory" class="btn btn-success float-xs-left"
+          data-toggle="tooltip" data-placement="top" title="History of data revisions">
+          <img src="assets/icon-md/c7.svg" alt="">
+        </button>
+        <button (click)="goEdit()" *ngIf="pageType == 'view' && menuPermissions.edit" id="btnEditTop" name="btnEditTop"
+          class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit">
+          <i class="fas fa-edit"></i><span>Edit</span>
+        </button>
+        <button [disabled]="checkDup()" (click)="saveSubmit()" *ngIf="pageType == 'update'" id="btnSaveTop"
+          name="btnSaveTop" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top"
+          title="Save">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button (click)="onClickBack()" *ngIf="pageType == 'update'" id="btnCancelTop" name="btnCancelTop"
+          class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel"
+          style="margin-left: 3px;">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <form class="form-horizontal" [formGroup]="priceForm">
+        <div class="ibox">
+          <div class="ibox-bg">
+            <div class="ibox-heading">
+              <h5 class="ibox-title-text" style="font-weight:700;font-size:20px;">Retail Price Info<br><small
+                  *ngIf="pageType != 'view'" style="font-weight:400;font-size:15px;">*Please enter data in the "Require
+                  Field" textbox.</small></h5>
+            </div>
+            <div class="ibox-body">
+              <div id="tab-1" class="tab-pane active">
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="ibox float-e-margins">
+                        <div class="ibox-content" style="border:0px;">
+                          <!--------------------- Raw Materials --------------------->
+                          <div style=" width: 100%;margin: 10px 20px; padding:5px 20px;border-left:2px solid #AE934F">
+                            <label style="margin-right: 15px;font-weight: 600;font-size: 18px;">Raw Materials</label>
+                          </div>
+                          <div class="form-group flex-wrap">
+                            <label class="col-sm-3 control-label">Raw Material Price
+                              <div class="sub-label">(THB/Day)</div>
+                            </label>
+                            <label class="col-sm-1 control-label"
+                              style="text-align: center !important; align-self:center">:</label>
+                            <div [ngClass]="{'col-sm-6':true}">
+                              <label class="control-label" style="text-align:left !important">Add more 2% (mg/day) x
+                                Retail Price (THB per mg)</label>
+                            </div>
+                          </div>
+                          <div class="form-group flex-wrap">
+                            <label class="col-sm-3 control-label">Total Raw Material Price
+                              <div class="sub-label">(THB/Supply Day)</div>
+                            </label>
+                            <label class="col-sm-1 control-label"
+                              style="text-align: center !important; align-self:center">:</label>
+                            <div [ngClass]="{'col-sm-6':true}">
+                              <label class="control-label" style="text-align:left !important">Raw Material Price
+                                (THB/day) x Supply Day (day)</label>
+                            </div>
+                          </div>
+                          <div class="hr-line-solid mt-40 mb-30"></div>
+                          <!--------------------- Batch Charge --------------------->
+                          <div style=" width: 100%;margin: 10px 20px; padding:5px 20px;border-left:2px solid #AE934F">
+                            <label style="margin-right: 15px;font-weight: 600;font-size: 18px;">Batch Charge</label>
+                          </div>
+                          <div class="form-group flex-wrap">
+                            <label class="col-sm-3 control-label">Batch Charge<span class="fontred">*</span>
+                              <div class="sub-label">(THB/Batch)</div>
+                            </label>
+                            <label class="col-sm-1 control-label"
+                              style="text-align: center !important; align-self:center">:</label>
+                            <div [ngClass]="{'col-sm-6':true}">
+                              <!-- <dx-number-box [ngStyle]="{
+                                'border-color':
+                                  f.txtBatchCharge.invalid && f.txtBatchCharge.dirty ? '#ff0000' : ''
+                              }" format="#.##########" *ngIf="pageType == 'update'" style="margin-top:7px" class="form-control cusnumbox" [min]="0" [(value)]="priceData.batchCharge" [(ngModel)]="priceData.batchCharge" formControlName="txtBatchCharge"></dx-number-box> -->
+                              <input [mask]="common.decimal('txtBatchCharge')" [validation]="false"
+                                (input)="onInput('txtBatchCharge', 'batchCharge')" *ngIf="pageType == 'update'"
+                                [ngStyle]="{ 'border-color': f.txtBatchCharge.invalid && f.txtBatchCharge.dirty ? '#ff0000' : ''}"
+                                type="text" autocomplete="off" pattern="\d{0,18}(?:\.\d{0,10})?$" onPaste="return false"
+                                class="form-control" style="margin-top:7px;max-width:400px" id="txtBatchCharge"
+                                name="txtBatchCharge" [ngModel]="priceData.batchCharge"
+                                formControlName="txtBatchCharge">
+                              <label *ngIf="pageType == 'view'" class="control-label"
+                                style="text-align:left !important">{{priceData.batchCharge || '-'}}</label>
+                            </div>
+                          </div>
+                          <div class="hr-line-solid mt-40 mb-30"></div>
+                          <!--------------------- Pack Charge --------------------->
+                          <div style=" width: 100%;margin: 10px 20px; padding:5px 20px;border-left:2px solid #AE934F">
+                            <label style="margin-right: 15px;font-weight: 600;font-size: 18px;">Pack Charge</label>
+                          </div>
+                          <div class="form-group flex-wrap">
+                            <label class="col-sm-3 control-label">Pack Charge<span class="fontred">*</span>
+                              <div class="sub-label">(THB/Month Supply)</div>
+                            </label>
+                            <label class="col-sm-1 control-label"
+                              style="text-align: center !important; align-self:center">:</label>
+                            <div [ngClass]="{'col-sm-6':true}">
+                              <!-- <dx-number-box *ngIf="pageType == 'update'" style="margin-top:7px" class="form-control cusnumbox" [min]="0" [(value)]="priceData.packCharge" [(ngModel)]="priceData.packCharge" formControlName="txtPackCharge"></dx-number-box> -->
+                              <input [mask]="common.decimal('txtPackCharge')" [validation]="false"
+                                (input)="onInput('txtPackCharge', 'packCharge')" *ngIf="pageType == 'update'"
+                                [ngStyle]="{'border-color':f.txtPackCharge.invalid && f.txtPackCharge.dirty ? '#ff0000' : ''}"
+                                type="text" autocomplete="off" pattern="\d{0,18}(?:\.\d{0,10})?$" onPaste="return false"
+                                class="form-control" style="margin-top:7px;max-width:400px" id="txtPackCharge"
+                                name="txtPackCharge" [ngModel]="priceData.packCharge" formControlName="txtPackCharge">
+                              <label *ngIf="pageType == 'view'" class="control-label"
+                                style="text-align:left !important">{{priceData.packCharge || '-'}}</label>
+                            </div>
+                          </div>
+                          <div class="form-group flex-wrap">
+                            <label class="col-sm-3 control-label">Total Pack Charge
+                              <div class="sub-label">(THB/Month Supply)</div>
+                            </label>
+                            <label class="col-sm-1 control-label"
+                              style="text-align: center !important; align-self:center">:</label>
+                            <div [ngClass]="{'col-sm-6':true}">
+                              <label class="control-label" style="text-align:left !important">Supply Day x ROUNDUP(Pack
+                                Charge/30,0)</label>
+                            </div>
+                          </div>
+                          <div class="hr-line-solid mt-40 mb-30"></div>
+                          <!--------------------- Retail Price --------------------->
+                          <div style=" width: 100%;margin: 10px 20px; padding:5px 20px;border-left:2px solid #AE934F">
+                            <label style="margin-right: 15px;font-weight: 600;font-size: 18px;">Retail Price</label>
+                          </div>
+                          <div class="form-group flex-wrap">
+                            <label class="col-sm-3 control-label">Retail Price
+                            </label>
+                            <label class="col-sm-1 control-label"
+                              style="text-align: center !important; align-self:center">:</label>
+                            <div [ngClass]="{'col-sm-6':true}">
+                              <label class="control-label" style="text-align:left !important">ROUNDUP((Total RM Price +
+                                Batch Charge + Total Pack Charge),0) </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!-------------------------- Staff price -------------------------->
+          <div class="ibox-bg mt-30">
+            <div class="ibox-heading">
+              <h5 class="ibox-title-text" style="font-weight:700;font-size:20px;">Staff Price Info<br></h5>
+            </div>
+            <div class="ibox-body">
+              <div id="tab-1" class="tab-pane active">
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-lg-12">
+                      <div class="ibox float-e-margins">
+                        <div class="ibox-content" style="border:0px;">
+
+                          <!--------------------- Raw Materials --------------------->
+                          <div style=" width: 100%;margin: 10px 20px; padding:5px 20px;border-left:2px solid #AE934F">
+                            <label style="margin-right: 15px;font-weight: 600;font-size: 18px;">Raw Materials</label>
+                          </div>
+                          <div class="form-group flex-wrap">
+                            <label class="col-sm-3 control-label">%Mark-Up<span class="fontred">*</span>
+                            </label>
+                            <label class="col-sm-1 control-label"
+                              style="text-align: center !important; align-self:center">:</label>
+                            <div [ngClass]="{'col-sm-6':true}">
+                              <!-- <dx-number-box *ngIf="pageType == 'update'" style="margin-top:7px" class="form-control cusnumbox" [min]="0" [(value)]="priceData.percentMarkup" [(ngModel)]="priceData.percentMarkup" formControlName="txtPercentMarkup"></dx-number-box> -->
+                              <input [mask]="common.decimal('txtPercentMarkup')" [validation]="false"
+                                (input)="onInput('txtPercentMarkup', 'percentMarkup')" *ngIf="pageType == 'update'"
+                                [ngStyle]="{'border-color':f.txtPercentMarkup.invalid && f.txtPercentMarkup.dirty ? '#ff0000' : ''}"
+                                type="text" autocomplete="off" pattern="\d{0,18}(?:\.\d{0,10})?$" onPaste="return false"
+                                class="form-control" style="margin-top:7px;max-width:400px" id="txtPercentMarkup"
+                                name="txtPercentMarkup" [ngModel]="priceData.percentMarkup"
+                                formControlName="txtPercentMarkup">
+                              <label *ngIf="pageType == 'view'" class="control-label"
+                                style="text-align:left !important">{{priceData.percentMarkup ? priceData.percentMarkup +
+                                "%" : '-'}}</label>
+                            </div>
+                          </div>
+                          <div class="form-group flex-wrap">
+                            <label class="col-sm-3 control-label">Raw Material Cost
+                              <div class="sub-label">(THB/Day)</div>
+                            </label>
+                            <label class="col-sm-1 control-label"
+                              style="text-align: center !important; align-self:center">:</label>
+                            <div [ngClass]="{'col-sm-6':true}">
+                              <label class="control-label" style="text-align:left !important">Add more 2% (mg/day) x
+                                Cost (THB per mg) x %Mark-Up</label>
+                            </div>
+                          </div>
+                          <div class="form-group flex-wrap">
+                            <label class="col-sm-3 control-label">Total Raw Material Cost
+                              <div class="sub-label">(THB/Supply Day)</div>
+                            </label>
+                            <label class="col-sm-1 control-label"
+                              style="text-align: center !important; align-self:center">:</label>
+                            <div [ngClass]="{'col-sm-6':true}">
+                              <label class="control-label" style="text-align:left !important">RM Cost (THB/day) x Supply
+                                Day (day)</label>
+                            </div>
+                          </div>
+                          <div class="hr-line-solid mt-40 mb-30"></div>
+                          <!--------------------- Production Charge --------------------->
+                          <div style=" width: 100%;margin: 10px 20px; padding:5px 20px;border-left:2px solid #AE934F">
+                            <label style="margin-right: 15px;font-weight: 600;font-size: 18px;">Production
+                              Charge</label>
+                          </div>
+                          <div style="width: 80%;margin:auto">
+                            <div *ngIf="pageType == 'update'">
+                              <div style="color:red;margin-top:10px;display:inline-block;">
+                                Note : When the "supply day to" input has been entered, the add button will become
+                                enabled.
+                              </div>
+                              <button
+                                [disabled]="priceData.productionCharge.length > 0 && !priceData.productionCharge[priceData.productionCharge.length - 1].supplyDayTo"
+                                (click)="addSource()" class="btn btn-success mr-10"
+                                style="padding:5px 10px;float:right">
+                                <i class="fas fa-plus" style="margin:0;font-size:20px"></i>
+                              </button>
+                              <button *ngIf="formRowArray.length > 0" (click)="delSource()"
+                                class="btn btn-success mr-10" style="padding:5px 10px;float:right">
+                                <i class="fas fa-minus" style="margin:0;font-size:20px"></i>
+                              </button>
+                            </div>
+                            <table id="tblProductionCharge" class="table table-bordered">
+                              <thead>
+                                <tr>
+                                  <th>Supply Day</th>
+                                  <th>Production Charge (THB)</th>
+                                </tr>
+                              </thead>
+                              <tbody formArrayName="productionCharge">
+                                <tr *ngFor="let item of formRowArray.controls; let i = index;" [formGroupName]="i">
+                                  <td>
+                                    <div class="input-box">
+                                      <dx-number-box [disabled]="true" class="form-control text-center cusnumbox"
+                                        [inputAttr]="{ maxlength: '6' }" *ngIf="pageType == 'update'"
+                                        [(value)]="priceData.productionCharge[i].supplyDayFrom"
+                                        [(ngModel)]="priceData.productionCharge[i].supplyDayFrom"
+                                        formControlName="txtSupplyDayFrom"></dx-number-box>
+                                      <!-- <input *ngIf="pageType == 'update'" [disabled]="true" type="text" (keypress)="numberOnly($event)" class="form-control" id="txtSupplyDayFrom" name="txtSupplyDayFrom" maxlength="50" [(ngModel)]="priceData.productionCharge[i].supplyDayFrom" formControlName="txtSupplyDayFrom"> -->
+                                      <label *ngIf="pageType == 'view' && priceData.productionCharge[i]?.supplyDayTo"
+                                        class="mb-0">{{priceData.productionCharge[i]?.supplyDayFrom || '-'}}</label>
+                                      <label *ngIf="pageType == 'view' && !priceData.productionCharge[i]?.supplyDayTo"
+                                        class="mb-0">{{">= " + priceData.productionCharge[i]?.supplyDayFrom}}</label>
+                                      <label *ngIf="pageType == 'view' && priceData.productionCharge[i]?.supplyDayTo"
+                                        class="mb-0">-</label>
+                                      <label *ngIf="pageType == 'update'" class="mb-0">-</label>
+                                      <dx-number-box [disabled]="i != priceData.productionCharge.length-1"
+                                        [inputAttr]="{ maxlength: '6' }" *ngIf="pageType == 'update'"
+                                        class="form-control text-center cusnumbox"
+                                        [min]="priceData.productionCharge[i].supplyDayFrom + 1"
+                                        [(value)]="priceData.productionCharge[i].supplyDayTo"
+                                        [(ngModel)]="priceData.productionCharge[i].supplyDayTo"
+                                        formControlName="txtSupplyDayTo"></dx-number-box>
+                                      <!-- <input *ngIf="pageType == 'update'" type="text" [min]="priceData.productionCharge[i].supplyDayFrom" (keypress)="numberOnly($event)" class="form-control" id="txtSupplyDayTo" name="txtSupplyDayTo" maxlength="50" [(ngModel)]="priceData.productionCharge[i].supplyDayTo" formControlName="txtSupplyDayTo"> -->
+                                      <label *ngIf="pageType == 'view' && priceData.productionCharge[i]?.supplyDayTo"
+                                        class="mb-0">{{priceData.productionCharge[i]?.supplyDayTo || '-'}}</label>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <div class="input-box" style="gap:5px">
+                                      <input *ngIf="pageType == 'update'"
+                                        [ngStyle]="{'border-color':checkValid(item, 'txtProductionCharge') ? '#ff0000' : ''}"
+                                        type="text" [mask]="common.decimal('txtProductionCharge'+i)"
+                                        [validation]="false"
+                                        (input)="onInput('txtProductionCharge', 'productionCharge', i)"
+                                        autocomplete="off" onPaste="return false" class="form-control" style="width:80%"
+                                        id="txtProductionCharge{{i}}" name="txtProductionCharge"
+                                        [ngModel]="priceData.productionCharge[i].productionCharge"
+                                        formControlName="txtProductionCharge">
+                                      <label *ngIf="pageType == 'view'"
+                                        class="mb-0">{{priceData.productionCharge[i]?.productionCharge || '-'}}</label>
+                                      <button *ngIf="pageType == 'update'"
+                                        (click)="openModal(priceData.productionCharge[i], i)" class="btn btn-success"
+                                        style="padding:5px 7px">
+                                        <i class="fas fa-calculator" style="margin:0;font-size:20px"></i>
+                                      </button>
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr *ngIf="pageType == 'view' && formRowArray.controls?.length == 0">
+                                  <td colspan="2" class="text-center">
+                                    <label class="mb-0">No Data</label>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <div class="hr-line-solid mt-40 mb-30"></div>
+                          <!--------------------- Raw Materials --------------------->
+                          <div style=" width: 100%;margin: 10px 20px; padding:5px 20px;border-left:2px solid #AE934F">
+                            <label style="margin-right: 15px;font-weight: 600;font-size: 18px;">Staff Price</label>
+                          </div>
+                          <div class="form-group flex-wrap">
+                            <label class="col-sm-3 control-label">Staff Price
+                            </label>
+                            <label class="col-sm-1 control-label"
+                              style="text-align: center !important; align-self:center">:</label>
+                            <div [ngClass]="{'col-sm-6':true}">
+                              <label class="control-label" style="text-align:left !important">ROUNDUP((Total RM Cost +
+                                Production Charge),0)</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ibox-footer no-bg">
+              <div class="ibox-footer-right">
+                <button *ngIf="pageType == 'view' && priceData.priceId && menuPermissions.view"
+                  [routerLink]="['/master-data-management','price', priceData.priceId ,'history']"
+                  style="padding: 5px 10px !important;" id="btnHistory" name="btnHistory"
+                  class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top"
+                  title="History of data revisions">
+                  <img src="assets/icon-md/c7.svg" alt="">
+                </button>
+                <button (click)="goEdit()" *ngIf="pageType == 'view' && menuPermissions.edit" id="btnEditTop"
+                  name="btnEditTop" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip"
+                  data-placement="top" title="Edit">
+                  <i class="fas fa-edit"></i><span>Edit</span>
+                </button>
+                <button [disabled]="checkDup()" (click)="saveSubmit()" *ngIf="pageType == 'update'" id="btnSaveTop"
+                  name="btnSaveTop" class="btn btn-success mr-10" data-toggle="tooltip" data-placement="top"
+                  title="Save">
+                  <i class="fas fa-save"></i><span>Save</span>
+                </button>
+                <button (click)="onClickBack()" *ngIf="pageType == 'update'" id="btnCancelTop" name="btnCancelTop"
+                  class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel"
+                  style="margin-left: 3px;">
+                  <i class="fal fa-times"></i><span>Cancel</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!--End row-->
+</div>
+<!--End Wrapper-->
+<div #myModalFormula class="modal inmodal" id="myModalFormula" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn" style="border-radius:0;">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:10px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;font-size:18px;font-weight:600;color:#646965;">
+            {{modalType == 'add' ? 'Add Formula' : 'Update Formula'}}
+          </div>
+        </div>
+        <div style="padding: 0px;">
+          <div style="border: 1px solid #AE934F;"></div>
+        </div>
+        <div style="display:flex;width:100%;justify-content:center;align-items:center;gap:20px;margin-top:50px">
+          <div style="gap:5px;display:flex;flex-direction:column;">
+            <input [ngStyle]="{
+              'border-color':
+              validatePopup && (!modalData.dividend || modalData.dividend == 0) ? '#ff0000' : ''
+            }" type="text" (keypress)="numberOnly($event)" autocomplete="off" onPaste="return false"
+              class="form-control" maxlength="50" [(ngModel)]="modalData.dividend"
+              style="width:80%;margin:auto;text-align:center">
+            <div style="border: 1px solid #AE934F;"></div>
+            <input [ngStyle]="{
+              'border-color':
+              validatePopup && (!modalData.divider || modalData.divider == 0) ? '#ff0000' : ''
+            }" type="text" (keypress)="numberOnly($event)" autocomplete="off" onPaste="return false"
+              class="form-control" maxlength="50" [(ngModel)]="modalData.divider"
+              style="width:80%;margin:auto;text-align:center">
+          </div>
+          <label>X</label>
+          <label>Supply Day</label>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <button (click)="addFormula()" *ngIf="modalType == 'update'" style="width:auto"
+            class="btn btn-success font-btn  width-btn-small">Update Formula
+          </button>
+          <button (click)="clearFormula()" *ngIf="modalType == 'update'" style="width:auto"
+            class="btn btn-success font-btn  width-btn-small">Clear Formula
+          </button>
+          <button (click)="addFormula()" *ngIf="modalType == 'add'" style="width:auto"
+            class="btn btn-success font-btn  width-btn-small">Add Formula
+          </button>
+          <button style="width:auto" class="btn btn-default font-btn  width-btn-small" data-dismiss="modal">Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()"></app-alert>

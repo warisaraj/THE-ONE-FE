@@ -1,0 +1,127 @@
+#schedulerReservationBooking .dx-scheduler-appointment {
+  //width: 78px !important;
+  margin-left: -1px;
+}
+
+#schedulerReservationBooking .dx-scheduler-appointment-title {
+  color: #646965;
+  overflow: unset;
+  text-overflow: unset;
+  white-space: pre-wrap;
+  text-align: center;
+  font-size: 11px;
+}
+
+#schedulerReservationBooking .dx-scheduler-appointment-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#schedulerReservationBooking .disable-date {
+  background-image: none;
+  background-color: #CDCDCD;
+  color: #CDCDCD;
+  pointer-events: none;
+  height: 100%;
+  width: 100%;
+}
+
+#schedulerReservationBooking .reserved-date {
+  background-image: none;
+  background-color: #CDDDD0;
+  color: #CDDDD0;
+  pointer-events: none;
+  height: 100%;
+  width: 100%;
+}
+
+#schedulerReservationBooking .dx-scheduler-appointment-content-details {
+  display: none;
+}
+
+
+#txtDeliveryDate.dx-texteditor.dx-editor-outlined {
+  background-color: #FFFFFF !important;
+  border: 1px solid #8A998D !important;
+}
+
+.stepper-wrapper {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.stepper-item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
+}
+
+.stepper-item::before {
+  position: absolute;
+  content: "";
+  border-bottom: 2px solid #ccc;
+  width: 100%;
+  top: 25px;
+  left: -50%;
+  z-index: 2;
+}
+
+.stepper-item::after {
+  position: absolute;
+  content: "";
+  border-bottom: 2px solid #ccc;
+  width: 100%;
+  top: 25px;
+  left: 50%;
+  z-index: 2;
+}
+
+.stepper-item .step-counter {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #D9D9D9;
+  margin-bottom: 6px;
+}
+.stepper-item.completed .step-name {
+  cursor: pointer;
+}
+
+.stepper-item.active {
+  font-weight: bold;
+}
+
+.stepper-item.completed .step-counter {
+  background-color: #AE934F;
+  cursor: pointer;
+}
+
+.stepper-item.completed::after {
+  position: absolute;
+  content: "";
+  border-bottom: 2px solid #AE934F;
+  width: 100%;
+  top: 25px;
+  left: 50%;
+  z-index: 3;
+}
+
+.stepper-item:first-child::before {
+  content: none;
+}
+.stepper-item:last-child::after {
+  content: none;
+}

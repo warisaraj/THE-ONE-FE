@@ -1,0 +1,64 @@
+.his-price .row-history {
+  display: block;
+  // flex-wrap:wrap;
+}
+
+.his-price .column-history {
+  // flex: 100%;
+  padding: 10px 0 10px 10%;
+  // max-width: 50%;
+  .control-label{
+    text-align: right;
+    font-weight: 700;
+    width:200px
+  }
+}
+
+#tblProductionCharge{
+  th{
+    border: 1px solid #E9E9E9;
+    background-color: #fff;
+    text-align: center;
+    width: 50%;
+  }
+  tr:nth-child(even){
+    background: #fff;
+  }
+  tr:nth-child(odd){
+    background: #f6f6f6;
+  }
+  td{
+    border: 1px solid #E9E9E9;
+    width: 50%;
+  }
+  .input-box{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    gap:10%;
+  }
+}
+.hr-line-solid{
+  border-style: none !important;
+  border-bottom: 1px solid #ae934f !important;
+}
+
+@media (max-width: 768px) {
+  .his-price .column-history {
+    .control-label{
+      width: auto;
+      text-align: left;
+    }
+  }
+}
+
+// @media (max-width: 425px) {
+//   .column-history {
+//     // flex: 100%;
+//     // max-width:100%;
+//     .control-label{
+//       width: auto;
+//       text-align: left;
+//     }
+//   }
+// }

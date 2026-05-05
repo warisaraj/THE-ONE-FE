@@ -1,0 +1,132 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">Sachet</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Master Data Management</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a (click)="onClickBack()">Sachet</a>
+              </li>
+              <li class="breadcrumb-item active">
+                <span> Edit Sachet Info </span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-12 align-self-center text-right">
+        <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text">History of data revisions</h5>
+          </div>
+          <div class="ibox-body">
+            <div id="tab-1" class="tab-pane active">
+              <div class="panel-body">
+                <div *ngFor="let key of historyData ; index as i">
+                  <div class="row" style="background-color: #F9F7F2; margin-bottom: 30px; padding-bottom: 30px;">
+                    <div style="text-align: end; margin-right: 20px; margin-top: 20px; padding-bottom: 20px; border-bottom: 1px solid #E5E5E5;">
+                      <label style="margin-right: 15px;"> Updated At : {{key.createdAt}}</label>
+                      <label>Updated By : {{key.createdBy}}</label>
+                    </div>
+                    <div style="height: 50px;"></div>
+                    <div class="col-sm-3" style="font-size: 18px; text-align: center; border-right: #AE934F 1px solid;">
+                      <p class="mt-20" style="font-weight: 600;">Morning Sachet</p>
+                      <div style="height: 50px;"></div>
+                      <img *ngIf="!key.morningPicture" src="assets/img/no-img.png" width="64%" style="border-radius: 5px; margin:auto; border: #AE934F solid 1px;">
+                      <img *ngIf="key.morningPicture" [attr.src]="key.morningPicture | resolveImageUrl" width="64%" style="border-radius: 5px; margin:auto; border: #AE934F solid 1px; background-color : white" (click)="popupImg(key.morningPicture)" />
+                      <div style="height: 30px;"></div>
+                      <p style="text-align:left; padding-left:50px;font-weight: 600;">Note :</p>
+                      <div class="form-group">
+                        <span style="text-align:left; padding-left:20px; padding-left:20px;width:100%; word-wrap:break-word; display:inline-block">
+                          {{key.morningNote ? key.morningNote : '-'}}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-sm-3" style="font-size: 18px; text-align: center; border-right: #AE934F 1px solid;">
+                      <p class="mt-20" style="font-weight: 600;">Lunch Sachet</p>
+                      <div style="height: 50px;"></div>
+                      <img *ngIf="!key.lunchPicture" src="assets/img/no-img.png" width="64%" style="border-radius: 5px; margin:auto; border: #AE934F solid 1px;">
+                      <img *ngIf="key.lunchPicture" [attr.src]="key.lunchPicture | resolveImageUrl" width="64%" style="border-radius: 5px; margin:auto; border: #AE934F solid 1px; background-color : white" (click)="popupImg(key.lunchPicture)" />
+                      <div style="height: 30px;"></div>
+                      <p style="text-align:left; padding-left:50px;font-weight: 600;">Note :</p>
+                      <div class="form-group">
+                        <span style="text-align:left; padding-left:20px; padding-left:20px;width:100%; word-wrap:break-word; display:inline-block">
+                          {{key.lunchNote ? key.lunchNote : '-'}}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-sm-3" style="font-size: 18px; text-align: center; border-right: #AE934F 1px solid;">
+                      <p class="mt-20" style="font-weight: 600;">Evening Sachet</p>
+                      <div style="height: 50px;"></div>
+                      <img *ngIf="!key.eveningPicture" src="assets/img/no-img.png" width="64%" style="border-radius: 5px; margin:auto; border: #AE934F solid 1px;">
+                      <img *ngIf="key.eveningPicture" [attr.src]="key.eveningPicture | resolveImageUrl" width="64%" style="border-radius: 5px; margin:auto; border: #AE934F solid 1px; background-color : white" (click)="popupImg(key.eveningPicture)" />
+                      <div style="height: 30px;"></div>
+                      <p style="text-align:left; padding-left:50px;font-weight: 600;">Note :</p>
+                      <div class="form-group">
+                        <span style="text-align:left; padding-left:20px; padding-left:20px;width:100%; word-wrap:break-word; display:inline-block">
+                          {{key.eveningNote ? key.eveningNote : '-'}}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-sm-3" style="font-size: 18px; text-align: center;">
+                      <p class="mt-20" style="font-weight: 600;">Bedtime Sachet</p>
+                      <div style="height: 50px;"></div>
+                      <img *ngIf="!key.bedtimePicture" src="assets/img/no-img.png" width="64%" style="border-radius: 5px; margin:auto; border: #AE934F solid 1px;">
+                      <img *ngIf="key.bedtimePicture" [attr.src]="key.bedtimePicture | resolveImageUrl" width="64%" style="border-radius: 5px; margin:auto; border: #AE934F solid 1px; background-color : white" (click)="popupImg(key.bedtimePicture)" />
+                      <div style="height: 30px;"></div>
+                      <p style="text-align:left; padding-left:50px;font-weight: 600;">Note :</p>
+                      <div class="form-group">
+                        <span style="text-align:left; padding-left:20px; padding-left:20px;width:100%; word-wrap:break-word; display:inline-block">
+                          {{key.bedtimeNote ? key.bedtimeNote : '-'}}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer no-bg" *ngIf="!loading">
+            <div class="ibox-footer-right">
+              <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;">
+                <i class="fal fa-times"></i><span>Cancel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<dx-popup [fullScreen]="true" [dragEnabled]="false" [showTitle]="true" [showCloseButton]="true" [(visible)]="popupVisible">
+  <div *dxTemplate="let data of 'content'" class="text-center">
+    <img [src]="filePicture | resolveImageUrl" style="height:100%;" />
+  </div>
+</dx-popup>
+<app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()" (onCloseModalWarning)="onCloseModalWarning()"></app-alert>

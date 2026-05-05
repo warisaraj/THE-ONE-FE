@@ -1,0 +1,147 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">Role</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Menu management</a>
+              </li>
+              <li class="breadcrumb-item active">
+                Role
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text"><i class="fas fa-filter"></i>Filter</h5>
+            <div class="ibox-graph-info collapse-link" #collapseLink (click)="clickCollapse()">
+              <i class="far fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="ibox-body">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="panel-body">
+                  <form method="get" class="form-horizontal">
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">Menu name</label>
+                      <div class="col-sm-3"><input id="txtMicroserviceName"
+                                                   name="txtMicroserviceName" maxlength="255"
+                                                   type="text" class="form-control"
+                                                   [(ngModel)]="txtInputSearch"></div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer">
+            <div class="ibox-footer-right">
+              <button *ngIf="menuPermissions.view" title="Search" (click)="clickSearch()"
+                      class="btn btn-success btn-md mr-10">
+                <span>Search</span>
+              </button>
+              <button *ngIf="menuPermissions.view" title=" Clear" (click)="clickClear()"
+                      class="btn btn-default btn-md">
+                <span> Clear</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading-total">
+            <h5 class="ibox-title-text">{{textTotal}}</h5>
+          </div>
+          <div class="ibox-body">
+            <!--[selectedRowKeys]="selectRowKeyId" (onInitialized)="onInitialized($event)" (onSelectionChanged)="selectRow($event)"-->
+            <div class="table-responsive table-wrapper">
+              <dx-data-grid #gridMicroservices id="gridMicroservices"
+                            [(dataSource)]="dataMicroservices"
+                            showBorders="false"
+                            [hoverStateEnabled]="true"
+                            noDataText="No data"
+                            [rowAlternationEnabled]="true"
+                            [columnAutoWidth]="true"
+                            [allowColumnResizing]="true"
+                            [(hint)]="hoverTootip"
+                            (onCellPrepared)="onCellPrepared($event)"
+                            (onCellHoverChanged)="onCellHoverChanged($event)"
+                            class="card-list-table"
+                            (onOptionChanged)="changePageIndex($event)">
+                <dxo-load-panel [enabled]="true"></dxo-load-panel>
+                <dxo-paging [pageSize]="dxgridPageSize" [pageIndex]="pageIndex"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="allowedPageSizes"
+                           [showInfo]="false" [visible]="true" [showNavigationButtons]="true">
+                </dxo-pager>
+                <dxo-scrolling showScrollbar="onHover"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-remote-operations [sorting]="true" [paging]="true">
+                </dxo-remote-operations>
+
+                <!--<dxi-column dataField="no" dataType="number" caption="No." alignment="left" width="10%"></dxi-column>-->
+                <dxi-column caption="No" cellTemplate="cellTemplateNo" [allowSorting]="false"
+                            [width]="50" alignment="center"></dxi-column>
+                <div *dxTemplate="let data of 'cellTemplateNo'" style="text-align: center;">
+                  <span>{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}</span>
+                </div>
+
+                <dxi-column dataField="menuName" dataType="string"
+                            caption="Menu name" width="100%"></dxi-column>
+                <dxi-column [visible]="false" dataField="updatedAt" caption="Updated At"
+                            sortOrder="desc" cssClass="wrapped-column" [width]="150"
+                            alignment="center"></dxi-column>
+                <dxi-column dataField="" dataType="string" caption="Action"
+                            cellTemplate="cellTemplateViewGroups" [width]="105"
+                            alignment="center"></dxi-column>
+
+                <div *dxTemplate="let data of 'cellTemplateViewGroups';let i=index;"
+                     style="text-align: center;">
+                  <a *ngIf="menuPermissions.view"
+                     [routerLink]="['/roles',data.data.menuId,'list-of-groups']"
+                     id="btnView{{i}}" class="btn btn-default icon btn-sm" data-toggle="tooltip"
+                     data-placement="top" title="View">
+                    <i class="fas fa-eye"></i>
+                  </a>
+                </div>
+              </dx-data-grid>
+            </div>
+          </div>
+          <!--End List-->
+        </div><!--End ibox-content-->
+      </div><!--End ibox-->
+    </div><!--End col-sm-12-->
+  </div><!--End row-->
+</div><!--End Wrapper-->
+
+<app-alert #myModal (onCloseModalError)="onCloseModalError()"></app-alert>

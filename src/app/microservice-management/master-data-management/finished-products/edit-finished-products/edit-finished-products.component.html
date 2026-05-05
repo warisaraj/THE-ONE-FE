@@ -1,0 +1,257 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">Finished Products</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Master Data Management</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a (click)="onClickBack()">Finished Products</a>
+              </li>
+              <li class="breadcrumb-item active">
+                <span *ngIf="pageType == 'view'"> View Finished Products Info </span>
+                <span *ngIf="pageType == 'new'"> Create Finished Products Info </span>
+                <span *ngIf="pageType == 'edit'"> Edit Finished Products Info </span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-12 align-self-center text-right">
+        <button *ngIf="pageType != 'view'" (click)="btnSubmit()" id="btnSaveTop" name="btnSaveTop"
+                class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal"
+                data-placement="top" title="Save" [disabled]="disbledBtn.save">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button *ngIf="pageType == 'view' && menuPermissions.edit"
+                [routerLink]="['/master-data-management','finished-products', Id ,'edit']" id="btnEditTop"
+                name="btnEditTop" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top"
+                title="Edit" [disabled]="disbledBtn.save">
+          <i class="fas fa-edit"></i><span>Edit</span>
+        </button>
+        <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right"
+                data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;"
+                [disabled]="disbledBtn.cancel">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text">Finished Products Info<br><small *ngIf="pageType != 'view'">*Please enter data
+              in the "Require Field" textbox.</small></h5>
+            <!-- <button [routerLink]="['/master-data-management','finished-products', Id ,'history']"
+                    *ngIf="pageType == 'view'" class="btn btn-success float-xs-left mr-10" style="padding:5px"
+                    data-toggle="tooltip" data-placement="top" title="History of data revisions">
+              <i class="fas fa-history" style="margin:0"></i>
+            </button> -->
+            <button [routerLink]="['/master-data-management','finished-products', Id ,'history']" *ngIf="pageType == 'view'"
+              style="padding: 5px 10px !important;" id="btnHistory" name="btnHistory"
+              class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top"
+              title="History of data revisions">
+              <img src="assets/icon-md/c7.svg" alt="">
+            </button>
+          </div>
+          <div class="ibox-body">
+            <div id="tab-1" class="tab-pane active">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                      <div class="ibox-content" style="border:0px;">
+                        <form class="form-horizontal" [formGroup]="editGroupForm">
+
+                          <div class="form-group"><label class="col-sm-3 control-label">Code<span
+                            class="fontred">*</span></label>
+                            <div
+                              [ngClass]="{'has-error':!editGroupForm.controls.txtCode.valid&&editGroupForm.controls.txtCode.dirty,'col-sm-4':true}">
+                              <input type="text" class="form-control" id="txtCode" name="txtCode" maxlength="50"
+                                     [(ngModel)]="editDataGroups.code" formControlName="txtCode">
+                            </div>
+                          </div>
+                          <div class="form-group"><label class="col-sm-3 control-label"> Finished Product Name<span
+                            class="fontred">*</span></label>
+                            <div
+                              [ngClass]="{'has-error':!editGroupForm.controls.txtName.valid&&editGroupForm.controls.txtName.dirty,'col-sm-4':true}">
+                              <input type="text" class="form-control" id="txtName" name="txtName" maxlength="255"
+                                     [(ngModel)]="editDataGroups.finishedProductName" formControlName="txtName">
+                            </div>
+                          </div>
+
+                          <div class="form-group"><label class="col-sm-3 control-label">UOM<span
+                            class="fontred">*</span></label>
+                            <div
+                              [ngClass]="{'has-error':!editGroupForm.controls.txtUom.valid&&editGroupForm.controls.txtUom.dirty,'col-sm-4':true}">
+                              <div class="select-wrapper">
+                                <select (change)="checkUom()" name="txtUom" id="txtUom" formControlName="txtUom"
+                                        [title]="editDataGroups.uom" class="form-control "
+                                        [(ngModel)]="editDataGroups.uom">
+                                  <option *ngFor="let item of uomList" [value]="item">{{ item }}</option>
+                                </select>
+                              </div>
+                              <!-- <input type="text" class="form-control" id="txtUom" name="txtUom" maxlength="255" [(ngModel)]="editDataGroups.uom" formControlName="txtUom" [title]="editDataGroups.uom"> -->
+                            </div>
+                          </div>
+
+                          <div *ngIf="editDataGroups.uom == 'Box' || editDataGroups.uom == 'Bottle'" class="form-group">
+                            <label class="col-sm-3 control-label">Quantity<span class="fontred">*</span></label>
+                            <div
+                              [ngClass]="{'has-error':!editGroupForm.controls.txtQuantity.valid&&editGroupForm.controls.txtQuantity.dirty,'col-sm-4':true}">
+                              <input (keypress)="numberOnly($event)" autocomplete="off" onPaste="return false"
+                                     type="text" class="form-control" id="txtQuantity" name="txtQuantity" maxlength="50"
+                                     [(ngModel)]="editDataGroups.quantity" formControlName="txtQuantity">
+                            </div>
+                          </div>
+
+                          <div *ngIf="editDataGroups.uom == 'Box' || editDataGroups.uom == 'Bottle'" class="form-group">
+                            <label class="col-sm-3 control-label">Unit<span class="fontred">*</span>
+                              <div class="sub-label">(Order from doctor)</div>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!editGroupForm.controls.txtUnit.valid&&editGroupForm.controls.txtUnit.dirty,'col-sm-4':true}">
+                              <div class="select-wrapper">
+                                <select (change)="checkUom()" name="txtUnit" id="txtUnit" formControlName="txtUnit"
+                                        [title]="editDataGroups.unit" class="form-control "
+                                        [(ngModel)]="editDataGroups.unit">
+                                  <option *ngFor="let item of unitList" [value]="item">{{ item }}</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div *ngIf="editDataGroups.uom == 'Pack'" class="form-group"><label
+                            class="col-sm-3 control-label">Supply day<span class="fontred">*</span></label>
+                            <div
+                              [ngClass]="{'has-error':!editGroupForm.controls.txtSupplyDay.valid&&editGroupForm.controls.txtSupplyDay.dirty,'col-sm-4':true}">
+                              <input (keypress)="numberOnly($event)" autocomplete="off" onPaste="return false"
+                                     type="text" class="form-control" id="txtSupplyDay" name="txtSupplyDay"
+                                     maxlength="50" [(ngModel)]="editDataGroups.supplyDay"
+                                     formControlName="txtSupplyDay">
+                            </div>
+                          </div>
+
+                          <div class="form-group"><label class="col-sm-3 control-label">Price (Thai, Expat)<span
+                            class="fontred">*</span></label>
+                            <div
+                              [ngClass]="{'has-error':!editGroupForm.controls.txtPriceThai.valid&&editGroupForm.controls.txtPriceThai.dirty,'col-sm-4':true}">
+                              <input [mask]="common.decimal('txtPriceThai')" [validation]="false"
+                                     (input)="onInput('txtPriceThai', 'priceThai')" autocomplete="off"
+                                     onPaste="return false"
+                                     type="text" class="form-control" id="txtPriceThai" name="txtPriceThai"
+                                     [ngModel]="editDataGroups.priceThai"
+                                     formControlName="txtPriceThai">
+                            </div>
+                          </div>
+
+                          <div class="form-group"><label class="col-sm-3 control-label">Price (Inter exc. ME)<span
+                            class="fontred">*</span></label>
+                            <div
+                              [ngClass]="{'has-error':!editGroupForm.controls.txtPriceInter.valid&&editGroupForm.controls.txtPriceInter.dirty,'col-sm-4':true}">
+                              <input [mask]="common.decimal('txtPriceInter')" [validation]="false"
+                                     (input)="onInput('txtPriceInter', 'priceInter')" autocomplete="off"
+                                     onPaste="return false"
+                                     type="text" class="form-control" id="txtPriceInter" name="txtPriceInter"
+                                     [(ngModel)]="editDataGroups.priceInter"
+                                     formControlName="txtPriceInter">
+                            </div>
+                          </div>
+
+                          <div class="form-group"><label class="col-sm-3 control-label">Price (Middle East)<span
+                            class="fontred">*</span></label>
+                            <div
+                              [ngClass]="{'has-error':!editGroupForm.controls.txtPriceMiddleEast.valid&&editGroupForm.controls.txtPriceMiddleEast.dirty,'col-sm-4':true}">
+                              <input [mask]="common.decimal('txtPriceMiddleEast')" [validation]="false"
+                                     (input)="onInput('txtPriceMiddleEast', 'priceMiddleEast')" autocomplete="off"
+                                     onPaste="return false"
+                                     type="text" class="form-control" id="txtPriceMiddleEast" name="txtPriceMiddleEast"
+                                     [(ngModel)]="editDataGroups.priceMiddleEast"
+                                     formControlName="txtPriceMiddleEast">
+                            </div>
+                          </div>
+
+                          <div *ngIf="pageType != 'new'" class="form-group"><label
+                            class="col-sm-3 control-label">Status</label>
+                            <div
+                              [ngClass]="{'has-error':!editGroupForm.controls.txtStatus.valid&&editGroupForm.controls.txtStatus.dirty,'col-sm-4':true}">
+                              <div class="select-wrapper">
+                                <select (change)="checkUom()" name="txtStatus" id="txtStatus"
+                                        formControlName="txtStatus" [title]="editDataGroups.status"
+                                        class="form-control " [(ngModel)]="editDataGroups.status">
+                                  <option *ngFor="let item of statusList" [value]="item.id">{{ item.name }}</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+
+                          <!-- <div class="form-group"><label class="col-sm-3 control-label">Price (Thai, Expat)</label>
+                            <div [ngClass]="{'col-sm-4':true}">
+                              <dx-number-box class="form-control" format="#,##0.00" [(value)]="editDataGroups.priceThai" [(ngModel)]="editDataGroups.priceThai" formControlName="txtPriceThai"></dx-number-box>
+                            </div>
+                          </div> -->
+
+                          <!-- <div class="form-group"><label class="col-sm-3 control-label">Price (Inter exc. ME)</label>
+                            <div [ngClass]="{'col-sm-4':true}">
+                              <dx-number-box class="form-control" format="#,##0.00" [(value)]="editDataGroups.priceInter" [(ngModel)]="editDataGroups.priceInter" formControlName="txtPriceInter"></dx-number-box>
+                            </div>
+                          </div> -->
+
+                          <!-- <div class="form-group"><label class="col-sm-3 control-label">Price (Middle East)</label>
+                            <div [ngClass]="{'col-sm-4':true}">
+                              <dx-number-box class="form-control" format="#,##0.00" [(value)]="editDataGroups.priceMiddleEast" [(ngModel)]="editDataGroups.priceMiddleEast" formControlName="txtPriceMiddleEast"></dx-number-box>
+                            </div>
+                          </div> -->
+                          <div class="hr-line-dashed"></div>
+                          <!-- <div class="form-group"><label class="col-sm-3 control-label">Description</label>
+                            <div class="col-sm-10">
+                              <textarea (keyup)="textAreaAutoHeight()" class="form-control" id="txtDescription" name="txtDescription"rows="3" placeholder="Enter a message ..." style="resize: vertical"  [(ngModel)]="editDataGroups.description" formControlName="txtDescription"></textarea>
+                            </div>
+                          </div>
+                          <div class="hr-line-dashed"></div> -->
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer no-bg">
+            <div class="ibox-footer-right">
+              <button *ngIf="pageType != 'view'" (click)="btnSubmit()" id="btnSaveTop" name="btnSaveTop" class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal" data-placement="top" title="Save" [disabled]="disbledBtn.save">
+                <i class="fas fa-save"></i><span>Save</span>
+              </button>
+              <button *ngIf="pageType == 'view' && menuPermissions.edit"  [routerLink]="['/master-data-management','finished-products', Id ,'edit']" id="btnEditTop" name="btnEditTop" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit" [disabled]="disbledBtn.save">
+                <i class="fas fa-edit"></i><span>Edit</span>
+              </button>
+              <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop"  class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                <i class="fal fa-times"></i><span>Cancel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()"
+           (onCloseModalWarning)="onCloseModalWarning()"></app-alert>

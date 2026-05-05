@@ -1,0 +1,191 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">Raw Materials</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Master Data Management</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a (click)="onClickBack()">Raw Materials</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a (click)="onClickBackToView()">View Raw Materials Info</a>
+              </li>
+              <li class="breadcrumb-item active">
+                <span> History of data revisions</span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-12 align-self-center text-right">
+        <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text">History of "{{hn}}"</h5>
+          </div>
+          <div class="ibox-body">
+            <div id="tab-1" class="tab-pane active">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                      <div class="ibox-content his-raw-mat" style="border:0px;">
+                        <div *ngFor="let key of historyData ; index as i">
+                          <div style="background-color: #F9F7F2 !important; width: 100%;margin-bottom: 20px; padding: 20px;">
+                            <div style="text-align: right;">
+                              <label style="margin-right: 15px;"> Updated At : {{key.createdAt}} </label>
+                              <label> Updated By : {{key.createdBy}} </label>
+                            </div>
+                            <div class="hr-line-solid" style="margin-top: 10px !important;"></div>
+                            <div class="row-history">
+                              <div *ngIf="key.no" class="column-history">
+                                <label class="col-sm-6 control-label">No:</label>
+                                <label class="col-sm-6">{{key.no}}</label>
+                              </div>
+
+                              <div *ngIf="key.code" class="column-history">
+                                <label class="col-sm-6 control-label">Code:</label>
+                                <label class="col-sm-6">{{key.code}}</label>
+                              </div>
+
+                              <div *ngIf="key.strength" class="column-history">
+                                <label class="col-sm-6 control-label">Strength:</label>
+                                <label class="col-sm-6">{{key.strength}}</label>
+                              </div>
+
+                              <div *ngIf="key.rawMaterialName" class="column-history">
+                                <label class="col-sm-6 control-label">RM Name:</label>
+                                <label class="col-sm-6">{{key.rawMaterialName}}</label>
+                              </div>
+
+                              <div *ngIf="key.description" class="column-history">
+                                <label class="col-sm-6 control-label">Description:</label>
+                                <label class="col-sm-6">{{key.description}}</label>
+                              </div>
+
+                              <div *ngIf="key.isExpense" class="column-history">
+                                <label class="col-sm-6 control-label">Expense:</label>
+                                <label class="col-sm-6">{{key.isExpense}}</label>
+                              </div>
+
+                              <div *ngIf="key.vtlCapPackingStat" class="column-history">
+                                <label class="col-sm-6 control-label">VTL Cap Packing Stat (mg):</label>
+                                <label class="col-sm-6">{{key.vtlCapPackingStat}}</label>
+                              </div>
+
+                              <div *ngIf="key.bin.binName" class="column-history">
+                                <label class="col-sm-6 control-label">Bin:</label>
+                                <label class="col-sm-6">{{key.bin.binName}}</label>
+                              </div>
+
+                              <div *ngIf="key.cost" class="column-history">
+                                <label class="col-sm-6 control-label">Cost:</label>
+                                <label class="col-sm-6">{{key.cost}}</label>
+                              </div>
+
+                              <div *ngIf="key.unit" class="column-history">
+                                <label class="col-sm-6 control-label">Unit:</label>
+                                <label class="col-sm-6">{{key.unit}}</label>
+                              </div>
+
+                              <div *ngIf="key.retailPrice" class="column-history">
+                                <label class="col-sm-6 control-label">RetailPrice:</label>
+                                <label class="col-sm-6">{{key.retailPrice}}</label>
+                              </div>
+
+                              <div *ngIf="key.recommendedDose" class="column-history">
+                                <label class="col-sm-6 control-label">Recommended dose/day:</label>
+                                <label class="col-sm-6">{{key.recommendedDose}}</label>
+                              </div>
+
+                              <div *ngIf="key.expiryDate" class="column-history">
+                                <label class="col-sm-6 control-label">Expiry Date:</label>
+                                <label class="col-sm-6">{{key.expiryDate}}</label>
+                              </div>
+
+                              <div *ngIf="key.minimumDose" class="column-history">
+                                <label class="col-sm-6 control-label">Minimum dose/day:</label>
+                                <label class="col-sm-6">{{key.minimumDose}}</label>
+                              </div>
+
+                              <div *ngIf="key.doseEquivalent" class="column-history">
+                                <label class="col-sm-6 control-label">Dose Equivalent:</label>
+                                <label class="col-sm-6">{{key.doseEquivalent}}</label>
+                              </div>
+
+                              <div *ngIf="key.maximumDose" class="column-history">
+                                <label class="col-sm-6 control-label">Maximum dose/day:</label>
+                                <label class="col-sm-6">{{key.maximumDose}}</label>
+                              </div>
+
+                              <div *ngIf="key.prescription" class="column-history">
+                                <label class="col-sm-6 control-label">Prescription:</label>
+                                <label class="col-sm-6">{{key.prescription}}</label>
+                              </div>
+
+                              <div *ngIf="key.status" class="column-history">
+                                <label class="col-sm-6 control-label">Status:</label>
+                                <label class="col-sm-6">{{key.status}}</label>
+                              </div>
+
+                              <div *ngIf="key.image" class="column-history">
+                                <label class="col-sm-6 control-label">Picture:</label>
+                                <div class="col-sm-6">
+                                  <div class="picture-preview">
+                                    <img [attr.src]="key.image | resolveImageUrl" width="200" (click)="popupImg(key.image)" />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer no-bg">
+            <div class="ibox-footer-right">
+              <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                <i class="fal fa-times"></i><span>Cancel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<dx-popup [fullScreen]="true" [dragEnabled]="false" [showTitle]="true" [showCloseButton]="true" [(visible)]="popupVisible">
+  <div *dxTemplate="let data of 'content'" class="text-center">
+    <img [src]="filePicture | resolveImageUrl" style="height:100%;" />
+  </div>
+</dx-popup>
+<app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()" (onCloseModalWarning)="onCloseModalWarning()"></app-alert>

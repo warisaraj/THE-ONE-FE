@@ -1,0 +1,22 @@
+export const GlobalVariable = Object.freeze({
+  TITLE_NAME: 'Menu',
+  BASE_API: '/api',
+  BASE_MODULE: '',
+  BASE_RESOURCE: '/v1/bih/orders',
+  BASE_RESOURCE_FINISHED: '/v1/bih/finishedProducts',
+  BASE_RESOURCE_GET_BY_ID:'/searchOrderPharmacistView',
+  BASE_RESOURCE_CREATE: '/createOrder',
+  BASE_RESOURCE_UPDATE: '/updateBin',
+  BASE_RESOURCE_CREATE_QUOTATION: '/createQuotation',
+  BASE_RESOURCE_UPDATE_REVIEW_ORDER: '/updateReviewOrder',
+  BASE_RESOURCE_GET_FINISHED_PRODUCT: '/searchFinishedProducts',
+  BASE_RESOURCE_GET_PACKMED_PRICE: '/v1/bih/packMed/searchPackMedPrice',
+  BASE_RESOURCE_GET_SEARCH_PATIENTS: '/v1/bih/ddl/searchDdlpatients',
+  BASE_RESOURCE_GET_RAW_MATERIALS: '/v1/bih/rawMaterials/searchRawMaterials',
+  BASE_RESOURCE_GET_SEARCH_PRICE: '/v1/bih/price/searchPrice',
+  BASE_RESOURCE_GET_SEARCH_CAPSULES: '/v1/bih/capsules/searchCapsules',
+  BASE_RESOURCE_UPDATE_COMPLETE_ORDER: '/updateCompleteOrder',
+  RESOURCE: '',
+  MOCKUP_QUERY: '',
+  ROLE_URL:'/order-management/orders-pharmacist-view'
+});

@@ -1,0 +1,135 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">Pharmacy Note</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Master Data Management</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a (click)="onClickBack()">Pharmacy Note</a>
+              </li>
+              <li class="breadcrumb-item active">
+                <span *ngIf="pageType == 'view'"> View Pharmacy Note Info </span>
+                <span *ngIf="pageType == 'new'"> Create Pharmacy Note Info </span>
+                <span *ngIf="pageType == 'edit'"> Edit Pharmacy Note Info </span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-12 align-self-center text-right">
+        <button *ngIf="pageType != 'view'" (click)="btnSubmit()" id="btnSaveTop" name="btnSaveTop" class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal" data-placement="top" title="Save" [disabled]="disbledBtn.save">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button *ngIf="pageType == 'view' && menuPermissions.edit" [routerLink]="['/master-data-management','pharmacy-notes', Id ,'edit']" id="btnEditTop" name="btnEditTop" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit" [disabled]="disbledBtn.save">
+          <i class="fas fa-edit"></i><span>Edit</span>
+        </button>
+        <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text">Pharmacy Note Info<br><small *ngIf="pageType != 'view'">*Please enter data in the "Require Field" textbox.</small></h5>
+          </div>
+          <div class="ibox-body">
+            <div id="tab-1" class="tab-pane active">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                      <div class="ibox-content" style="border:0px;">
+                        <form class="form-horizontal" [formGroup]="editGroupForm">
+
+                          <div class="form-group"><label class="col-sm-3 control-label">HN<span class="fontred">*</span></label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls.txtHn.valid&&editGroupForm.controls.txtHn.dirty,'col-sm-4':true}">
+                              <!-- <input type="text" class="form-control" id="txtHn" name="txtHn" maxlength="50" [(ngModel)]="editDataGroups.hn" formControlName="txtHn"> -->
+                              <dx-autocomplete id="txtHn" name="txtHn" [ngModel]="editDataGroups.hn"
+                                               valueExpr="hn"
+                                               (onItemClick)="onItemClick($event)"
+                                               (onFocusOut)="onFocusOut($event,'hn')"
+                                               (onValueChanged)="onValueChanged($event,'hn')"
+                                               formControlName="txtHn" [dataSource]="patientInfoDataSource">
+                              </dx-autocomplete>
+                            </div>
+                          </div>
+                          <div class="form-group"><label class="col-sm-3 control-label"> Name<span class="fontred">*</span></label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls.txtName.valid&&editGroupForm.controls.txtName.dirty,'col-sm-4':true}">
+                              <dx-autocomplete id="txtName" name="txtName"
+                              [ngModel]="editDataGroups.name"
+                              valueExpr="patientName"
+                              (onItemClick)="onItemClick($event)"
+                              (onFocusOut)="onFocusOut($event,'name')"
+                              (onValueChanged)="onValueChanged($event,'name')"
+                              formControlName="txtName" [dataSource]="patientInfoDataSource">
+             </dx-autocomplete>
+                            </div>
+                          </div>
+
+                          <div class="form-group"><label class="col-sm-3 control-label"> Order Note</label>
+                            <div class="col-sm-4">
+                              <textarea (keyup)="textAreaAutoHeight()" class="form-control" id="txtOrderNote" name="txtOrderNote" rows="3" placeholder="" style="resize: vertical" [(ngModel)]="editDataGroups.orderNote" formControlName="txtOrderNote"></textarea>
+                            </div>
+                          </div>
+
+                          <div class="form-group"><label class="col-sm-3 control-label"> Production Note</label>
+                            <div class="col-sm-4">
+                              <textarea (keyup)="textAreaAutoHeight()" class="form-control" id="txtProductionNote" name="txtProductionNote" rows="3" placeholder="" style="resize: vertical" [(ngModel)]="editDataGroups.productionNote" formControlName="txtProductionNote"></textarea>
+                            </div>
+                          </div>
+
+                          <div class="hr-line-dashed"></div>
+                          <!-- <div class="form-group"><label class="col-sm-3 control-label">Description</label>
+                            <div class="col-sm-10">
+                              <textarea (keyup)="textAreaAutoHeight()" class="form-control" id="txtDescription" name="txtDescription"rows="3" placeholder="Enter a message ..." style="resize: vertical"  [(ngModel)]="editDataGroups.description" formControlName="txtDescription"></textarea>
+                            </div>
+                          </div>
+                          <div class="hr-line-dashed"></div> -->
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer no-bg">
+            <div class="ibox-footer-right">
+              <button *ngIf="pageType != 'view'" (click)="btnSubmit()" id="btnSaveTop" name="btnSaveTop" class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal" data-placement="top" title="Save" [disabled]="disbledBtn.save">
+                <i class="fas fa-save"></i><span>Save</span>
+              </button>
+              <button *ngIf="pageType == 'view' && menuPermissions.edit"  [routerLink]="['/master-data-management','finished-products', Id ,'edit']" id="btnEditTop" name="btnEditTop" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit" [disabled]="disbledBtn.save">
+                <i class="fas fa-edit"></i><span>Edit</span>
+              </button>
+              <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop"  class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                <i class="fal fa-times"></i><span>Cancel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()" (onCloseModalWarning)="onCloseModalWarning()"></app-alert>

@@ -1,0 +1,2126 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-6 col-xs-12 align-self-center">
+        <h4 class="soc-title">Orders</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Order Management</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a (click)="onClickBack()">Orders</a>
+              </li>
+              <li *ngIf="pageType == 'quotation'" class="breadcrumb-item">
+                <a (click)="onClickBackEdit()">Edit Order Info</a>
+              </li>
+              <li class="breadcrumb-item active">
+                <span *ngIf="pageType == 'view'"> View Order Info </span>
+                <span *ngIf="pageType == 'new'"> Create Order Info </span>
+                <span *ngIf="pageType == 'edit'"> Edit Order Info </span>
+                <span *ngIf="pageType == 'quotation'"> View Nutraceuticals Quotation Info </span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <!-- *ngIf="menuPermissions.add" -->
+      <div class="col-md-6 col-xs-12 align-self-center text-right">
+        <!-- <button *ngIf="pageType == 'quotation' && menuPermissions.edit" id="btnPrint" name="btnPrint" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Print">
+          <i class="fas fa-print"></i><span>Print</span>
+        </button> -->
+        <button
+          *ngIf="!hideEditBtn && pageType == 'view' && orderStatus == 17 && menuPermissions.edit && (order.isSplitProduction == 0 || order.isSplitProduction == null)"
+          (click)="fnClickSplitProduction()" id="btnSplitProduction" name="btnSplitProduction" title="Split Production"
+          class="btn btn-success float-xs-left mr-10" [disabled]="disbledBtn.save">
+          <span>Split Production</span>
+        </button>
+        <button *ngIf="!hideEditBtn && pageType == 'edit' && orderStatus == 13 && menuPermissions.add"
+          (click)="fnClickInsertOrder()" id="btnInsertOrderInTC" name="btnInsertOrderInTC"
+          class="btn btn-success float-xs-left mr-10" title="Insert order in TC" [disabled]="disbledBtn.save">
+          <span>Insert order in TC</span>
+        </button>
+        <button *ngIf="!hideEditBtn && pageType == 'view' && orderStatus == 17  && menuPermissions.edit"
+          (click)="fnClickPrintDone()" id="btnPrintDone" name="btnPrintDone" class="btn btn-success float-xs-left mr-10"
+          title="Print done" [disabled]="disbledBtn.save">
+          <i class="fas fa-print" *ngIf="!disbledBtn.save"></i>
+          <i class="fas fa-spinner fa-spin" *ngIf="disbledBtn.save"></i>
+          <span>{{ disbledBtn.save ? 'Processing...' : 'Print done' }}</span>
+        </button>
+        <button *ngIf="!hideEditBtn && pageType == 'edit' && orderStatus == 18 && menuPermissions.edit"
+          (click)="fnClickSecondCheckDone()" id="btnSecondCheckDone" name="btnSecondCheckDone" title="Second check done"
+          class="btn btn-success float-xs-left mr-10" [disabled]="disbledBtn.save">
+          <span>Second check done</span>
+        </button>
+        <button *ngIf="!hideEditBtn && pageType == 'edit' && orderStatus == 14 && menuPermissions.edit"
+          (click)="fnUpdateFirstReviewDone()" id="btnUpdateFirstReviewDone" name="btnUpdateFirstReviewDone"
+          class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal"
+          data-placement="top" title="Save" [disabled]="disbledBtn.save">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button *ngIf="!hideEditBtn && pageType == 'edit' && orderStatus == 25 && menuPermissions.edit"
+          (click)="fnUpdateCompleteOrder()" id="btnUpdateCompleteOrder" name="btnUpdateCompleteOrder"
+          class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal"
+          data-placement="top" title="Complete"
+          [disabled]="disbledBtn.save || isEditDelivery || !isCompleteAllDelivery">
+          <span>Complete</span>
+        </button>
+        <button
+          *ngIf="!hideEditBtn && pageType == 'edit' && (orderStatus == 24 || orderStatus == 25) && menuPermissions.edit"
+          (click)="fnUpdatePharmacyCheck()" id="btnUpdatePharmacyCheck" name="btnUpdatePharmacyCheck"
+          class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal"
+          data-placement="top" title="Save" [disabled]="disbledBtn.save || isEditDelivery">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button
+          *ngIf="!hideEditBtn && pageType == 'view' && orderStatus != 17 && orderStatus != 26 && menuPermissions.edit"
+          [routerLink]="['/order-management','orders-production-pharmacist-view', Id ,'edit']"
+          [queryParams]="{ tab: tabIndex }" id="btnEditTop" name="btnEditTop"
+          class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit"
+          [disabled]="disbledBtn.save">
+          <i class="fas fa-edit"></i><span>Edit</span>
+        </button>
+        <button *ngIf="!hideEditBtn" (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop"
+          class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel"
+          style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text" style="font-weight:700;">
+              Order Info<br>
+              <small *ngIf="pageType != 'view'">
+                *Please enter data in the "Require Field" textbox.
+              </small>
+            </h5>
+          </div>
+          <div class="ibox-body">
+            <div id="tab-1" class="tab-pane active">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                      <div class="ibox-content" style="border:0px;">
+                        <form class="form-horizontal" [formGroup]="orderForm">
+                          <!-- Patient Info -->
+                          <div class="row" id="divPatientInfo">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Patient Info</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <!-- HN -->
+                                    <div class="form-group">
+                                      <label class="col-sm-3 control-label">HN</label>
+                                      <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="txtHn" name="txtHn"
+                                          formControlName="txtHn" [ngModel]="order.hn">
+                                      </div>
+                                    </div>
+                                    <!-- Patient Name -->
+                                    <div class="form-group">
+                                      <label class="col-sm-3 control-label">Patient Name</label>
+                                      <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="txtPatientName"
+                                          name="txtPatientName" formControlName="txtPatientName"
+                                          [ngModel]="order.patientName">
+                                      </div>
+                                    </div>
+                                    <!-- Order Date -->
+                                    <div class="form-group">
+                                      <label class="col-sm-3 control-label">Order Date</label>
+                                      <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="txtOrderDate" name="txtOrderDate"
+                                          formControlName="txtOrderDate" [ngModel]="order.orderDate">
+                                      </div>
+                                    </div>
+                                    <!-- Supply Day -->
+                                    <div class="form-group">
+                                      <label class="col-sm-3 control-label">Supply Day</label>
+                                      <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="txtSupplyDay" name="txtSupplyDay"
+                                          formControlName="txtSupplyDay" [ngModel]="order.supplyDay">
+                                      </div>
+                                    </div>
+                                    <!-- Calculated Day -->
+                                    <div class="form-group" *ngIf="order.isSeparateMeal && +order.isSeparateMeal === 1">
+                                      <label class="col-sm-3 control-label">Calculated Day</label>
+                                      <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="txtCalculatedDay"
+                                          name="txtCalculatedDay" formControlName="txtCalculatedDay"
+                                          [ngModel]="order.calculatedDay">
+                                      </div>
+                                    </div>
+                                    <!-- Customized x Months -->
+                                    <div class="form-group" *ngIf="quotationDetail.name">
+                                      <label class="col-sm-3 control-label">{{quotationDetail.name}}</label>
+                                      <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="txtCustomizedSupplement"
+                                          name="txtCustomizedSupplement" formControlName="txtCustomizedSupplement"
+                                          [ngModel]="quotationDetail.amount | number:'1.2-2'">
+                                      </div>
+                                    </div>
+                                    <!-- Physician -->
+                                    <div class="form-group">
+                                      <label class="col-sm-3 control-label">Physician</label>
+                                      <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="txtPhysician" name="txtPhysician"
+                                          formControlName="txtPhysician" [ngModel]="order.physician">
+                                      </div>
+                                    </div>
+                                    <!-- Production End Date/Time -->
+                                    <div class="form-group">
+                                      <label class="col-sm-3 control-label">Production End Date/Time</label>
+                                      <div class="col-sm-4">
+                                        <input type="text" class="form-control" id="txtProductionEnd"
+                                          name="txtProductionEnd" formControlName="txtProductionEnd"
+                                          [ngModel]="order.productionEnd">
+                                      </div>
+                                    </div>
+                                    <!-- Confirmation Detail -->
+                                    <div>
+                                      <!-- Production End Date -->
+                                      <div class="form-group">
+                                        <label class="col-sm-3 control-label">Confirmation Detail</label>
+                                        <div class="col-sm-9" style="margin-top: 6px;display: flex;">
+                                          <div style="width: 180px;">
+                                            <i class="fas fa-circle circle-label" style="width: 30px;"></i>
+                                            Production End Date
+                                          </div>
+                                          <div style="width: 40px;">:</div>
+                                          <div>{{order.productionEndDate}}</div>
+                                        </div>
+                                      </div>
+                                      <!-- Time -->
+                                      <div class="form-group">
+                                        <div class="col-sm-3"></div>
+                                        <div class="col-sm-9" style="margin-top: 6px;display: flex;">
+                                          <div style="width: 180px;">
+                                            <i class="fas fa-circle circle-label" style="width: 30px;"></i>
+                                            Time
+                                          </div>
+                                          <div style="width: 40px;">:</div>
+                                          <div>{{order.productionEndTime}}</div>
+                                        </div>
+                                      </div>
+                                      <!-- Delivery Method -->
+                                      <div class="form-group">
+                                        <div class="col-sm-3"></div>
+                                        <div class="col-sm-9" style="margin-top: 6px;display: flex;">
+                                          <div style="width: 180px;">
+                                            <i class="fas fa-circle circle-label" style="width: 30px;"></i>
+                                            Delivery Method
+                                          </div>
+                                          <div style="width: 40px;">:</div>
+                                          <div style="overflow: hidden;text-overflow: ellipsis; max-width: 75%;"
+                                            [title]="deliveryDetailMethod">
+                                            {{deliveryDetailMethod}}
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <!-- Arrival Date/Time -->
+                                      <div class="form-group">
+                                        <div class="col-sm-3"></div>
+                                        <div class="col-sm-9" style="margin-top: 6px;display: flex;">
+                                          <div style="width: 180px;">
+                                            <i class="fas fa-circle circle-label" style="width: 30px;"></i>
+                                            Arrival Date/Time
+                                          </div>
+                                          <div style="width: 40px;">:</div>
+                                          <div style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"
+                                            [title]="deliveryDetailArrivalDateTime">
+                                            {{deliveryDetailArrivalDateTime}}
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <!-- MFG -->
+                                      <div class="form-group">
+                                        <div class="col-sm-3"></div>
+                                        <div class="col-sm-9" style="margin-top: 6px;display: flex;">
+                                          <div style="width: 180px;">
+                                            <i class="fas fa-circle circle-label" style="width: 30px;"></i>
+                                            MFG
+                                          </div>
+                                          <div style="width: 40px;">:</div>
+                                          <div>{{order.productionEndDate}}</div>
+                                        </div>
+                                      </div>
+                                      <!-- BBF -->
+                                      <div class="form-group">
+                                        <div class="col-sm-3"></div>
+                                        <div class="col-sm-9" style="margin-top: 6px;display: flex;">
+                                          <div style="width: 180px;">
+                                            <i class="fas fa-circle circle-label" style="width: 30px;"></i>
+                                            BBF
+                                          </div>
+                                          <div style="width: 40px;">:</div>
+                                          <div>
+                                            <!-- {{bbfValue()}} -->
+                                            {{bbf}}
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <!-- Cpd. Exp. -->
+                                      <div class="form-group">
+                                        <div class="col-sm-3"></div>
+                                        <div class="col-sm-9" style="margin-top: 6px;display: flex;">
+                                          <div style="width: 180px;">
+                                            <i class="fas fa-circle circle-label" style="width: 30px;"></i>
+                                            Cpd. Exp.
+                                          </div>
+                                          <div style="width: 40px;">:</div>
+                                          <div>
+                                            <!-- {{cpdExpValue()}} -->
+                                            {{cpdExp}}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!-- Packaging -->
+                                    <div class="form-group">
+                                      <label class="col-sm-3 control-label">
+                                        Packaging
+                                        <span class="fontred"
+                                          *ngIf="pageType != 'view' && order.orderStatus < 24">*</span>
+                                      </label>
+                                      <div *ngIf="pageType != 'view'"
+                                        [ngClass]="{'has-error':!orderForm.controls['ddlPackaging'].valid&&orderForm.controls['ddlPackaging'].dirty,'col-sm-4':true}">
+                                        <select [disabled]="pageType == 'view'" class="form-control"
+                                          formControlName="ddlPackaging" [(ngModel)]="order.packaging"
+                                          (change)="fnChangePacking()">
+                                          <option selected="selected" [value]="null">Please select</option>
+                                          <option *ngFor="let item of packagingList" [value]="item.id">{{ item.name }}
+                                          </option>
+                                        </select>
+                                      </div>
+                                      <div class="col-sm-4" *ngIf="pageType == 'view'">
+                                        <input type="text" disabled="true" class="form-control" id="txtPackaging"
+                                          name="txtPackaging" [value]="packagingListMap[order.packaging]">
+                                      </div>
+                                    </div>
+                                    <div class="form-group">
+                                      <label class="col-sm-3 control-label">
+                                        Location
+                                      </label>
+                                      <div *ngIf="pageType != 'view'"
+                                        [ngClass]="{'has-error':!orderForm.controls['ddlLocation'].valid&&orderForm.controls['ddlLocation'].dirty,'col-sm-4':true}">
+                                        <select [disabled]="pageType == 'view'" class="form-control"
+                                          formControlName="ddlLocation" [(ngModel)]="order.locationDetail"
+                                          (change)="fnChangeLocation()">
+                                          <option selected="selected" [value]="null">Please select</option>
+                                          <option *ngFor="let item of locationList" [value]="item.name">{{ item.name }}
+                                          </option>
+                                        </select>
+                                      </div>
+                                      <div class="col-sm-4" *ngIf="pageType == 'view'">
+                                        <input type="text" disabled="true" class="form-control" id="txtLocation"
+                                          name="txtLocation" [value]="order.locationDetail">
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="row" id="divPackageNote" *ngIf="tabIndex == '3'">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Packaging Note</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row" style="padding:0 20px;">
+                                      <div class="form-group">
+                                        <label class="control-label text-right">Packaging Note</label>
+                                        <textarea [disabled]="true" *ngIf="!isPackagingList" class="form-control"
+                                          rows="3" [value]="order.packageNote"
+                                          style="resize: vertical; height: 83px; max-height: 83px;"></textarea>
+                                        <div formArrayName="txtPackageNoteList" *ngIf="isPackagingList">
+                                          <div
+                                            *ngFor="let note of orderForm.get('txtPackageNoteList').controls; let i = index"
+                                            [formGroupName]="i">
+
+                                            <div class="packaging-note-form-list"
+                                              style="width: 555px;padding:10px; border:1px solid #8a998d; border-radius:5px; margin-top:15px; position: relative;background-color: #eee;opacity:0.7">
+
+                                              <!-- Qty -->
+                                              <div style="display: flex; gap: 10px;margin-bottom: 15px;">
+                                                <div class="form-group"
+                                                  style="display: flex; align-items: center;margin-bottom: 0px;">
+                                                  <label class="control-label" style="margin-right: 5px;">Qty
+                                                    =</label>
+                                                  <input type="number" formControlName="qty"
+                                                    class="form-control no-spinner"
+                                                    style="width: 100px; height: 25px; border-radius: 10px;">
+                                                </div>
+
+                                                <!-- Type -->
+                                                <div formArrayName="type"
+                                                  style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                                  <div *ngFor="let opt of typeOptions; let j = index"
+                                                    class="checkbox-wrapper">
+                                                    <dx-check-box [formControlName]="j"
+                                                      [text]="opt.text"></dx-check-box>
+                                                  </div>
+                                                </div>
+                                              </div>
+
+                                              <!-- Supply Days / supType -->
+                                              <div
+                                                style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;margin-bottom: 15px;">
+                                                <!-- Supply Days = [input] x -->
+                                                <div class="form-group"
+                                                  style="display: flex; align-items: center; gap: 0px;margin-bottom: 0px;">
+                                                  <label class="control-label"
+                                                    style="padding-top: 0px;margin-right: 5px;">Supply Days =</label>
+                                                  <input type="number" formControlName="supplyDays" class="form-control"
+                                                    style="width: 100px; height: 25px; border-radius: 10px;">
+                                                  <span style="font-size: 14px;margin-left: 9px;">x</span>
+                                                </div>
+
+                                                <!-- ( checkbox checkbox ) -->
+                                                <div style="display: flex; align-items: center; gap: 5px;">
+                                                  <span style="font-size: 14px;">(</span>
+                                                  <div formArrayName="supType" style="display: flex; gap: 10px;">
+                                                    <div *ngFor="let option of supTypeOptions; let j = index">
+                                                      <dx-check-box [formControlName]="j" [text]="option.text">
+                                                      </dx-check-box>
+                                                    </div>
+                                                  </div>
+                                                  <span style="font-size: 14px;">)</span>
+                                                </div>
+                                              </div>
+
+                                              <!-- Other -->
+                                              <div style="display: flex; gap: 10px;">
+                                                <div class="form-group" style="display: flex; align-items: center;">
+                                                  <label class="control-label"
+                                                    style="margin-right: 5px;padding: 0px;">Other
+                                                    :</label>
+                                                  <input type="text" formControlName="other" class="form-control"
+                                                    style="width: 430px; height: 25px; border: none; border-bottom: 1px solid; border-radius: 0; outline: none; box-shadow: none;">
+                                                </div>
+                                              </div>
+
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- {{order.orderCompound | json}} -->
+                          <!-- Compound -->
+                          <div *ngIf="pageType != 'quotation'" class="row" id="divCompound">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Compound</h5>
+                                    <div class="ibox-graph-info collapse-link" (click)="clickCollapse('divCompound')">
+                                      <i class="far fa-chevron-down"></i>
+                                    </div>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row" style="padding:20px;">
+                                      <table id="tblCompound" class="table table-bordered">
+                                        <thead>
+                                          <tr>
+                                            <th
+                                              *ngIf="pageType==='edit' && formCompound.controls.length > 0 && tabIndex != 3">
+                                              <div class="form-group">
+                                                <dx-check-box [(value)]="allCheckedCompound"
+                                                  (onValueChanged)="onHeaderBcCompoundChanged($event)">
+                                                </dx-check-box>
+                                              </div>
+                                            </th>
+                                            <th>Name</th>
+                                            <th>Unit</th>
+                                            <th style="width: 200px;">Recommended Dose</th>
+                                            <th style="width: 200px;">Physician Order</th>
+                                            <th>RM Weight (mg)</th>
+                                            <th
+                                              *ngIf="(order.orderStatus >= 14 && pageType ==='edit') || (order.orderStatus >= 17 && pageType ==='view')">
+                                              WF1</th>
+                                            <th
+                                              *ngIf="(order.orderStatus >= 14 && pageType ==='edit') || (order.orderStatus >= 17 && pageType ==='view')">
+                                              WF2</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody formArrayName="compound">
+                                          <ng-container *ngFor="let item of formCompound.controls; let i = index;"
+                                            [formGroupName]="i">
+                                            <tr *ngIf="order.orderCompound[i]?.rawMaterialName != 'Vivapur'"
+                                              class="text-center">
+                                              <td *ngIf="pageType==='edit' && tabIndex != 3" class="text-center">
+                                                <div class="form-group" style="margin-bottom: 0px;">
+                                                  <dx-check-box class="lbl-checkbox-require"
+                                                    formControlName="isCheckedCompound"
+                                                    (onValueChanged)="checkAllCompound()"></dx-check-box>
+                                                </div>
+                                              </td>
+                                              <td class="text-left">
+                                                <span class="mb-0">{{order.orderCompound[i]?.rawMaterialName}}</span>
+                                              </td>
+                                              <td class="text-center">
+                                                <span class="mb-0">{{order.orderCompound[i]?.unit}}</span>
+                                              </td>
+                                              <td class="text-center">
+                                                <span class="mb-0">{{order.orderCompound[i]?.recommendedDose}}</span>
+                                              </td>
+                                              <td class="text-center">
+                                                <span class="mb-0">{{order.orderCompound[i]?.dosePerDay}}</span>
+                                              </td>
+                                              <td class="text-center">
+                                                <span class="mb-0">{{order.orderCompound[i]?.rmWeight |
+                                                  number:'1.1-1'}}</span>
+                                              </td>
+                                              <td
+                                                *ngIf="(order.orderStatus >= 14 && pageType ==='edit') || (order.orderStatus >= 17 && pageType ==='view')"
+                                                class="text-center">
+                                                <input type="radio" [value]="1" (change)="fnSetRequireCapsule(true)"
+                                                  [(ngModel)]="order.orderCompound[i].wf" id="rdlWF{{i}}"
+                                                  name="rdlWF{{i}}" class="mr-15" formControlName="rdlWF{{i}}">
+                                              </td>
+                                              <td
+                                                *ngIf="(order.orderStatus >= 14 && pageType ==='edit') || (order.orderStatus >= 17 && pageType ==='view')"
+                                                class="text-center">
+                                                <input type="radio" [value]="2" (change)="fnSetRequireCapsule(true)"
+                                                  [(ngModel)]="order.orderCompound[i].wf" id="rdlWF{{i}}"
+                                                  name="rdlWF{{i}}" class="mr-15" formControlName="rdlWF{{i}}">
+                                              </td>
+                                            </tr>
+                                          </ng-container>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Dispensed Pill -->
+                          <div *ngIf="pageType != 'quotation'" class="row" id="divDispensedPill">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Dispensed Pill</h5>
+                                    <div class="ibox-graph-info collapse-link"
+                                      (click)="clickCollapse('divDispensedPill')">
+                                      <i class="far fa-chevron-down"></i>
+                                    </div>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <!-- radio -->
+                                    <div class="row" style="padding:20px 20px 0 20px;"
+                                      *ngIf="(pageType==='view' && order.orderStatus >= 17) || (pageType==='edit' && order.orderStatus >= 14)">
+                                      <div class="mb-15">time to take pills</div>
+                                      <!-- Morning -->
+                                      <div class="ml-30" style="display: inline-flex;min-height: 35px;">
+                                        <div style="width: 130px;display: inline-flex;align-items: center;">
+                                          <i class="fas fa-circle circle-label" style="width: 30px;"></i>
+                                          <span>Morning</span>
+                                        </div>
+                                        <div style="display: inline-flex;align-items: center;">
+                                          <input type="radio" [value]="dispensedPillRadioLabel[0]"
+                                            [(ngModel)]="dispensedPillMorning" id="rdlDispensedPillMorningWithMeals"
+                                            name="rdlDispensedPillMorning" formControlName="rdlDispensedPillMorning"
+                                            (click)="onClickMorning(dispensedPillRadioLabel[0])"
+                                            (change)="onCalInstruction()" class="mr-15">
+                                          <span> {{dispensedPillRadioLabel[0]}}</span>
+                                        </div>
+                                        <div style="display: inline-flex;align-items: center;">
+                                          <input type="radio" [value]="dispensedPillRadioLabel[1]"
+                                            [(ngModel)]="dispensedPillMorning" id="rdlDispensedPillMorningBeforeMeals"
+                                            name="rdlDispensedPillMorning" formControlName="rdlDispensedPillMorning"
+                                            (click)="onClickMorning(dispensedPillRadioLabel[1])"
+                                            (change)="onCalInstruction()" class="ml-30 mr-15">
+                                          {{dispensedPillRadioLabel[1]}}
+                                        </div>
+                                      </div>
+                                      <br>
+                                      <!-- Lunch -->
+                                      <div class="ml-30" style="display: inline-flex;min-height: 35px;">
+                                        <div style="width: 130px;display: inline-flex;align-items: center;">
+                                          <i class="fas fa-circle circle-label" style="width: 30px;"></i>
+                                          <span>Lunch</span>
+                                        </div>
+                                        <div style="display: inline-flex;align-items: center;">
+                                          <input type="radio" [value]="dispensedPillRadioLabel[0]"
+                                            [(ngModel)]="dispensedPillLunch" id="rdlDispensedPillLunchWithMeals"
+                                            name="rdlDispensedPillLunch" formControlName="rdlDispensedPillLunch"
+                                            (click)="onClickLunch(dispensedPillRadioLabel[0])"
+                                            (change)="onCalInstruction()" class="mr-15">
+                                          <span>{{dispensedPillRadioLabel[0]}}</span>
+                                        </div>
+                                        <div style="display: inline-flex;align-items: center;">
+                                          <input type="radio" [value]="dispensedPillRadioLabel[1]"
+                                            [(ngModel)]="dispensedPillLunch" id="rdlDispensedPillLunchBeforeMeals"
+                                            name="rdlDispensedPillLunch" formControlName="rdlDispensedPillLunch"
+                                            (click)="onClickLunch(dispensedPillRadioLabel[1])"
+                                            (change)="onCalInstruction()" class="ml-30 mr-15">
+                                          <span>{{dispensedPillRadioLabel[1]}}</span>
+                                        </div>
+                                      </div>
+                                      <br>
+                                      <!-- Evening -->
+                                      <div class="ml-30" style="display: inline-flex;min-height: 35px;">
+                                        <div style="width: 130px;display: inline-flex;align-items: center;">
+                                          <i class="fas fa-circle circle-label" style="width: 30px;"></i>
+                                          <span>Evening</span>
+                                        </div>
+                                        <div style="display: inline-flex;align-items: center;">
+                                          <input type="radio" [value]="dispensedPillRadioLabel[0]"
+                                            [(ngModel)]="dispensedPillEvening" id="rdlDispensedPillEveningWithMeals"
+                                            name="rdlDispensedPillEvening" formControlName="rdlDispensedPillEvening"
+                                            (click)="onClickEvening(dispensedPillRadioLabel[0])"
+                                            (change)="onCalInstruction()" class="mr-15">
+                                          <span> {{dispensedPillRadioLabel[0]}}</span>
+                                        </div>
+                                        <div style="display: inline-flex;align-items: center;">
+                                          <input type="radio" [value]="dispensedPillRadioLabel[1]"
+                                            [(ngModel)]="dispensedPillEvening" id="rdlDispensedPillEveningBeforeMeals"
+                                            name="rdlDispensedPillEvening" formControlName="rdlDispensedPillEvening"
+                                            (click)="onClickEvening(dispensedPillRadioLabel[1])"
+                                            (change)="onCalInstruction()" class="ml-30 mr-15">
+                                          <span>{{dispensedPillRadioLabel[1]}}</span>
+                                        </div>
+                                      </div>
+                                      <br>
+                                      <!-- Bedtime -->
+                                      <div class="ml-30" style="display: inline-flex;min-height: 35px;">
+                                        <div style="width: 130px;display: inline-flex;align-items: center;">
+                                          <i class="fas fa-circle circle-label" style="width: 30px;"></i>
+                                          <span>Bedtime</span>
+                                        </div>
+                                        <div style="display: inline-flex;align-items: center;">
+                                          <input type="radio" [value]="dispensedPillRadioLabel[0]"
+                                            [(ngModel)]="dispensedPillBedtime" id="rdlDispensedPillBedtimeWithMeals"
+                                            name="rdlDispensedPillBedtime" formControlName="rdlDispensedPillBedtime"
+                                            (click)="onClickBedtime(dispensedPillRadioLabel[0])"
+                                            (change)="onCalInstruction()" class="mr-15">
+                                          <span>Bedtime</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <!-- table -->
+                                    <div class="ibox-body">
+                                      <div class="row" style="padding:0 20px;">
+                                        <button (click)="addDispensed()" title="Add Dispensed Pill"
+                                          *ngIf="pageType != 'view' && order.orderStatus < 24 && !(pageType === 'edit' && order.orderStatus === 13)"
+                                          class="btn btn-success mr-10" type="button"
+                                          style="padding:5px 10px;float:right;margin-right:30px !important">
+                                          <i class="fas fa-plus" style="margin:0;font-size:20px"></i>
+                                        </button>
+                                        <!-- <div *ngIf="order.orderDispensedPill.length === 0 && pageType === 'view'" class="row mb-20 mt-20 text-center">
+                                          <span>No Data</span>
+                                        </div> -->
+                                        <table id="tblDispensedPill" class="table table-bordered" style="border:none">
+                                          <thead>
+                                            <tr>
+                                              <th
+                                                *ngIf="pageType==='edit' && formDispensedPill.controls.length > 0 && tabIndex != 3"
+                                                class="text-center">
+                                                <div class="form-group">
+                                                  <dx-check-box class="lbl-checkbox-require"
+                                                    [value]="allCheckedDispensedPill"
+                                                    (onValueChanged)="onHeaderDpCompoundChanged($event)">
+                                                  </dx-check-box>
+                                                </div>
+                                              </th>
+                                              <th class="text-center">Name</th>
+                                              <th class="text-center">Note</th>
+                                              <th class="text-center">Physician Order</th>
+                                              <th class="text-center" style="width: 8%;"
+                                                *ngIf="dispensedPillMorning===dispensedPillRadioLabel[0]">
+                                                M (pc)
+                                              </th>
+                                              <th class="text-center" style="width: 8%;"
+                                                *ngIf="dispensedPillMorning===dispensedPillRadioLabel[1]">
+                                                M (ac)
+                                              </th>
+                                              <th class="text-center" style="width: 8%;"
+                                                *ngIf="dispensedPillLunch===dispensedPillRadioLabel[0]">
+                                                L (pc)
+                                              </th>
+                                              <th class="text-center" style="width: 8%;"
+                                                *ngIf="dispensedPillLunch===dispensedPillRadioLabel[1]">
+                                                L (ac)
+                                              </th>
+                                              <th class="text-center" style="width: 8%;"
+                                                *ngIf="dispensedPillEvening===dispensedPillRadioLabel[0]">
+                                                E (pc)
+                                              </th>
+                                              <th class="text-center" style="width: 8%;"
+                                                *ngIf="dispensedPillEvening===dispensedPillRadioLabel[1]">
+                                                E (ac)
+                                              </th>
+                                              <th class="text-center" style="width: 8%;"
+                                                *ngIf="dispensedPillBedtime===dispensedPillRadioLabel[0]">
+                                                HS
+                                              </th>
+                                              <th class="text-center">Total Pill
+                                              </th>
+                                            </tr>
+                                          </thead>
+                                          <tbody formArrayName="dispensedPill">
+                                            <tr *ngFor="let item of formDispensedPill.controls; let i = index;"
+                                              [formGroupName]="i">
+                                              <td *ngIf="pageType==='edit' && tabIndex != 3" class="text-center">
+                                                <div class="form-group" style="margin-bottom: 0px;">
+                                                  <dx-check-box class="lbl-checkbox-require"
+                                                    formControlName="isCheckedDispensedPill"
+                                                    (onValueChanged)="checkAllDispensedPill()"></dx-check-box>
+                                                </div>
+                                              </td>
+                                              <!-- name -->
+                                              <td style="vertical-align: text-bottom;">
+                                                <!-- <dx-autocomplete style="background:#fff" -->
+                                                <!--                  [ngClass]="{'border-error':!item.get('txtFinishedProductName').valid&&item.get('txtFinishedProductName').dirty}" -->
+                                                <!--                  [ngModel]="order.orderDispensedPill[i].finishedProductName" -->
+                                                <!--                  formControlName="txtFinishedProductName" -->
+                                                <!--                  [dataSource]="finishedProduct" -->
+                                                <!--                  (onItemClick)="updateDispensedPill($event,i)" -->
+                                                <!--                  (onFocusOut)="onFocusOutDispensedPill($event,i)"> -->
+                                                <!--   <div *dxTemplate="let items of 'item'"> -->
+                                                <!--     <span>{{ items.finishedProductName }}</span> -->
+                                                <!--   </div> -->
+                                                <!-- </dx-autocomplete> -->
+                                                <input type="text" class="form-control" maxlength="255"
+                                                  [ngClass]="{'border-error':!item.get('txtFinishedProductName').valid&&item.get('txtFinishedProductName').dirty}"
+                                                  [(ngModel)]="order.orderDispensedPill[i].finishedProductName"
+                                                  formControlName="txtFinishedProductName"
+                                                  (input)="fnCheckDupDispensedPill()">
+                                                <div class="fontred"
+                                                  *ngIf="order.orderDispensedPill[i].finishedProductName && isDuplicateDispensedPill[order.orderDispensedPill[i].finishedProductName] > 1">
+                                                  * Dispensed Pill is duplicate
+                                                </div>
+                                              </td>
+                                              <!-- note -->
+                                              <td class="text-center" style="vertical-align: top;">
+                                                <input type="text" class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.orderDispensedPill[i].note"
+                                                  formControlName="txtNote">
+                                              </td>
+                                              <!-- physician -->
+                                              <td class="text-center" style="vertical-align: top;">
+                                                <input *ngIf="pageType !== 'view'" [disabled]="pageType != 'new'"
+                                                  type="text" class="form-control text-center" maxlength="50"
+                                                  [(ngModel)]="order.orderDispensedPill[i].physician"
+                                                  (keypress)="numberOnly($event)" (input)="fnCalTotal()"
+                                                  formControlName="txtPhysician">
+                                                <input *ngIf="pageType === 'view'" [disabled]="true" type="text"
+                                                  class="form-control text-center"
+                                                  [value]="order.orderDispensedPill[i].physician">
+                                              </td>
+                                              <!-- M (pc) -->
+                                              <td *ngIf="dispensedPillMorning===dispensedPillRadioLabel[0]"
+                                                style="vertical-align: top;">
+                                                <input type="text"
+                                                  [ngClass]="{'border-error': order.orderDispensedPill[i].isErrorTimeToTakePills,'form-control':true,'text-center':true}"
+                                                  maxlength="50" [(ngModel)]="order.orderDispensedPill[i].mpc"
+                                                  (keypress)="numberOnly($event)" (input)="fnCalTotal()"
+                                                  formControlName="txtMpc">
+                                              </td>
+                                              <!-- M (ac) -->
+                                              <td *ngIf="dispensedPillMorning===dispensedPillRadioLabel[1]"
+                                                style="vertical-align: top;">
+                                                <input type="text"
+                                                  [ngClass]="{'border-error': order.orderDispensedPill[i].isErrorTimeToTakePills,'form-control':true,'text-center':true}"
+                                                  maxlength="50" [(ngModel)]="order.orderDispensedPill[i].mac"
+                                                  (keypress)="numberOnly($event)" (input)="fnCalTotal()"
+                                                  formControlName="txtMac">
+                                              </td>
+                                              <!-- L (pc) -->
+                                              <td *ngIf="dispensedPillLunch===dispensedPillRadioLabel[0]"
+                                                style="vertical-align: top;">
+                                                <input type="text"
+                                                  [ngClass]="{'border-error': order.orderDispensedPill[i].isErrorTimeToTakePills,'form-control':true,'text-center':true}"
+                                                  maxlength="50" [(ngModel)]="order.orderDispensedPill[i].lpc"
+                                                  (keypress)="numberOnly($event)" (input)="fnCalTotal()"
+                                                  formControlName="txtLpc">
+                                              </td>
+                                              <!-- L (ac) -->
+                                              <td *ngIf="dispensedPillLunch===dispensedPillRadioLabel[1]"
+                                                style="vertical-align: top;">
+                                                <input type="text"
+                                                  [ngClass]="{'border-error': order.orderDispensedPill[i].isErrorTimeToTakePills,'form-control':true,'text-center':true}"
+                                                  maxlength="50" [(ngModel)]="order.orderDispensedPill[i].lac"
+                                                  (keypress)="numberOnly($event)" (input)="fnCalTotal()"
+                                                  formControlName="txtLac">
+                                              </td>
+                                              <!-- E (pc) -->
+                                              <td *ngIf="dispensedPillEvening===dispensedPillRadioLabel[0]"
+                                                style="vertical-align: top;">
+                                                <input type="text"
+                                                  [ngClass]="{'border-error': order.orderDispensedPill[i].isErrorTimeToTakePills,'form-control':true,'text-center':true}"
+                                                  maxlength="50" [(ngModel)]="order.orderDispensedPill[i].epc"
+                                                  (keypress)="numberOnly($event)" (input)="fnCalTotal()"
+                                                  formControlName="txtEpc">
+                                              </td>
+                                              <!-- E (ac) -->
+                                              <td *ngIf="dispensedPillEvening===dispensedPillRadioLabel[1]"
+                                                style="vertical-align: top;">
+                                                <input type="text"
+                                                  [ngClass]="{'border-error': order.orderDispensedPill[i].isErrorTimeToTakePills,'form-control':true,'text-center':true}"
+                                                  maxlength="50" [(ngModel)]="order.orderDispensedPill[i].eac"
+                                                  (keypress)="numberOnly($event)" (input)="fnCalTotal()"
+                                                  formControlName="txtEac">
+                                              </td>
+                                              <!-- B (pc) -->
+                                              <td *ngIf="dispensedPillBedtime===dispensedPillRadioLabel[0]"
+                                                style="vertical-align: top;">
+                                                <input type="text"
+                                                  [ngClass]="{'border-error': order.orderDispensedPill[i].isErrorTimeToTakePills,'form-control':true,'text-center':true}"
+                                                  maxlength="50" [(ngModel)]="order.orderDispensedPill[i].bpc"
+                                                  (keypress)="numberOnly($event)" (input)="fnCalTotal()"
+                                                  formControlName="txtBac">
+                                              </td>
+                                              <!-- Total Pill -->
+                                              <td style="vertical-align: top;">
+                                                <input type="text" class="form-control text-center" maxlength="50"
+                                                  [ngClass]="{'border-error':!item.get('txtTotalPill').valid&&item.get('txtTotalPill').dirty}"
+                                                  [(ngModel)]="order.orderDispensedPill[i].totalPill"
+                                                  (keypress)="numberOnly($event)" formControlName="txtTotalPill">
+                                              </td>
+                                              <div
+                                                *ngIf="pageType != 'view' && order.orderDispensedPill[i].isVitalLife && order.orderStatus < 24 && order.orderDispensedPill[i].finishedProductName !== 'Compounded Pills'"
+                                                style="width:20px" title="Delete Dispensed Pill">
+                                                <a (click)="delDispensed(i)" class="btn btn-default icon btn-sm"><i
+                                                    class="fas fa-trash"></i></a>
+                                              </div>
+                                            </tr>
+                                            <tr *ngIf="formDispensedPill.controls?.length == 0">
+                                              <td colspan="11" class="text-center">
+                                                <label class="mb-0">No Data</label>
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                          <tfoot
+                                            *ngIf="order.orderDispensedPill.length > 0 && (dispensedPillLunch || dispensedPillMorning || dispensedPillEvening || dispensedPillBedtime)">
+                                            <tr>
+                                              <td [attr.colspan]="(pageType === 'edit' && tabIndex != 3) ? 4 : (tabIndex == 3 ? 3 : 3)"
+                                                class="text-right">
+                                                <span class="mb-0" style="font-weight: 700;">Total</span>
+                                              </td>
+                                              <!-- Total M (pc) -->
+                                              <td *ngIf="dispensedPillMorning===dispensedPillRadioLabel[0]">
+                                                <input type="text" class="form-control text-center" [disabled]="true"
+                                                  [value]="total.mpc" id="txtTotalMpc">
+                                              </td>
+                                              <!-- Total M (ac) -->
+                                              <td *ngIf="dispensedPillMorning===dispensedPillRadioLabel[1]">
+                                                <input type="text" class="form-control text-center" [disabled]="true"
+                                                  [value]="total.mac" id="txtTotalMac">
+                                              </td>
+                                              <!-- Total L (pc) -->
+                                              <td *ngIf="dispensedPillLunch===dispensedPillRadioLabel[0]">
+                                                <input type="text" class="form-control text-center" [disabled]="true"
+                                                  [value]="total.lpc" id="txtTotalLpc">
+                                              </td>
+                                              <!-- Total L (ac) -->
+                                              <td *ngIf="dispensedPillLunch===dispensedPillRadioLabel[1]">
+                                                <input type="text" class="form-control text-center" [disabled]="true"
+                                                  [value]="total.lac" id="txtTotalLac">
+                                              </td>
+                                              <!-- Total E (pc) -->
+                                              <td *ngIf="dispensedPillEvening===dispensedPillRadioLabel[0]">
+                                                <input type="text" class="form-control text-center" [disabled]="true"
+                                                  [value]="total.epc" id="txtTotalEpc">
+                                              </td>
+                                              <!-- Total E (ac) -->
+                                              <td *ngIf="dispensedPillEvening===dispensedPillRadioLabel[1]">
+                                                <input type="text" class="form-control text-center" [disabled]="true"
+                                                  [value]="total.eac" id="txtTotalEac">
+                                              </td>
+                                              <!-- Total B (pc) -->
+                                              <td *ngIf="dispensedPillBedtime===dispensedPillRadioLabel[0]">
+                                                <input type="text" class="form-control text-center" [disabled]="true"
+                                                  [value]="total.bpc" id="txtTotalBac">
+                                              </td>
+                                              <td>
+                                              </td>
+                                            </tr>
+                                          </tfoot>
+                                        </table>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Pharmacy Note -->
+                          <div class="row" id="divPharmacyNote">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Pharmacy Note</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row" style="padding:0 20px;">
+                                      <div class="form-group"><label class="control-label text-right">Pharmacy
+                                          Note</label>
+                                        <div>
+                                          <textarea [disabled]="true" [value]="pharmacyNotes.productionNote"
+                                            class="form-control" rows="3"
+                                            style="resize: vertical; height: 83px !important; min-height: 83px !important; "></textarea>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row" style="padding:0 20px;">
+                                      <div class="form-group"><label class="control-label text-right">Additional Note
+                                          from Doctor (TC) </label>
+                                        <div>
+                                          <textarea [disabled]="true" [value]="order.additionalNoteFromDoctor"
+                                            id="txtAdditionalNoteFromDoctor" class="form-control" rows="3"
+                                            placeholder=""
+                                            style="resize: vertical; height: 83px; max-height: 83px;"></textarea>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row" style="padding:0 20px;">
+                                      <div class="form-group"><label class="control-label text-right">Remark</label>
+                                        <div>
+                                          <textarea class="form-control" rows="3" id="txtOrderPharmacyNoteRemark"
+                                            placeholder="" [(ngModel)]="order.orderPharmacyNoteRemark"
+                                            formControlName="txtOrderPharmacyNoteRemark"
+                                            style="resize: vertical; height: 83px; max-height: 83px;"></textarea>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Capsule -->
+                          <div class="row" id="divCapsule">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Capsule</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row pl-0 pr-0 pt-0 pb-0" style="padding:20px;">
+                                      <!-- WF1 -->
+                                      <div class="form-group ml-30 mb-30" style="height: 25px;">
+                                        <div class="col-sm-8">
+                                          <div class="col-sm-1 pl-0 pr-0" style="margin-top: 7px; max-width: 20px;">
+                                            <i class="fas fa-circle circle-label"></i>
+                                          </div>
+                                          <div class="col-sm-2" style="margin-top: 7px;max-width: 70px;">WF1</div>
+                                          <div class="input-box col-sm-5">
+                                            <select class="form-control" formControlName="ddlCapsuleWF1"
+                                              [(ngModel)]="capsule.wf1">
+                                              <option selected="selected" [value]="''">Please select</option>
+                                              <option *ngFor="let item of capsulesList" [value]="item.code">{{
+                                                item.capsuleName }}
+                                              </option>
+                                            </select>
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <!-- WF2 -->
+                                      <div class="form-group ml-30" style="height: 25px;">
+                                        <div class="col-sm-8">
+                                          <div class="col-sm-1 pl-0 pr-0" style="margin-top: 7px; max-width: 20px;">
+                                            <i class="fas fa-circle circle-label"></i>
+                                          </div>
+                                          <div class="col-sm-2" style="margin-top: 7px;max-width: 70px;">
+                                            WF2
+                                            <span class="fontred"
+                                              *ngIf="capsuleWF2Require && pageType != 'view' && order.orderStatus < 24">*</span>
+                                          </div>
+                                          <div class="input-box col-sm-5">
+                                            <div
+                                              [ngClass]="{'has-error':!orderForm.controls['ddlCapsuleWF2'].valid&&orderForm.controls['ddlCapsuleWF2'].dirty}">
+                                              <select (change)="calDosePerDayWF2()" [disabled]="pageType == 'view'"
+                                                class="form-control" formControlName="ddlCapsuleWF2"
+                                                [(ngModel)]="capsule.wf2">
+                                                <option selected="selected" [value]="''">Please select</option>
+                                                <option *ngFor="let item of capsulesList" [value]="item.code">{{
+                                                  item.capsuleName }}
+                                                </option>
+                                              </select>
+
+                                            </div>
+                                          </div>
+                                          <div style="color: red;" *ngIf="capPerDayWF2">
+                                            Total cap per day of WF2 is {{capPerDayWF2 | number: '1.0-0'}} cap.
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <!-- <div class="mb-30"> -->
+                                    <!--   <div style="display: inline-flex;" class="ml-15 mr-30"> -->
+                                    <!--     <i class="fas fa-circle circle-label" style="width: 30px;"></i> -->
+                                    <!--     WF1 -->
+                                    <!--   </div> -->
+                                    <!--   <div style="display: inline-flex;width: 40%;"> -->
+                                    <!--     <select class="form-control" formControlName="ddlCapsuleWF1" [(ngModel)]="capsule.wf1"> -->
+                                    <!--       <option selected="selected" [value]="''">Please select</option> -->
+                                    <!--       <option *ngFor="let item of capsulesList" [value]="item.code">{{ item.capsuleName }}</option> -->
+                                    <!--     </select> -->
+                                    <!--   </div> -->
+                                    <!-- </div> -->
+                                    <!-- <div> -->
+                                    <!--   <div style="display: inline-flex;" class="ml-15 mr-30"> -->
+                                    <!--     <i class="fas fa-circle circle-label" style="width: 30px;"></i> -->
+                                    <!--     WF2 -->
+                                    <!--     <span class="fontred" *ngIf="capsuleWF2Require && pageType != 'view' && order.orderStatus < 24">*</span> -->
+                                    <!--   </div> -->
+                                    <!--   <div style="display: inline-flex;width: 40%;" [ngClass]="{'has-error':!orderForm.controls['ddlCapsuleWF2'].valid&&orderForm.controls['ddlCapsuleWF2'].dirty}"> -->
+                                    <!--     <select (change)="calDosePerDay()" [disabled]="pageType == 'view'" class="form-control" formControlName="ddlCapsuleWF2" [(ngModel)]="capsule.wf2"> -->
+                                    <!--       <option selected="selected" [value]="''">Please select</option> -->
+                                    <!--       <option *ngFor="let item of capsulesList" [value]="item.code">{{ item.capsuleName }}</option> -->
+                                    <!--     </select> -->
+                                    <!--   </div> -->
+                                    <!-- </div> -->
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Instruction and Warning -->
+                          <div class="row" id="divInstructionWarning"
+                            [hidden]="(pageType === 'view' || pageType === 'edit') && +order.orderStatus === 13">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Instruction and Warning</h5>
+                                    <dx-button-group *ngIf="pageType !== 'view'" [items]="preferredLanguageList"
+                                      keyExpr="value" stylingMode="outlined" [selectedItemKeys]="[preferredLanguage]"
+                                      (onItemClick)="preferredLanguageItemClick($event)">
+                                    </dx-button-group>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row" style="padding:0 20px;"
+                                      *ngIf="(order.packaging == 1 && pageType != 'view') || (order.packaging == 1 && +order.orderStatus >= 17)">
+                                      <ul>
+                                        <li class="mb-30">
+                                          <div>Bottle</div>
+                                          <br>
+                                          <div style="display: inline-flex;">
+                                            <div style="width: 150px;">
+                                              Number of Capsules
+                                              <span class="fontred"
+                                                *ngIf="bottleRequire && pageType != 'view' && order.orderStatus < 24">*</span>
+                                            </div>
+                                            <div
+                                              [ngClass]="{'has-error':!orderForm.controls['txtNumberOfCapsules'].valid&&orderForm.controls['txtNumberOfCapsules'].dirty}">
+                                              <input type="text" [disabled]="pageType == 'view'"
+                                                (keypress)="numberOnly($event)" class="form-control" maxlength="50"
+                                                style="width: 150px;" [(ngModel)]="order.bottleNumberOfCap"
+                                                formControlName="txtNumberOfCapsules" (input)="fnChangeMeals()">
+                                            </div>
+                                          </div>
+                                          <br>
+                                          <div style="display: inline-flex;" class="mt-15">
+                                            <div style="width: 150px;">
+                                              Meals
+                                              <span class="fontred"
+                                                *ngIf="bottleRequire && pageType != 'view' && order.orderStatus < 24">*</span>
+                                            </div>
+                                            <div
+                                              [ngClass]="{'has-error':!orderForm.controls['ddlInstructionMeals'].valid&&orderForm.controls['ddlInstructionMeals'].dirty}">
+                                              <select [disabled]="pageType == 'view'" class="form-control"
+                                                id="ddlInstructionMeals" name="ddlInstructionMeals"
+                                                formControlName="ddlInstructionMeals" style="width: 150px;"
+                                                [(ngModel)]="order.bottleMeals" (change)="fnChangeMeals()">
+                                                <option selected="selected" [value]="null">Please select</option>
+                                                <option *ngFor="let item of mealList" [value]="item.id">{{ item.name }}
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                        </li>
+                                      </ul>
+                                    </div>
+                                    <div class="row" style="padding:0 20px;">
+                                      <div class="form-group"><label
+                                          class="control-label text-right">Instruction</label>
+                                        <div>
+                                          <textarea [disabled]="true" class="form-control" rows="3"
+                                            [value]="order.instruction"
+                                            style="resize: vertical; height: 83px; max-height: 83px;"></textarea>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row" style="padding:0 20px;">
+                                      <div class="form-group"><label class="control-label text-right">Warning</label>
+                                        <div>
+                                          <textarea [disabled]="true" class="form-control" rows="3"
+                                            [value]="order.warning"
+                                            style="resize: vertical; height: 83px; max-height: 83px;"></textarea>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row" style="padding:0 20px;">
+                                      <div class="form-group">
+                                        <label class="control-label text-right">
+                                          Additional Instruction
+                                        </label>
+                                        <div>
+                                          <textarea (keyup)="textAreaAutoHeight()" class="form-control" rows="3"
+                                            placeholder="" [(ngModel)]="order.additionalInstruction"
+                                            formControlName="txtAdditionalInstruction"
+                                            style="resize: vertical; height: 83px; max-height: 83px;"></textarea>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row" style="padding:0 20px;">
+                                      <div class="form-group">
+                                        <label class="control-label text-right">
+                                          Additional Warning
+                                        </label>
+                                        <div>
+                                          <textarea (keyup)="textAreaAutoHeight()" class="form-control" rows="3"
+                                            placeholder="" [(ngModel)]="order.additionalWarning"
+                                            formControlName="txtAdditionalWarning"
+                                            style="resize: vertical; height: 83px; max-height: 83px;"></textarea>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Order สั่งแยกมื้อ -->
+                          <div class="row" id="divSeparateMeal" *ngIf="order.isSeparateMeal">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Order สั่งแยกมื้อ</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <table id="tblSeparateMeal" class="table table-bordered"
+                                      style="width: 96%; margin:auto;">
+                                      <thead>
+                                        <tr style="height: 57px">
+                                          <th class="text-center" style="width: 25%;">Last Order</th>
+                                          <th class="text-center" style="width: 25%;">Cap per Day</th>
+                                          <th class="text-center" style="width: 25%;">Order</th>
+                                          <th class="text-center" style="width: 25%;">Supply Day</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr style="background-color: #FFF;">
+                                          <td>
+                                            <div class="input-box ml-10">
+                                              <label>Morning</label>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="input-box text-center">
+                                              <div class="input-box">
+                                                <dx-number-box [disabled]="true"
+                                                  class="form-control text-center cusnumbox"
+                                                  [value]="order.sepLastMorningCapPerDay"></dx-number-box>
+                                              </div>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="input-box">
+                                              <label>Morning</label>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="input-box">
+                                              <dx-number-box [disabled]="true"
+                                                class="form-control text-center cusnumbox"
+                                                [value]="calSupplyDay(order.sepMorningSupplyDay)"></dx-number-box>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                        <tr style="background-color: #F6F6F6;">
+                                          <td>
+                                            <div class="input-box ml-10">
+                                              <label>Lunch</label>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="input-box text-center">
+                                              <div class="input-box">
+                                                <dx-number-box [disabled]="true"
+                                                  class="form-control text-center cusnumbox"
+                                                  [value]="order.sepLastLunchCapPerDay"></dx-number-box>
+                                              </div>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="input-box">
+                                              <label>Lunch</label>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="input-box">
+                                              <dx-number-box [disabled]="true"
+                                                class="form-control text-center cusnumbox"
+                                                [value]="calSupplyDay(order.sepLunchSupplyDay)"></dx-number-box>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                        <tr style="background-color: #FFF;">
+                                          <td>
+                                            <div class="input-box ml-10">
+                                              <label>Evening</label>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="input-box text-center">
+                                              <div class="input-box">
+                                                <dx-number-box [disabled]="true"
+                                                  class="form-control text-center cusnumbox"
+                                                  [value]="order.sepLastEveningCapPerDay"></dx-number-box>
+                                              </div>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="input-box">
+                                              <label>Evening</label>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="input-box">
+                                              <dx-number-box [disabled]="true"
+                                                class="form-control text-center cusnumbox"
+                                                [value]="calSupplyDay(order.sepEveningSupplyDay)"></dx-number-box>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                        <tr style="background-color: #F6F6F6;">
+                                          <td>
+                                            <div class="input-box ml-10">
+                                              <label>Bedtime</label>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="input-box text-center">
+                                              <div class="input-box">
+                                                <dx-number-box [disabled]="true"
+                                                  class="form-control text-center cusnumbox"
+                                                  [value]="order.sepLastBedtimeCapPerDay"></dx-number-box>
+                                              </div>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="input-box">
+                                              <label>Bedtime</label>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="input-box">
+                                              <dx-number-box [disabled]="true"
+                                                class="form-control text-center cusnumbox"
+                                                [value]="calSupplyDay(order.sepBedtimeSupplyDay)"></dx-number-box>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                        <tr style="background-color: #FFF;">
+                                          <td>
+                                            <div class="input-box ml-10">
+                                              <label>Total Cap per Day</label>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="input-box text-center">
+                                              <div class="input-box">
+                                                <dx-number-box [disabled]="true"
+                                                  class="form-control text-center cusnumbox"
+                                                  [value]="order.sepTotalCap"></dx-number-box>
+                                              </div>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="input-box">
+                                              <label>Calculated Day</label>
+                                            </div>
+                                          </td>
+                                          <td>
+                                            <div class="input-box">
+                                              <dx-number-box [disabled]="true"
+                                                class="form-control text-center cusnumbox input-summary"
+                                                [value]="order.calculatedDay"></dx-number-box>
+                                            </div>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Separate medicines -->
+                          <div class="row" id="divSeparateMedicines" *ngIf="((pageType === 'view' && seperateMedicines?.length > 0) 
+                          || (pageType !== 'view' && +order?.orderStatus >= 13))
+                          && !(pageType === 'edit' && +order?.orderStatus === 13)">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <div class="col-sm-8 pl-0 pr-0">
+                                      <h5 class="ibox-title-text">Separate medicines</h5>
+                                    </div>
+                                    <div class="col-sm-4 pl-0 pr-0 text-right">
+                                      <button (click)="clickAddSeparateMedicines()"
+                                        *ngIf="pageType != 'view' && order.orderStatus >= 13  && order.orderStatus != 24 && order.orderStatus != 25"
+                                        class="btn btn-success" style="padding:5px 10px;" type="button"
+                                        data-toggle="tooltip" data-placement="top" title="Add Separate medicines">
+                                        <i class="fas fa-plus" style="margin:0;font-size:20px"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div formArrayName="separateMedicines">
+                                      <div class="mb-30"
+                                        *ngFor="let item of formSeparateMedicines.controls; let i = index;"
+                                        [formGroupName]="i">
+                                        <div class="pb-15px"
+                                          *ngIf="!seperateMedicines[i].isVitalLife || pageType === 'view'">
+                                          <i class="fas fa-circle circle-label" style="width: 30px;"></i>
+                                          {{seperateMedicines[i].name}}
+                                        </div>
+                                        <div *ngIf="seperateMedicines[i].isVitalLife && pageType !== 'view'"
+                                          style="display: inline-flex;width: 40%;">
+                                          <i class="fas fa-circle circle-label pt-15" style="width: 30px;"></i>
+                                          <input type="text" class="form-control" maxlength="255"
+                                            [ngClass]="{'border-error':!item.get('txtSeperateMedicines').valid&&item.get('txtSeperateMedicines').dirty}"
+                                            [(ngModel)]="seperateMedicines[i].name"
+                                            formControlName="txtSeperateMedicines"
+                                            (input)="fnCheckDupSeparateMedicines()">
+                                          <a (click)="clickDeleteSeparateMedicines(i)"
+                                            class="btn btn-default icon btn-sm" style="margin-top: 0 !important;"
+                                            data-toggle="tooltip" data-placement="top"
+                                            title="Delete Separate medicines">
+                                            <i class="fas fa-trash"></i>
+                                          </a>
+                                        </div>
+                                        <div class="fontred"
+                                          *ngIf="isDuplicateFinishedProduct[seperateMedicines[i].name] > 1">
+                                          * Seperate Medicine is duplicate
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Medications not received this visit -->
+                          <div class="row" id="divMedicationsNotReceived" *ngIf="((pageType === 'view' && medicationsNotReceived?.length > 0) 
+                          || (pageType !== 'view' && +order?.orderStatus >= 13))
+                          && !(pageType === 'edit' && +order?.orderStatus === 13)">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <div class="col-sm-8 pl-0 pr-0">
+                                      <h5 class="ibox-title-text">Medications not received this visit</h5>
+                                    </div>
+                                    <div class="col-sm-4 pl-0 pr-0 text-right">
+                                      <button (click)="clickAddMedicationsNotReceived()"
+                                        *ngIf="pageType != 'view' && order.orderStatus >= 13  && order.orderStatus != 24 && order.orderStatus != 25"
+                                        class="btn btn-success" style="padding:5px 10px;" type="button"
+                                        data-toggle="tooltip" data-placement="top"
+                                        title="Add Medications not received this visit">
+                                        <i class="fas fa-plus" style="margin:0;font-size:20px"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div formArrayName="medicationsNotReceived">
+                                      <div class="mb-30"
+                                        *ngFor="let item of formMedicationsNotReceived.controls; let i = index;"
+                                        [formGroupName]="i">
+                                        <div class="pb-15px"
+                                          *ngIf="!medicationsNotReceived[i].isVitalLife || pageType === 'view'">
+                                          <i class="fas fa-circle circle-label" style="width: 30px;"></i>
+                                          {{medicationsNotReceived[i].name}}
+                                        </div>
+                                        <div *ngIf="medicationsNotReceived[i].isVitalLife && pageType !== 'view'"
+                                          style="display: inline-flex;width: 40%;">
+                                          <i class="fas fa-circle circle-label pt-15" style="width: 30px;"></i>
+                                          <input type="text" class="form-control" maxlength="255"
+                                            [ngClass]="{'border-error':!item.get('txtMedicationsNotReceived').valid&&item.get('txtMedicationsNotReceived').dirty}"
+                                            [(ngModel)]="medicationsNotReceived[i].name"
+                                            formControlName="txtMedicationsNotReceived"
+                                            (input)="fnCheckDupMedicationsNotReceived()">
+                                          <a (click)="clickDeleteMedicationsNotReceived(i)"
+                                            class="btn btn-default icon btn-sm" style="margin-top: 0 !important;"
+                                            data-toggle="tooltip" data-placement="top"
+                                            title="Delete Separate medicines">
+                                            <i class="fas fa-trash"></i>
+                                          </a>
+                                        </div>
+                                        <div class="fontred"
+                                          *ngIf="isDuplicateMedicationsNotReceived[medicationsNotReceived[i].name] > 1">
+                                          * Medication not received this visit is duplicate
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Additional note from cashier -->
+                          <div class="row" id="divAdditionalNoteFromCashier"
+                            [hidden]="+order.orderStatus >= 19 && tabIndex != '3'">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Additional note from cashier</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row" style="padding:0 20px;">
+                                      <div class="form-group">
+                                        <label class="control-label text-right">Additional note from cashier</label>
+                                        <div>
+                                          <textarea [disabled]="true" class="form-control" rows="3"
+                                            [value]="order.cashierSupNote"
+                                            style="resize: vertical; height: 83px; max-height: 83px;"></textarea>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Pharmacy Check 1 -->
+                          <div
+                            *ngIf="((pageType == 'view' || pageType == 'edit') && +order.orderStatus !== 13) && (orderStatus < 24 || orderStatus === 26)"
+                            class="row" id="divPharmacyCheck1">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Pharmacy Check 1</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row" style="padding: 15px 30px">
+                                      <!-- <div class="form-group"> -->
+                                      <!--   <dx-check-box [readOnly]="pageType == 'view' || +order.orderStatus === 18" -->
+                                      <!--                 class="lbl-checkbox-require" -->
+                                      <!--                 [(value)]="pharmacyCheck1.isProdPc1CheckDoc" -->
+                                      <!--                 text="ใบผลิต / ฉลาก [eDoc]"></dx-check-box> -->
+                                      <!-- </div> -->
+                                      <div class="form-group">
+                                        <dx-check-box name="pharmacyCheck"
+                                          [readOnly]="pageType == 'view' || +order.orderStatus === 18"
+                                          class="lbl-checkbox-require" [(value)]="pharmacyCheck1.isProdPc1CheckStock"
+                                          text='Check stock deduction / "Pack" in TrakCare (only if Location = VTL)'></dx-check-box>
+                                      </div>
+                                      <div class="form-group">
+                                        <dx-check-box name="pharmacyCheck"
+                                          [readOnly]="pageType == 'view' || +order.orderStatus === 18"
+                                          class="lbl-checkbox-require" [(value)]="pharmacyCheck1.isProdPc1CheckPills"
+                                          text="Check Price (Edited) & Key Collect payment : Review by PH / Cut Stock"></dx-check-box>
+                                      </div>
+                                      <div class="form-group">
+                                        <dx-check-box name="pharmacyCheck"
+                                          [readOnly]="pageType == 'view' || +order.orderStatus === 18"
+                                          class="lbl-checkbox-require" [(value)]="pharmacyCheck1.isProdPc1CheckSep"
+                                          text="Check Note & List of Separate Medicine"></dx-check-box>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Pharmacy Check 2 -->
+                          <div
+                            *ngIf="(pageType === 'view' || pageType === 'edit') && +order.orderStatus !== 13 && orderStatus !== 14 && orderStatus !== 17 && (orderStatus < 24 || orderStatus === 26)"
+                            class="row" id="divPharmacyCheck2">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Pharmacy Check 2</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row mb-15" style="padding: 15px 30px">
+                                      <div class="form-group">
+                                        <dx-check-box name="pharmacyCheck" class="lbl-checkbox-require"
+                                          [readOnly]="pageType == 'view'" [(value)]="pharmacyCheck2.isProdPc2CheckProd"
+                                          text="Production Document"></dx-check-box>
+                                      </div>
+                                      <div class="form-group">
+                                        <dx-check-box name="pharmacyCheck" class="lbl-checkbox-require"
+                                          [readOnly]="pageType == 'view'" [(value)]="pharmacyCheck2.isProdPc2CheckTC"
+                                          text='"Check" in TrakCare (only if Location = VTL)'></dx-check-box>
+                                      </div>
+                                      <div class="form-group">
+                                        <dx-check-box name="pharmacyCheck" class="lbl-checkbox-require"
+                                          [readOnly]="pageType == 'view'" [(value)]="pharmacyCheck2.isProdPc2CheckPills"
+                                          text="Dispensed Pills"></dx-check-box>
+                                      </div>
+                                      <div class="form-group">
+                                        <dx-check-box name="pharmacyCheck" class="lbl-checkbox-require"
+                                          [readOnly]="pageType == 'view'" [(value)]="pharmacyCheck2.isProdPc2CheckMed"
+                                          text="Check List of Separate Medicine & Med Schedule"></dx-check-box>
+                                      </div>
+                                      <div class="form-group">
+                                        <dx-check-box name="pharmacyCheck" class="lbl-checkbox-require"
+                                          [readOnly]="pageType == 'view'" [(value)]="pharmacyCheck2.isProdPc2CheckGuide"
+                                          text="Cover Form : Pharmacy Production"></dx-check-box>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Pharmacy Check -->
+                          <div *ngIf="orderStatus === 24 || orderStatus === 25 || orderStatus === 26" class="row"
+                            id="divPharmacyCheck">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Pharmacy Check</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row" style="padding: 15px 30px">
+                                      <!-- Scaned Production in TC -->
+                                      <div class="form-group">
+                                        <dx-check-box name="pharmacyCheck"
+                                          style="color:red !important;font-weight: bold;"
+                                          [readOnly]="pageType == 'view'" [(value)]="order.isCompletePcCheckScan"
+                                          text="Scaned Production in TC">
+                                        </dx-check-box>
+                                      </div>
+                                      <!-- New Formula -->
+                                      <div class="form-group">
+                                        <dx-check-box [readOnly]="pageType == 'view'"
+                                          [(value)]="order.isCompletePcCheckFormula" text="New Formula">
+                                        </dx-check-box>
+                                      </div>
+                                      <!-- Partial delivery -->
+                                      <div class="form-group">
+                                        <dx-check-box [readOnly]="pageType == 'view' || partialDeliveryReadonly"
+                                          [(value)]="order.isCompletePcCheckDeli"
+                                          text="Partial delivery"></dx-check-box>
+                                        <button
+                                          *ngIf="pageType == 'edit' && order.isCompletePcCheckDeli && (orderStatus === 24 || deliveryList.length === 0)"
+                                          class="btn btn-success mr-10" style="padding:5px 10px;" title="Split Delivery"
+                                          (click)="fnClickSplitDelivery()">
+                                          <span><i class="fas fa-copy"></i>Split Delivery</span>
+                                        </button>
+                                      </div>
+                                    </div>
+                                    <!-- Split Delivery -->
+                                    <div
+                                      *ngIf="(orderStatus === 25 || orderStatus === 26) && order.isCompletePcCheckDeli && deliveryList.length > 0"
+                                      class="row" style="padding: 15px 30px 0px 30px" formArrayName="splitDelivery">
+                                      <span style="font-weight: 700;font-size: 18px; padding-bottom: 10px;">Split
+                                        Delivery</span>
+                                      <div class="pt-30 pb-15 mb-5 mt-10"
+                                        [ngStyle]="{
+                                          'background-color': isMainDelivery(item) ? '#F3EDE0' : '#FFFFFF'
+                                        }"
+                                        *ngFor="let item of deliveryList; index as i" [formGroupName]="i">
+                                        <div class="col-sm-11 title-no-menu pr-0 ml-30 mb-10"
+                                          style="display: flex;justify-content:space-between">
+                                          <span style="float: left;padding-top: 10px;">Queue {{i + 1}}</span>
+                                          <div
+                                            *ngIf="pageType == 'edit' && item.isComplete != 1 && isMainDelivery(item)">
+                                            <!-- Button Complete -->
+                                            <button *ngIf="item.edited == 1" (click)="fnCompleteDelivery(item)"
+                                              id="btnCompleteDelivery" name="btnCompleteDelivery"
+                                              class="btn btn-success float-xs-left mr-10" data-toggle="modal"
+                                              data-placement="top" title="Complete" [disabled]="isEditDelivery">
+                                              <span>Complete</span>
+                                            </button>
+                                            <!-- Button Edit -->
+                                            <button *ngIf="item.edited == 1" (click)="fnEditDelivery(i)"
+                                              style="padding: 5px 10px !important;" id="btnEditDelivery"
+                                              name="btnEditDelivery" class="btn btn-success float-xs-left mr-10"
+                                              data-toggle="tooltip" data-placement="top" title="Edit"
+                                              [disabled]="isEditDelivery">
+                                              <i class="fas fa-edit" style="margin:0;font-size: 20px;"></i>
+                                            </button>
+                                          </div>
+                                        </div>
+                                        <!-- Delivery Date -->
+                                        <div class="form-group">
+                                          <label class="col-sm-4 control-label">
+                                            Delivery Date
+                                            <span class="fontred">*</span>
+                                          </label>
+                                          <div
+                                            [ngClass]="{'has-error':isInvalidDelivery(i,'txtDeliveryStartDate'),'col-sm-7':true}">
+                                            <dx-date-box id="txtDeliveryStartDate" [openOnFieldClick]="true"
+                                              [acceptCustomValue]="false"
+                                              (onValueChanged)="onValueChangedDeliveryStartDate($event, i)"
+                                              style="background-color: #FFFFFF; border: 1px solid #8A998D;"
+                                              class="form-control cus-datebox" type="date" [min]="minDeliveryDate"
+                                              displayFormat="dd/MM/yyyy" [(ngModel)]="item.deliveryDate"
+                                              formControlName="txtDeliveryStartDate">
+                                            </dx-date-box>
+                                          </div>
+                                        </div>
+                                        <!--Supply Day-->
+                                        <div class="form-group">
+                                          <label class="col-sm-4 control-label">
+                                            Supply Day
+                                            <span class="fontred">*</span>
+                                          </label>
+                                          <div
+                                            [ngClass]="{'has-error':isInvalidDelivery(i,'txtDeliverySupplyDay'),'col-sm-7':true}">
+                                            <input type="text" class="form-control" id="txtDeliverySupplyDay"
+                                              name="txtDeliverySupplyDay" [(ngModel)]="item.supplyDay"
+                                              formControlName="txtDeliverySupplyDay">
+                                          </div>
+                                        </div>
+                                        <!-- Remind Date -->
+                                        <div class="form-group" *ngIf="item.remindDate">
+                                          <label class="col-sm-4 control-label">
+                                            Remind Date
+                                            <span class="fontred">*</span>
+                                          </label>
+                                          <div
+                                            [ngClass]="{'has-error':isInvalidDelivery(i,'txtDeliveryRemindDate'), 'col-sm-7':true}">
+                                            <dx-date-box id="txtDeliveryRemindDate{{item.no}}" [openOnFieldClick]="true"
+                                              [acceptCustomValue]="false"
+                                              style="background-color: #FFFFFF; border: 1px solid #8A998D;"
+                                              class="form-control cus-datebox" type="date" displayFormat="dd/MM/yyyy"
+                                              [(ngModel)]="item.remindDate" formControlName="txtDeliveryRemindDate">
+                                            </dx-date-box>
+                                          </div>
+                                        </div>
+                                        <!-- Delivery Detail -->
+                                        <div [hidden]="item.showHide != 2">
+                                          <!-- Recipient Name -->
+                                          <div class="form-group">
+                                            <label class="col-sm-4 control-label">
+                                              Recipient Name
+                                              <span class="fontred">*</span>
+                                            </label>
+                                            <div
+                                              [ngClass]="{'has-error':isInvalidDelivery(i,'txtRecipientName'),'col-sm-7':true}">
+                                              <input type="text" class="form-control" id="txtRecipientName"
+                                                name="txtRecipientName" formControlName="txtRecipientName"
+                                                [(ngModel)]="item.recipientName">
+                                            </div>
+                                          </div>
+                                          <!-- Phone -->
+                                          <div class="form-group">
+                                            <label class="col-sm-4 control-label">
+                                              Phone
+                                              <span class="fontred">*</span>
+                                            </label>
+                                            <div
+                                              [ngClass]="{'has-error':isInvalidDelivery(i,'txtPhone'),'col-sm-7':true}">
+                                              <input type="text" class="form-control" id="txtPhone" name="txtPhone"
+                                                formControlName="txtPhone" maxlength="255" [(ngModel)]="item.phone">
+                                            </div>
+                                          </div>
+                                          <!-- Address -->
+                                          <div class="form-group">
+                                            <label class="col-sm-4 control-label">
+                                              Address
+                                              <span class="fontred" *ngIf="checkRequired('ddlAddress', i)">*</span>
+                                            </label>
+                                            <div
+                                              [ngClass]="{'has-error':isInvalidDelivery(i,'ddlAddress'),'col-sm-7':true}">
+                                              <select name="ddlAddress" id="ddlAddress" formControlName="ddlAddress"
+                                                class="form-control" [(ngModel)]="item.patientAddressId"
+                                                (click)="onClickDeliveryDetailAddress(i)">
+                                                <option selected="selected" [value]="null">Please select</option>
+                                                <option *ngFor="let item of addressList"
+                                                  [value]="item.patientAddressId">{{ item.concatAddress }}
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <!-- Address Detail -->
+                                          <div class="form-group">
+                                            <label class="col-sm-4 control-label">Address Detail
+                                            </label>
+                                            <div [ngClass]="{'col-sm-7':true}">
+                                              <textarea class="form-control" id="txtAddressDetail"
+                                                name="txtAddressDetail" formControlName="txtAddressDetail" rows="3"
+                                                [(ngModel)]="item.address" style="resize: vertical">
+                                               </textarea>
+                                            </div>
+                                          </div>
+                                          <!-- District/Province -->
+                                          <div class="form-group">
+                                            <label class="col-sm-4 control-label">District/Province
+                                            </label>
+                                            <div [ngClass]="{'col-sm-7':true}">
+                                              <input type="text" class="form-control" id="txtDistrictProvince"
+                                                name="txtDistrictProvince" formControlName="txtDistrictProvince"
+                                                [(ngModel)]="item.districtProvince">
+                                            </div>
+                                          </div>
+                                          <!-- Postcode -->
+                                          <div class="form-group">
+                                            <label class="col-sm-4 control-label">Postcode
+                                            </label>
+                                            <div [ngClass]="{'col-sm-7':true}">
+                                              <input type="text" class="form-control" id="txtPostcode"
+                                                name="txtPostcode" formControlName="txtPostcode"
+                                                [(ngModel)]="item.postcode">
+                                            </div>
+                                          </div>
+                                          <!-- Arrival Time -->
+                                          <div class="form-group">
+                                            <label class="col-sm-4 control-label">
+                                              Arrival Time
+                                              <span class="fontred">*</span>
+                                            </label>
+                                            <div
+                                              [ngClass]="{'has-error':isInvalidDelivery(i,'ddlArrivalTime'),'col-sm-7':true}">
+                                              <select id="ddlArrivalTime" name="ddlArrivalTime"
+                                                formControlName="ddlArrivalTime" [(ngModel)]="item.arrivalTime"
+                                                class="form-control">
+                                                <option selected="selected" [value]="null">Please select</option>
+                                                <option *ngFor="let item of arrivalTimeMap[i]" [value]="item.id">{{
+                                                  item.name }}
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <!-- Delivery Method -->
+                                          <div class="form-group">
+                                            <label class="col-sm-4 control-label">
+                                              Delivery Method
+                                              <span class="fontred">*</span>
+                                            </label>
+                                            <div
+                                              [ngClass]="{'has-error':isInvalidDelivery(i,'ddlDeliveryMethod'),'col-sm-7':true}">
+                                              <select id="ddlDeliveryMethod" name="ddlDeliveryMethod"
+                                                formControlName="ddlDeliveryMethod" [(ngModel)]="item.deliveryMethod"
+                                                class="form-control"
+                                                (change)="onDeliveryMethodChanged($event.target.value,i)">
+                                                <option selected="selected" [value]="null">Please select</option>
+                                                <option *ngFor="let item of deliveryMethodList" [value]="item.id">{{
+                                                  item.name }}
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <!--Delivery Method Other-->
+                                          <div class="form-group" *ngIf="+item.deliveryMethod === 6">
+                                            <label class="col-sm-4 control-label">
+                                              Delivery Method Other
+                                              <span class="fontred">*</span>
+                                            </label>
+                                            <div
+                                              [ngClass]="{'has-error':isInvalidDelivery(i,'txtDeliveryMethodOther'),'col-sm-7':true}">
+                                              <input type="text" class="form-control" id="txtDeliveryMethodOther"
+                                                name="txtDeliveryMethodOther" maxlength="255"
+                                                [(ngModel)]="item.deliveryMethodOther"
+                                                formControlName="txtDeliveryMethodOther">
+                                            </div>
+                                          </div>
+                                          <!-- Packaging -->
+                                          <div class="form-group">
+                                            <label class="col-sm-4 control-label">
+                                              Packaging
+                                              <span class="fontred">*</span>
+                                            </label>
+                                            <div
+                                              [ngClass]="{'has-error':isInvalidDelivery(i,'ddlPackaging'),'col-sm-7':true}">
+                                              <select id="ddlPackaging" name="ddlPackaging"
+                                                formControlName="ddlPackaging" [(ngModel)]="item.packaging"
+                                                class="form-control">
+                                                <option selected="selected" [value]="null">Please select</option>
+                                                <option *ngFor="let item of packagingList" [value]="item.id">{{
+                                                  item.name }}
+                                                </option>
+                                              </select>
+                                            </div>
+                                          </div>
+                                          <!-- Documentation -->
+                                          <div class="form-group">
+                                            <label class="col-sm-4 control-label">Documentation
+                                            </label>
+                                            <div [ngClass]="{'col-sm-7':true,'control-label':true}"
+                                              style="text-align:left">
+                                              <dx-check-box name="cbxIsInvoice" id="cbxIsInvoice"
+                                                formControlName="cbxIsInvoice" class="mb-5" [(ngModel)]="item.isInvoice"
+                                                text="Invoice">
+                                              </dx-check-box>
+                                              <br>
+                                              <dx-check-box name="cbxIsReceipt" id="cbxIsReceipt"
+                                                formControlName="cbxIsReceipt" [(ngModel)]="item.isReceipt"
+                                                text="Receipt">
+                                              </dx-check-box>
+                                            </div>
+                                          </div>
+                                          <!-- Urgent -->
+                                          <div class="form-group">
+                                            <label class="col-sm-4 control-label">
+                                              Urgent
+                                            </label>
+                                            <div [ngClass]="{'col-sm-7':true,'control-label':true}"
+                                              style="text-align:left">
+                                              <dx-check-box name="cbxIsUrgent" id="cbxIsUrgent"
+                                                formControlName="cbxIsUrgent" [(ngModel)]="item.isUrgent" text="Urgent">
+                                              </dx-check-box>
+                                            </div>
+                                          </div>
+                                          <!-- Additional Note -->
+                                          <div class="form-group">
+                                            <label class="col-sm-4 control-label">
+                                              Additional Note
+                                            </label>
+                                            <div [ngClass]="{'col-sm-7':true}">
+                                              <textarea class="form-control" id="txtCashierDeliNote"
+                                                name="txtCashierDeliNote" formControlName="txtCashierDeliNote" rows="3"
+                                                [(ngModel)]="item.cashierDeliNote" style="resize: vertical">
+                                               </textarea>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <div class="form-group text-center" *ngIf="item.showHide == 1">
+                                          <label style="color:#AE934F;text-align: center;cursor: pointer;"
+                                            (click)="item.showHide = 2">Show delivery detail</label>
+                                        </div>
+                                        <div class="form-group text-center" *ngIf="item.showHide == 2">
+                                          <label style="color:#AE934F;text-align: center;cursor: pointer;"
+                                            (click)="item.showHide = 1">Hide delivery detail</label>
+                                        </div>
+                                        <div *ngIf="item.edited == 2" class="text-center">
+                                          <button id="btnSaveSplitDelivery" class="btn btn-success float-xs-right"
+                                            data-toggle="tooltip" data-placement="top" title="Save"
+                                            style="margin-left: 3px;" (click)="updateSplit(i)">
+                                            <i class="fas fa-save"></i><span>Save</span>
+                                          </button>
+                                          <button id="btnCancelSplitDelivery"
+                                            class="btn btn-default float-xs-left mr-10" data-toggle="tooltip"
+                                            data-placement="top" title="Back" (click)="cancelSplit(i)">
+                                            <i class="fal fa-times"></i><span>Cancel</span>
+                                          </button>
+                                        </div>
+                                        <!--Reason-->
+                                        <!-- <div class="form-group" *ngIf="i===0 && isChangeDeliveryDate">
+                                          <label class="col-sm-4 control-label">Reason
+                                            <span class="fontred">*</span>
+                                          </label>
+                                          <div [ngClass]="{'has-error':!splitDeliveryForm2.controls['txtDeliveryReason'].valid&&splitDeliveryForm2.controls['txtDeliveryReason'].dirty,
+                                            'col-sm-7':true}">
+                                            <textarea class="form-control" id="txtDeliveryReason" name="txtDeliveryReason" formControlName="txtDeliveryReason" rows="3" placeholder="" style="resize: vertical" [(ngModel)]="item.reason"></textarea>
+                                          </div>
+                                        </div> -->
+                                      </div>
+                                    </div>
+
+                                    <div class="ibox-body" *ngIf="order.orderStatus == 25 || order.orderStatus == 27 || order.orderStatus == 26">
+                                      <div class="row" style="padding: 10px 12px">
+                                        <!-- Picture -->
+                                        <div class="form-group col-sm-12"
+                                          *ngIf="(pageType === 'edit') || pharmacyPictureList.length > 0">
+                                          <div style="display: flex; align-items: center; gap: 10px;">
+                                            <!-- Label + Tooltip -->
+                                            <label style="margin-bottom: 0; font-weight: 100; margin-left:10px">
+                                              Picture
+                                              <div *ngIf="(pageType === 'edit')" class="tooltip-i tooltip-white"
+                                                style="display: inline-block; margin-left: 7px;">
+                                                <img src="assets/remark-icon.png" width="16px" height="16px" alt="">
+                                                <span class="tooltiptext"
+                                                  style="width: 150px; text-align: left !important;">
+                                                  <ul>
+                                                    <li>Max. 5 files</li>
+                                                    <li>Max. 1MB/pic</li>
+                                                  </ul>
+                                                </span>
+                                              </div>
+                                            </label>
+
+                                            <button class="btn btn-success" data-toggle="tooltip" data-placement="top"
+                                              *ngIf="(pageType === 'edit')" title="Upload" (click)="triggerFileInput()">
+                                              Upload
+                                            </button>
+                                          </div>
+
+                                          <div class="card-picture-preview mt-15"
+                                            *ngIf="pharmacyPictureList.length > 0">
+                                            <div class="row" style="padding: 0px 85px">
+                                              <div class="col-sm-3"
+                                                *ngFor="let item of pharmacyPictureList; let i = index"
+                                                style="margin-top: 10px;">
+                                                <div class="picture-preview-pharmacist" style="position: relative;">
+                                                  <div class="delete-icon-col-4" *ngIf="pageType === 'edit'"
+                                                    (click)="removePicture(i)">
+                                                    <img src="assets/icon-md/Vector.png" alt="Delete Icon" />
+                                                  </div>
+                                                  <img [src]="item | resolveImageUrl" alt="Preview" class="img-responsive"
+                                                    (click)="popupImg(item)" />
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <input type="file" #fileInput style="display: none" accept="image/*" multiple
+                                          (change)="upload($event)" />
+                                      </div>
+                                    </div>
+
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Packaging Note -->
+                          <div class="row" id="divPackageNote" *ngIf="tabIndex !== '3'"
+                            [hidden]="+order.orderStatus >= 13 && +order.orderStatus <= 18 ">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Packaging Note</h5>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="row" style="padding:0 20px;">
+                                      <div class="form-group">
+                                        <label class="control-label text-right">Packaging Note</label>
+                                        <textarea [disabled]="true" *ngIf="!isPackagingList" class="form-control"
+                                          rows="3" [value]="order.packageNote"
+                                          style="resize: vertical; height: 83px; max-height: 83px;"></textarea>
+                                        <div formArrayName="txtPackageNoteList" *ngIf="isPackagingList">
+                                          <div
+                                            *ngFor="let note of orderForm.get('txtPackageNoteList').controls; let i = index"
+                                            [formGroupName]="i">
+
+                                            <div class="packaging-note-form-list"
+                                              style="width: 555px;padding:10px; border:1px solid #8a998d; border-radius:5px; margin-top:15px; position: relative;background-color: #eee;opacity:0.7">
+
+                                              <!-- Qty -->
+                                              <div style="display: flex; gap: 10px;margin-bottom: 15px;">
+                                                <div class="form-group"
+                                                  style="display: flex; align-items: center;margin-bottom: 0px;">
+                                                  <label class="control-label" style="margin-right: 5px;">Qty
+                                                    =</label>
+                                                  <input type="number" formControlName="qty"
+                                                    class="form-control no-spinner"
+                                                    style="width: 100px; height: 25px; border-radius: 10px;">
+                                                </div>
+
+                                                <!-- Type -->
+                                                <div formArrayName="type"
+                                                  style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                                  <div *ngFor="let opt of typeOptions; let j = index"
+                                                    class="checkbox-wrapper">
+                                                    <dx-check-box [formControlName]="j"
+                                                      [text]="opt.text"></dx-check-box>
+                                                  </div>
+                                                </div>
+                                              </div>
+
+                                              <!-- Supply Days / supType -->
+                                              <div
+                                                style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;margin-bottom: 15px;">
+                                                <!-- Supply Days = [input] x -->
+                                                <div class="form-group"
+                                                  style="display: flex; align-items: center; gap: 0px;margin-bottom: 0px;">
+                                                  <label class="control-label"
+                                                    style="padding-top: 0px;margin-right: 5px;">Supply Days =</label>
+                                                  <input type="number" formControlName="supplyDays" class="form-control"
+                                                    style="width: 100px; height: 25px; border-radius: 10px;">
+                                                  <span style="font-size: 14px;margin-left: 9px;">x</span>
+                                                </div>
+
+                                                <!-- ( checkbox checkbox ) -->
+                                                <div style="display: flex; align-items: center; gap: 5px;">
+                                                  <span style="font-size: 14px;">(</span>
+                                                  <div formArrayName="supType" style="display: flex; gap: 10px;">
+                                                    <div *ngFor="let option of supTypeOptions; let j = index">
+                                                      <dx-check-box [formControlName]="j" [text]="option.text">
+                                                      </dx-check-box>
+                                                    </div>
+                                                  </div>
+                                                  <span style="font-size: 14px;">)</span>
+                                                </div>
+                                              </div>
+
+                                              <!-- Other -->
+                                              <div style="display: flex; gap: 10px;">
+                                                <div class="form-group" style="display: flex; align-items: center;">
+                                                  <label class="control-label"
+                                                    style="margin-right: 5px;padding: 0px;">Other
+                                                    :</label>
+                                                  <input type="text" formControlName="other" class="form-control"
+                                                    style="width: 430px; height: 25px; border: none; border-bottom: 1px solid; border-radius: 0; outline: none; box-shadow: none;">
+                                                </div>
+                                              </div>
+
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- Print Document -->
+                          <div
+                            *ngIf="(pageType === 'view' || pageType === 'edit') && +order.orderStatus !== 13 && orderStatus !== 14 && orderStatus !== 18"
+                            class="row" id="divPrintDocument">
+                            <div class="col-lg-12">
+                              <div class="ibox">
+                                <div class="custom-ibox">
+                                  <div class="ibox-heading">
+                                    <h5 class="ibox-title-text">Print Document</h5>
+                                    <button id="btnDownloadAll"
+                                      style="padding: 5px 10px !important; color :#FFFFFF !important; float: right;"
+                                      title="Download All" class="btn btn-success"
+                                      (click)="fnDownloadAll()"
+                                      [disabled]="!printAllurl">
+                                      Download All
+                                    </button>
+                                  </div>
+                                  <div class="ibox-body">
+                                    <div class="pl-30 pr-30 mr-30 ml-30">
+                                      <div class="row">
+                                        <div class="col-sm-4 pr-0" *ngFor="let print of printPageList; index as i">
+                                          <button id="btnDocument" style="padding: 5px 10px !important;"
+                                            class="btn btn-success ml-10" data-toggle="tooltip" data-placement="top"
+                                            title="Print {{print.name}}" (click)="fnPrintDocument(print.type)">
+                                            <img src="assets/icon-md/print.svg" alt="">
+                                          </button>
+                                          <span style="padding-top: 10px;padding-left: 10px;">{{print.name}}</span>
+                                        </div>
+                                      </div>
+                                      <br>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer no-bg">
+            <div class="ibox-footer-right">
+              <button
+                *ngIf="!hideEditBtn && pageType == 'view' && orderStatus == 17 && menuPermissions.edit && (order.isSplitProduction == 0 || order.isSplitProduction == null)"
+                (click)="fnClickSplitProduction()" id="btnSplitProduction" name="btnSplitProduction"
+                title="Split Production" class="btn btn-success float-xs-left mr-10" [disabled]="disbledBtn.save">
+                <span>Split Production</span>
+              </button>
+              <button *ngIf="!hideEditBtn && pageType == 'edit' && orderStatus == 13 && menuPermissions.add"
+                (click)="fnClickInsertOrder()" id="btnInsertOrderInTC" name="btnInsertOrderInTC"
+                class="btn btn-success float-xs-left mr-10" title="Insert order in TC" [disabled]="disbledBtn.save">
+                <span>Insert order in TC</span>
+              </button>
+              <button *ngIf="!hideEditBtn && pageType == 'view' && orderStatus == 17  && menuPermissions.edit"
+                (click)="fnClickPrintDone()" id="btnPrintDone" name="btnPrintDone"
+                class="btn btn-success float-xs-left mr-10" title="Print done" [disabled]="disbledBtn.save">
+                <i class="fas fa-print" *ngIf="!disbledBtn.save"></i>
+                <i class="fas fa-spinner fa-spin" *ngIf="disbledBtn.save"></i>
+                <span>{{ disbledBtn.save ? 'Processing...' : 'Print done' }}</span>
+              </button>
+              <button *ngIf="!hideEditBtn && pageType == 'edit' && orderStatus == 18 && menuPermissions.edit"
+                (click)="fnClickSecondCheckDone()" id="btnSecondCheckDone" name="btnSecondCheckDone"
+                title="Second check done" class="btn btn-success float-xs-left mr-10" [disabled]="disbledBtn.save">
+                <span>Second check done</span>
+              </button>
+              <button *ngIf="!hideEditBtn && pageType == 'edit' && orderStatus == 14 && menuPermissions.edit"
+                (click)="fnUpdateFirstReviewDone()" id="btnUpdateFirstReviewDone" name="btnUpdateFirstReviewDone"
+                class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal"
+                data-placement="top" title="Save" [disabled]="disbledBtn.save">
+                <i class="fas fa-save"></i><span>Save</span>
+              </button>
+              <button *ngIf="!hideEditBtn && pageType == 'edit' && orderStatus == 25 && menuPermissions.edit"
+                (click)="fnUpdateCompleteOrder()" id="btnUpdateCompleteOrder" name="btnUpdateCompleteOrder"
+                class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal"
+                data-placement="top" title="Complete"
+                [disabled]="disbledBtn.save || isEditDelivery || !isCompleteAllDelivery">
+                <span>Complete</span>
+              </button>
+              <button
+                *ngIf="!hideEditBtn && pageType == 'edit' && (orderStatus == 24 || orderStatus == 25) && menuPermissions.edit"
+                (click)="fnUpdatePharmacyCheck()" id="btnUpdatePharmacyCheck" name="btnUpdatePharmacyCheck"
+                class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal"
+                data-placement="top" title="Save" [disabled]="disbledBtn.save || isEditDelivery">
+                <i class="fas fa-save"></i><span>Save</span>
+              </button>
+              <button
+                *ngIf="!hideEditBtn && pageType == 'view' && orderStatus != 17 && orderStatus != 26 && menuPermissions.edit"
+                [routerLink]="['/order-management','orders-production-pharmacist-view', Id ,'edit']"
+                [queryParams]="{ tab: tabIndex }" id="btnEditTop" name="btnEditTop"
+                class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit"
+                [disabled]="disbledBtn.save">
+                <i class="fas fa-edit"></i><span>Edit</span>
+              </button>
+              <button *ngIf="!hideEditBtn" (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop"
+                class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel"
+                style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                <i class="fal fa-times"></i><span>Cancel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()"
+  (onCloseModalWarning)="onCloseModalWarning()" (onOkInsertTrakCare)="insertTrakCare()"
+  (onOkCompleteDelivery)="completeDelivery()" (onClosePrintDocument)="onClickBack()"
+  (onClickEditOrder)="onClickEditOrder()" (onCloseEditOrder)="onCloseEditOrder()"
+  (onCloseModalSplit)="onCloseModalSplit()"></app-alert>
+<app-alert-split-production #modalSplitProduction
+  (clickSplitProductionNo)="onClickSplitProductionNo()"></app-alert-split-production>
+<app-alert-split-delivery #modalSplitDelivery></app-alert-split-delivery>
+
+<dx-load-panel shadingColor="rgba(0,0,0,0.4)" [(visible)]="isLoadingPanel" [showIndicator]="true" [showPane]="true"
+  [shading]="true">
+</dx-load-panel>
+
+<dx-popup [fullScreen]="true" [dragEnabled]="false" [showTitle]="true" [showCloseButton]="true"
+  [(visible)]="popupVisible">
+  <div *dxTemplate="let data of 'content'" class="text-center">
+    <img [src]="filePicture | resolveImageUrl" style="height:100%;" />
+  </div>
+</dx-popup>

@@ -1,0 +1,524 @@
+<div #modalSplitProduction class="modal inmodal" id="modalSplitProduction" tabindex="-1" role="dialog"
+     aria-hidden="true">
+  <div [ngClass]="{'modal-dialog-custom': step===0, 'modal-dialog-custom1': step===1||step===2}">
+    <div class="modal-content animated fadeIn">
+      <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+        <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+          Split Production
+        </div>
+        <div class="col-sm-4 modal-title-1">
+          <a class="btn pull-right" (click)="goBack()" style="border:none;color: #000000;"><i
+            class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+          </a>
+        </div>
+      </div>
+      <div style="padding: 0 23px; margin-bottom: 42px">
+        <div style="border: 1px solid #C4C4C4;"></div>
+      </div>
+      <div class="m-l-n-sm pb-30" *ngIf="step === 0">
+        <div class="text-center">
+          <div>
+            <img src="assets/icon-md/c.png" width="110px" style="position: absolute;" alt="">
+            <img src="assets/icon-md/c17.svg" style="margin-left: 34px;margin-top: 32px;height: 45px;" alt="">
+          </div>
+        </div>
+        <br>
+      </div>
+      <div class="modal-header" style="padding-top: 0">
+        <!--step 0-->
+        <div *ngIf="step === 0">
+          <h4 class="modal-title font-yellow-w">Split Production</h4>
+          <p>You want to split production ?</p>
+        </div>
+        <!--step 1-->
+        <form class="form-horizontal" [formGroup]="splitProductionForm1" *ngIf="step === 1">
+          <!--Supply Day-->
+          <div class="form-group">
+            <label class="col-sm-4 control-label">Supply Day</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" id="txtSupplyDay" name="txtSupplyDay"
+                     [(ngModel)]="dataForm1.supplyDay" formControlName="txtSupplyDay">
+            </div>
+          </div>
+          <!--Number of weighted item-->
+          <div class="form-group">
+            <label class="col-sm-4 control-label">Number of weighted item</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" id="txtNumberOfItem" name="txtNumberOfItem"
+                     [(ngModel)]="dataForm1.numberOfItem" formControlName="txtNumberOfItem">
+            </div>
+          </div>
+          <!--Number of split-->
+          <div class="form-group">
+            <label class="col-sm-4 control-label">Number of split
+              <span class="fontred">*</span>
+            </label>
+            <div
+              [ngClass]="{'has-error':!splitProductionForm1.controls['txtNumberOfSplit'].valid&&splitProductionForm1.controls['txtNumberOfSplit'].dirty,'col-sm-7':true}">
+              <!-- <input type="text" class="form-control" id="txtNumberOfSplit" name="txtNumberOfSplit"
+                [(ngModel)]="dataForm1.numberOfSplit" formControlName="txtNumberOfSplit" (keypress)="numberGraterThan2Only($event)"> -->
+              <dx-number-box [min]="2" [max]="dataForm1.supplyDay" class="form-control" id="txtNumberOfSplit" name="txtNumberOfSplit"
+                             [(ngModel)]="dataForm1.numberOfSplit" formControlName="txtNumberOfSplit" (onValueChanged)="fnCheckMaxSplit()"></dx-number-box>
+            </div>
+          </div>
+          <br>
+          <!--First Production Date-->
+          <div class="form-group"><label class="col-sm-4 control-label">First Production Date</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" id="txtFirstProductionDate" name="txtFirstProductionDate"
+                     [(ngModel)]="dataForm1.firstProductionDate" formControlName="txtFirstProductionDate">
+            </div>
+          </div>
+        </form>
+        <!--step 2-->
+        <form class="form-horizontal" [formGroup]="splitProductionForm2" *ngIf="step === 2">
+          <!--Supply Day-->
+          <div class="form-group"><label class="col-sm-4 control-label">Supply Day</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" id="txtForm2SupplyDay" name="txtForm2SupplyDay"
+                     [(ngModel)]="dataForm1.supplyDay" formControlName="txtForm2SupplyDay">
+            </div>
+          </div>
+          <!--Number of weighted item-->
+          <div class="form-group"><label class="col-sm-4 control-label">Number of weighted item</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" id="txtForm2NumberOfItem" name="txtForm2NumberOfItem"
+                     [(ngModel)]="dataForm1.numberOfItem" formControlName="txtForm2NumberOfItem">
+            </div>
+          </div>
+          <!--Calculated Day-->
+          <div *ngIf="dataForm1.calculatedDay" class="form-group"><label class="col-sm-4 control-label">Calculated Day</label>
+            <div class="col-sm-7">
+              <input type="text" class="form-control" id="txtForm2CalculatedDay" name="txtForm2CalculatedDay"
+                     [(ngModel)]="dataForm1.calculatedDay" formControlName="txtForm2CalculatedDay">
+            </div>
+          </div>
+          <!-- if isSeparateMeal === 1 เพิ่ม order สั่งแยกมื้อ -->
+          <div *ngIf="result.isSeparateMeal === 1" class="row" id="divOrder"
+               style="margin-top: 30px !important; width: 90%; margin: auto;">
+            <div class="col-lg-12">
+              <div class="ibox">
+                <div class="custom-ibox">
+                  <div class="ibox-heading">
+                    <h5 class="ibox-title-text">Order สั่งแยกมื้อ</h5>
+                  </div>
+                  <div class="ibox-body">
+                    <div class="row" style="padding:20px;">
+                      <table id="tblCompound" class="table table-bordered">
+                        <thead>
+                        <tr>
+                          <th style="width: 30%;">Last Order</th>
+                          <th style="width: 20%;">Cap per Day</th>
+                          <th style="width: 30%;">Order</th>
+                          <th style="width: 20%;">Supply Day</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                          <td>
+                            <span class="mb-0">Morning</span>
+                          </td>
+                          <td class="text-center">
+                            <input *ngIf="result.sepLastMorningCapPerDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" [(value)]="result.sepLastMorningCapPerDay"
+                                   class="form-control text-center" maxlength="50">
+                            <input *ngIf="!result.sepLastMorningCapPerDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" value="0" class="form-control text-center"
+                                   maxlength="50">
+                          </td>
+                          <td>
+                            <span class="mb-0">Morning</span>
+                          </td>
+                          <td>
+                            <input *ngIf="result.sepMorningSupplyDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" [(value)]="result.sepMorningSupplyDay"
+                                   class="form-control text-center" maxlength="50">
+                            <input *ngIf="!result.sepMorningSupplyDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" value="0" class="form-control text-center"
+                                   maxlength="50">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span class="mb-0">Lunch</span>
+                          </td>
+                          <td class="text-center">
+                            <input *ngIf="result.sepLastLunchCapPerDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" [(value)]="result.sepLastLunchCapPerDay"
+                                   class="form-control text-center" maxlength="50">
+                            <input *ngIf="!result.sepLastLunchCapPerDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" value="0" class="form-control text-center"
+                                   maxlength="50">
+                          </td>
+                          <td>
+                            <span class="mb-0">Lunch</span>
+                          </td>
+                          <td>
+                            <input *ngIf="result.sepLunchSupplyDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" [(value)]="result.sepLunchSupplyDay"
+                                   class="form-control text-center" maxlength="50">
+                            <input *ngIf="!result.sepLunchSupplyDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" value="0" class="form-control text-center"
+                                   maxlength="50">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span class="mb-0">Evening</span>
+                          </td>
+                          <td class="text-center">
+                            <input *ngIf="result.sepLastEveningCapPerDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" [(value)]="result.sepLastEveningCapPerDay"
+                                   class="form-control text-center" maxlength="50">
+                            <input *ngIf="!result.sepLastEveningCapPerDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" value="0" class="form-control text-center"
+                                   maxlength="50">
+                          </td>
+                          <td>
+                            <span class="mb-0">Evening</span>
+                          </td>
+                          <td>
+                            <input *ngIf="result.sepEveningSupplyDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" [(value)]="result.sepEveningSupplyDay"
+                                   class="form-control text-center" maxlength="50">
+                            <input *ngIf="!result.sepEveningSupplyDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" value="0" class="form-control text-center"
+                                   maxlength="50">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span class="mb-0">Bedtime</span>
+                          </td>
+                          <td class="text-center">
+                            <input *ngIf="result.sepLastBedtimeCapPerDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" [(value)]="result.sepLastBedtimeCapPerDay"
+                                   class="form-control text-center" maxlength="50">
+                            <input *ngIf="!result.sepLastBedtimeCapPerDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" value="0" class="form-control text-center"
+                                   maxlength="50">
+                          </td>
+                          <td>
+                            <span class="mb-0">Bedtime</span>
+                          </td>
+                          <td>
+                            <input *ngIf="result.sepBedtimeSupplyDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" [(value)]="result.sepBedtimeSupplyDay"
+                                   class="form-control text-center" maxlength="50">
+                            <input *ngIf="!result.sepBedtimeSupplyDay" autocomplete="off" onPaste="return false"
+                                   type="text" [disabled]="true" value="0" class="form-control text-center"
+                                   maxlength="50">
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <span class="mb-0" style="font-weight: 700;">Total Cap per Day</span>
+                          </td>
+                          <td class="text-center">
+                            <input [disabled]="true" [(value)]="result.totalCapPerDay" type="text"
+                                   class="form-control text-center" maxlength="50">
+                          </td>
+                          <td>
+                            <span class="mb-0" style="font-weight: 700;">Calculated Day</span>
+                          </td>
+                          <td>
+                            <input [disabled]="true" [(value)]="result.calculatedDay" type="text"
+                                   class="form-control text-center" maxlength="50">
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-10">
+              <hr>
+              <div class="row">
+                <div class="col-sm-12 text-right">
+                  <span style="float: left;padding-top: 10px; font-weight: 600; font-size: 16px">Production</span>
+                  <button id="btnProductionAdd" type="button" style="padding: 5px 10px !important;"
+                          class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top"
+                          title="Add Production" (click)="onClickSplitProductionAdd()">
+                    <i class="fal fa-plus mr-0"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="pt-30 pb-15 mb-5" style="background-color: #F9F7F2 !important;"
+                   *ngFor="let item of productionList; index as i">
+                <div class="col-sm-11 title-no-menu text-right pr-0 ml-30 mb-10">
+                  <span style="float: left;padding-top: 10px;">Production {{i + 1}}</span>
+                  <button id="btnDeleteProduction" type="button" class="btn btn-default icon btn-sm"
+                          data-placement="top" title="Delete Production" (click)="onClickProductionDelete(item.no)"
+                          *ngIf="i>1">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </div>
+                <!--Supply Day-->
+                <div class="form-group">
+                  <label class="col-sm-4 control-label">Supply Day
+                    <span class="fontred">*</span>
+                  </label>
+                  <div
+                    [ngClass]="{'has-error':!splitProductionForm2.controls['txtProductionSupplyDay'+item.no].valid&&splitProductionForm2.controls['txtProductionSupplyDay'+item.no].dirty,'col-sm-7':true}">
+                    <input type="text" class="form-control" id="txtProductionSupplyDay{{item.no}}"
+                           name="txtProductionSupplyDay{{item.no}}" [(ngModel)]="item.supplyDay"
+                           (keypress)="numberOnly($event)" formControlName="txtProductionSupplyDay{{item.no}}"
+                           (input)="fnCheckSumSupplyDay(true)">
+                  </div>
+                </div>
+                <!--Production Start Date #1-->
+                <div class="form-group" *ngIf="i===0 && !isChangeProductionDate">
+                  <label class="col-sm-4 control-label">Production Start Date
+                    <span class="fontred">*</span>
+                  </label>
+                  <div [ngClass]="{'has-error':!splitProductionForm2.controls['txtProductionStartDate'+item.no].valid&&splitProductionForm2.controls['txtProductionStartDate'+item.no].dirty,
+                    'col-sm-6':true}">
+                    <input type="text" class="form-control" id="txtProductionStartDate{{item.no}}"
+                           name="txtProductionStartDate{{item.no}}" [(ngModel)]="item.productionStartDate"
+                           formControlName="txtProductionStartDate{{item.no}}">
+                  </div>
+
+                  <div class="col-sm-1 pl-0">
+                    <button id="btnChangeProductionStartDate" type="button"
+                            style="padding: 5px 10px !important;margin-top: -2.5px !important;"
+                            class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top"
+                            title="Change Production Start Date" (click)="onClickChangeProductionStartDate()">
+                      <i class="fal fa-calendar-alt mr-0"></i>
+                    </button>
+                  </div>
+                </div>
+                <!--Production Start Date #++-->
+                <div class="form-group" *ngIf="i>0 || isChangeProductionDate">
+                  <label class="col-sm-4 control-label">Production Start Date
+                    <span class="fontred">*</span>
+                  </label>
+                  <div [ngClass]="{'has-error':!splitProductionForm2.controls['txtProductionStartDate'+item.no].valid&&splitProductionForm2.controls['txtProductionStartDate'+item.no].dirty,
+                    'col-sm-7':true}">
+                    <dx-date-box id="txtProductionStartDate{{item.no}}" [openOnFieldClick]="true"
+                                 [acceptCustomValue]="false"
+                                 (onValueChanged)="onValueChangedProductionStartDate($event, i)"
+                                 style="background-color: #FFFFFF !important; border: 1px solid #8A998D;"
+                                 class="form-control cus-datebox" type="date" displayFormat="dd/MM/yyyy" [min]="now"
+                                 [(ngModel)]="item.productionStartDate"
+                                 formControlName="txtProductionStartDate{{item.no}}">
+                    </dx-date-box>
+                    <span *ngIf="i>0" style="margin-left: -20px;font-size: 13px;">Remark : Production Start Date should be
+                      {{item.productionStartDateRemark}}
+                    </span>
+                  </div>
+
+                </div>
+                <!--Reason-->
+                <div class="form-group" *ngIf="i===0 && isChangeProductionDate">
+                  <label class="col-sm-4 control-label">Reason
+                    <span class="fontred">*</span>
+                  </label>
+                  <div [ngClass]="{'has-error':!splitProductionForm2.controls['txtSplitProdReason'+item.no].valid&&splitProductionForm2.controls['txtSplitProdReason'+item.no].dirty,
+                    'col-sm-7':true}">
+                    <textarea class="form-control" id="txtSplitProdReason{{item.no}}"
+                              name="txtSplitProdReason{{item.no}}"
+                              formControlName="txtSplitProdReason{{item.no}}" rows="3" placeholder=""
+                              style="resize: vertical"
+                              [(ngModel)]="item.splitProdReason"></textarea>
+                  </div>
+                </div>
+                <!-- if isSeparateMeal === 1 เพิ่ม order สั่งแยกมื้อ -->
+                <div *ngIf="result.isSeparateMeal === 1" class="row" id="divOrder" style="margin-top: 30px;">
+                  <div class="col-lg-12">
+                    <div class="ibox">
+                      <div class="custom-ibox">
+                        <div class="ibox-heading">
+                          <h5 class="ibox-title-text">Order สั่งแยกมื้อ</h5>
+                        </div>
+                        <div class="ibox-body">
+                          <div class="row" style="padding:20px;">
+                            <table id="tblCompound" class="table table-bordered">
+                              <thead>
+                              <tr>
+                                <th style="width: 30%;">Last Order</th>
+                                <th style="width: 20%;">Cap per Day</th>
+                                <th style="width: 30%;">Order</th>
+                                <th style="width: 20%;">Supply Day</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                <td>
+                                  <span class="mb-0">Morning</span>
+                                </td>
+                                <td class="text-center">
+                                  <input *ngIf="result.sepLastMorningCapPerDay" autocomplete="off"
+                                         onPaste="return false" type="text" [disabled]="true"
+                                         [(value)]="result.sepLastMorningCapPerDay" class="form-control text-center"
+                                         maxlength="50">
+                                  <input *ngIf="!result.sepLastMorningCapPerDay" autocomplete="off"
+                                         onPaste="return false" type="text" [disabled]="true" value="0"
+                                         class="form-control text-center" maxlength="50">
+                                </td>
+                                <td>
+                                  <span class="mb-0">Morning</span>
+                                </td>
+                                <td>
+                                  <input autocomplete="off" onPaste="return false" type="text"
+                                         [ngClass]="{'border-error': isInvalid(item,'sepMorningSupplyDayError', 'txtSepMorningSupplyDay'),'form-control':true,'text-center':true}"
+                                         maxlength="50"
+                                         id="txtSepMorningSupplyDay{{item.no}}" name="txtSepMorningSupplyDay{{item.no}}"
+                                         formControlName="txtSepMorningSupplyDay{{item.no}}"
+                                         [(ngModel)]="item.sepMorningSupplyDay"
+                                         (input)="onInput(item.no,'txtSepMorningSupplyDay', 'sepMorningSupplyDay')"
+                                         (change)="calcalculatedDay(item.no , $event)"
+                                         (keypress)="numberOnly($event)">
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <span class="mb-0">Lunch</span>
+                                </td>
+                                <td class="text-center">
+                                  <input *ngIf="result.sepLastLunchCapPerDay" autocomplete="off"
+                                         onPaste="return false" type="text" [disabled]="true"
+                                         [(value)]="result.sepLastLunchCapPerDay" class="form-control text-center"
+                                         maxlength="50">
+                                  <input *ngIf="!result.sepLastLunchCapPerDay" autocomplete="off"
+                                         onPaste="return false" type="text" [disabled]="true" value="0"
+                                         class="form-control text-center" maxlength="50">
+                                </td>
+                                <td>
+                                  <span class="mb-0">Lunch</span>
+                                </td>
+                                <td>
+                                  <input autocomplete="off" onPaste="return false" type="text"
+                                         [ngClass]="{'border-error': isInvalid(item,'sepLunchSupplyDayError', 'txtSepLunchSupplyDay'),'form-control':true,'text-center':true}"
+                                         maxlength="50"
+                                         id="txtSepLunchSupplyDay{{item.no}}" name="txtSepLunchSupplyDay{{item.no}}"
+                                         formControlName="txtSepLunchSupplyDay{{item.no}}"
+                                         [(ngModel)]="item.sepLunchSupplyDay"
+                                         (input)="onInput(item.no,'txtSepLunchSupplyDay', 'sepLunchSupplyDay')"
+                                         (change)="calcalculatedDay(item.no, $event)"
+                                         (keypress)="numberOnly($event)">
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <span class="mb-0">Evening</span>
+                                </td>
+                                <td class="text-center">
+                                  <input *ngIf="result.sepLastEveningCapPerDay && result.sepLastEveningCapPerDay !== 0" autocomplete="off"
+                                         onPaste="return false" type="text" [disabled]="true"
+                                         [(value)]="result.sepLastEveningCapPerDay" class="form-control text-center"
+                                         maxlength="50">
+                                  <input *ngIf="!result.sepLastEveningCapPerDay || result.sepLastEveningCapPerDay === 0" autocomplete="off"
+                                         onPaste="return false" type="text" [disabled]="true" value="0"
+                                         class="form-control text-center" maxlength="50">
+                                </td>
+                                <td>
+                                  <span class="mb-0">Evening</span>
+                                </td>
+                                <td>
+                                  <input autocomplete="off" onPaste="return false" type="text"
+                                         [ngClass]="{'border-error': isInvalid(item,'sepEveningSupplyDayError', 'txtSepEveningSupplyDay'),'form-control':true,'text-center':true}"
+                                         maxlength="50"
+                                         id="txtSepEveningSupplyDay{{item.no}}" name="txtSepEveningSupplyDay{{item.no}}"
+                                         formControlName="txtSepEveningSupplyDay{{item.no}}"
+                                         [(ngModel)]="item.sepEveningSupplyDay"
+                                         (input)="onInput(item.no,'txtSepEveningSupplyDay', 'sepEveningSupplyDay')"
+                                         (change)="calcalculatedDay(item.no, $event)"
+                                         (keypress)="numberOnly($event)">
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <span class="mb-0">Bedtime</span>
+                                </td>
+                                <td class="text-center">
+                                  <input *ngIf="result.sepLastBedtimeCapPerDay && result.sepLastBedtimeCapPerDay !== 0" autocomplete="off"
+                                         onPaste="return false" type="text" [disabled]="true"
+                                         [(value)]="result.sepLastBedtimeCapPerDay" class="form-control text-center"
+                                         maxlength="50">
+                                  <input *ngIf="!result.sepLastBedtimeCapPerDay || result.sepLastBedtimeCapPerDay === 0" autocomplete="off"
+                                         onPaste="return false" type="text" [disabled]="true" value="0"
+                                         class="form-control text-center" maxlength="50">
+                                </td>
+                                <td>
+                                  <span class="mb-0">Bedtime</span>
+                                </td>
+                                <td>
+                                  <input autocomplete="off" onPaste="return false" type="text"
+                                         [ngClass]="{'border-error': isInvalid(item,'sepBedtimeSupplyDayError', 'txtSepBedtimeSupplyDay'),'form-control':true,'text-center':true}"
+                                         maxlength="50"
+                                         id="txtSepBedtimeSupplyDay{{item.no}}" name="txtSepBedtimeSupplyDay{{item.no}}"
+                                         formControlName="txtSepBedtimeSupplyDay{{item.no}}"
+                                         [(ngModel)]="item.sepBedtimeSupplyDay"
+                                         (keypress)="numberOnly($event)"
+                                         (input)="onInput(item.no,'txtSepBedtimeSupplyDay', 'sepBedtimeSupplyDay')"
+                                         (change)="calcalculatedDay(item.no, $event)">
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <span class="mb-0" style="font-weight: 700;">Total Cap per Day</span>
+                                </td>
+                                <td class="text-center">
+                                  <input [disabled]="true" [(value)]="item.totalCapPerDay" type="text"
+                                         class="form-control text-center" maxlength="50">
+                                </td>
+                                <td>
+                                  <span class="mb-0" style="font-weight: 700;">Calculated Day</span>
+                                </td>
+                                <td>
+                                  <input name="txtCalculatedDay{{item.no}}"
+                                         formControlName="txtCalculatedDay{{item.no}}" [(ngModel)]="item.calculatedDay"
+                                         type="text" class="form-control text-center" maxlength="50">
+                                </td>
+                              </tr>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-1"></div>
+          </div>
+        </form>
+        <br>
+        <!-- button step 0-->
+        <div class="row" *ngIf="step === 0">
+          <button style="margin-left:3px;width:129px" id="btnSplitProductionYes" type="button"
+                  class="btn btn-default font-btn width-btn-small" data-dismiss="modal"
+                  (click)="onClickSplitProductionYes()"
+                  title="Yes">Yes
+          </button>
+          <button style="margin-left:3px;width:129px" id="btnSplitProductionNo"
+                  class="btn btn-success font-btn width-btn-small" data-dismiss="model" title="No"
+                  (click)="onClickSplitProductionNo()">No
+          </button>
+        </div>
+        <!--button step 1-->
+        <div class="row" *ngIf="step === 1">
+          <button style="margin-left:3px;width:129px" id="btnSplitProductionNext"
+                  class="btn btn-success font-btn  width-btn-small" data-dismiss="model" title="Next"
+                  (click)="onClickSplitProductionNext()" [disabled]="isMaxSplit">Next
+          </button>
+        </div>
+        <!--button step 2-->
+        <div class="row" *ngIf="step === 2">
+          <button id="btnBack" class="btn btn-default float-xs-left mr-10" data-toggle="tooltip" data-placement="top"
+                  title="Back" (click)="onClickSplitProductionBack()">
+            <i class="fas fa-angle-left"></i><span>Back</span>
+          </button>
+          <button id="btnSave" class="btn btn-success float-xs-right" data-toggle="tooltip" data-placement="top"
+                  title="Save" style="margin-left: 3px;" (click)="onClickSplitProductionSave()">
+            <i class="fas fa-save"></i><span>Save</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

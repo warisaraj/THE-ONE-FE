@@ -1,0 +1,887 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">Production Schedule</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Master Data Management</a>
+              </li>
+              <li class="breadcrumb-item active">
+                Production Schedule
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div id="productionScheduleInfo" class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <!-- <button (click)="fnLoopManPower1Year()">fnLoopManPower1Year</button> -->
+      <!-- Production Schedule -->
+      <div class="row" id="divProductionSchedule">
+        <div class="col-lg-12">
+          <div class="ibox">
+            <div class="ibox-bg">
+              <div class="ibox-heading">
+                <h5 class="ibox-title-text">Production Schedule</h5>
+                <div class="ibox-graph-info collapse-link" (click)="clickCollapse('divProductionSchedule')">
+                  <i class="far fa-chevron-down"></i>
+                </div>
+              </div>
+              <div class="ibox-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="panel-body">
+                      <form class="form-horizontal" [formGroup]="productionScheduleForm">
+                        <div class="row mb-15 mt-15">
+                          <div class="col-sm-6">
+                            <span class="fontred" style="padding: 0 30px;">Note : Please set the opening time and closing time for the whole week.</span>
+                          </div>
+                          <div class="col-sm-6 text-right">
+                            <button id="btnEditProductionSchedule" class="btn btn-default icon btn-sm2 ng-star-inserted"
+                                    title="Edit Production Schedule" style="padding: 4px 2px 6px 7px !important;"
+                                    (click)="fnEditProductionSchedule()" *ngIf="!isEditProductionSchedule && menuPermissions.edit">
+                              <i class="fas fa-edit"></i>
+                            </button>
+                            <button id="btnSaveProductionSchedule" class="btn btn-success float-xs-left mr-10"
+                                    title="Save Production Schedule" (click)="fnSaveProductionSchedule()"
+                                    [disabled]="!isDisableAddProductionTime" *ngIf="isEditProductionSchedule">
+                              <i class="fas fa-save"></i><span>Save</span>
+                            </button>
+                            <button id="btnCancelProductionSchedule" class="btn btn-default float-xs-right"
+                                    title="Cancel Production Schedule" style="margin-left: 3px;"
+                                    (click)="fnCancelProductionSchedule()" *ngIf="isEditProductionSchedule">
+                              <i class="fal fa-times"></i><span>Cancel</span>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div *ngFor="let productionTime of productionTimeList; let i = index">
+                          <!-- sub title -->
+                          <div class="row">
+                            <div class="col-sm-12">
+                              <div class="sub-title-no-menu">Production
+                                Time {{productionTime.no}}</div>
+                            </div>
+                          </div>
+
+                          <!-- day -->
+                          <div class="row mr-40 ml-40">
+                            <div class="col-sm-3 pt-15 pb-15" *ngFor="let day of daysKey">
+                              <dx-check-box [(value)]="productionTime.days[day].value" text="{{day}}"
+                                            [readOnly]="!isEditProductionSchedule || !!productionTime.days[day].disable"
+                                            style="line-height: 1.35715;"
+                                            (onValueChanged)="fnValueChanged(productionTime.days)">
+                              </dx-check-box>
+                            </div>
+                          </div>
+
+                          <!-- Opening Time -->
+                          <div class="form-group">
+                            <label class="col-sm-4 control-label">Opening Time
+                              <span class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!productionScheduleForm.controls['openingTime'+productionTime.no].valid&&productionScheduleForm.controls['openingTime'+productionTime.no].dirty,'col-sm-6':true}">
+                              <dx-date-box id="openingTime{{productionTime.no}}" name="openingTime{{productionTime.no}}"
+                                           [disabled]="!isEditProductionSchedule" [displayFormat]="formatHHMM"
+                                           formControlName="openingTime{{productionTime.no}}"
+                                           [(ngModel)]="productionTime.openingTime" type="time"
+                                           [acceptCustomValue]="false" [openOnFieldClick]="true"
+                                           (onValueChanged)="fnCheckMinTime(productionTime, 'openingTime')"
+                                           [max]="productionTime.checkMaxTime" width="100%">
+                              </dx-date-box>
+                            </div>
+                          </div>
+
+                          <!-- Closing Time -->
+                          <div class="form-group">
+                            <label class="col-sm-4 control-label">Closing Time
+                              <span class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!productionScheduleForm.controls['closingTime'+productionTime.no].valid&&productionScheduleForm.controls['closingTime'+productionTime.no].dirty,'col-sm-6':true}">
+                              <dx-date-box id="closingTime{{productionTime.no}}" name="closingTime{{productionTime.no}}"
+                                           [disabled]="!isEditProductionSchedule" [displayFormat]="formatHHMM"
+                                           formControlName="closingTime{{productionTime.no}}"
+                                           [(ngModel)]="productionTime.closingTime" type="time"
+                                           [min]="productionTime.checkMinTime"
+                                           (onValueChanged)="fnCheckMaxTime(productionTime,'closingTime')"
+                                           [acceptCustomValue]="false" [openOnFieldClick]="true" width="100%">
+                              </dx-date-box>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row" *ngIf="isEditProductionSchedule">
+                          <div class="col-sm-12 pr-20 pl-20 text-center">
+                            <hr>
+                            <button id="btnAddProductionTime" class="btn btn-success float-xs-left mr-10" title="Save"
+                                    (click)="fnAddProductionTime()" [disabled]="isDisableAddProductionTime">
+                              <span>Add Production Time</span>
+                            </button>
+                            <button id="btnDeleteProductionTime" class="btn btn-default float-xs-right" title="Cancel"
+                                    style="margin-left: 3px;" (click)="fnDeleteProductionTime()"
+                                    *ngIf="productionTimeList.length>1">
+                              <span>Delete Production Time</span>
+                            </button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Production Time -->
+      <div class="row" id="divProductionTime">
+        <div class="col-lg-12">
+          <div class="ibox">
+            <div class="ibox-bg">
+              <div class="ibox-heading">
+                <h5 class="ibox-title-text">Production Time</h5>
+                <div class="ibox-graph-info collapse-link" (click)="clickCollapse('divProductionTime')">
+                  <i class="far fa-chevron-down"></i>
+                </div>
+              </div>
+              <div class="ibox-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="panel-body">
+                      <form class="form-horizontal" [formGroup]="productionTimeForm">
+                        <div class="row mb-15 mt-15">
+                          <div class="col-sm-6">
+                          </div>
+                          <div class="col-sm-6 text-right">
+                            <button id="btnEditProductionTime" class="btn btn-default icon btn-sm2 ng-star-inserted"
+                                    title="Edit Production Time" style="padding: 4px 2px 6px 7px !important;"
+                                    (click)="fnEditProductionTime()" *ngIf="!isEditProductionTime && menuPermissions.edit">
+                              <i class="fas fa-edit"></i>
+                            </button>
+                            <button id="btnSaveProductionTime" class="btn btn-success float-xs-left mr-10" title="Save"
+                                    (click)="fnSaveProductionTime()" *ngIf="isEditProductionTime">
+                              <i class="fas fa-save"></i><span>Save</span>
+                            </button>
+                            <button id="btnCancelProductionTime" class="btn btn-default float-xs-right" title="Cancel"
+                                    style="margin-left: 3px;" (click)="fnCancelProductionTime()"
+                                    *ngIf="isEditProductionTime">
+                              <i class="fal fa-times"></i><span>Cancel</span>
+                            </button>
+                          </div>
+                        </div>
+                        <!-- Time Before Production Start -->
+                        <div class="form-group">
+                          <label class="col-sm-4 control-label">
+                            Time Before Production Start
+                            <span class="fontred">*</span>
+                          </label>
+                          <div
+                            [ngClass]="{'has-error':!productionTimeForm.controls['timeBeforeProductionStart'].valid&&productionTimeForm.controls['timeBeforeProductionStart'].dirty,'col-sm-6':true}">
+                            <div class="select-wrapper">
+                              <select name="timeBeforeProductionStart" id="timeBeforeProductionStart"
+                                      formControlName="timeBeforeProductionStart" class="form-control"
+                                      [(ngModel)]="productionTime.timeBeforeProductionStart">
+                                <option selected="selected" [value]="''">Please select</option>
+                                <option *ngFor="let item of timeBeforeProductionList" [value]="item">{{ item }}</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- Production End -->
+                        <div class="form-group">
+                          <label class="col-sm-4 control-label">
+                            Production End
+                            <span class="fontred">*</span>
+                            <div class="tooltip-i" style="margin-left:7px;">
+                              <img src="assets/remark-icon.png" width="16px" height="16px" alt="">
+                              <span class="tooltiptext" style="width: 300px;">The earliest a production end can be provided. You can’t book a production slot for a production end that is defined to occur earlier than the specified time.</span>
+                            </div>
+                          </label>
+
+                          <!-- <div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div> -->
+                          <div
+                            [ngClass]="{'has-error':!productionTimeForm.controls['productionEnd'].valid&&productionTimeForm.controls['productionEnd'].dirty,'col-sm-6':true}">
+                            <dx-date-box id="productionEnd" name="productionEnd" [displayFormat]="formatHHMM"
+                                         formControlName="productionEnd" [openOnFieldClick]="true"
+                                         [acceptCustomValue]="false" [(ngModel)]="productionTime.productionEnd"
+                                         type="time" width="100%">
+                            </dx-date-box>
+                          </div>
+                        </div>
+
+                        <!-- Table Production Time -->
+                        <div class="form-group">
+                          <div style="float: right;" *ngIf="isEditProductionTime">
+                            <button *ngIf="productionTime.productionTimeList.length > 1" id="btnDeleteProductionTimeRow"
+                                    class="btn btn-default icon btn-sm2 ng-star-inserted"
+                                    title="Delete Production Time Row"
+                                    [disabled]="productionTime.productionTimeList.length < 2"
+                                    (click)="fnDeleteProductionTimeRow()">
+                              <i class="fas fa-minus"></i>
+                            </button>
+                            <button id="btnAddProductionTimeRow" class="btn btn-default icon btn-sm2 ng-star-inserted"
+                                    title="Add Production Time Row" [disabled]="disabledAddProductionTimeRow()"
+                                    (click)="fnAddProductionTimeRow()">
+                              <i class="fas fa-plus"></i>
+                            </button>
+
+                          </div>
+                          <table id="tblProductionTime" class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                              <th colspan="2">Criteria</th>
+                              <th colspan="4">
+                                Per Weighted Item (min.)
+                                <span class="fontred">*</span>
+                              </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="text-center">
+                              <td class="bg-color-default" style="min-width: 150px;">
+                                Fixed Time (min.)
+                                <span class="fontred">*</span>
+                              </td>
+                              <td class="bg-color-gray">
+                                <div *ngIf="!isEditProductionTime">
+                                  {{productionTime.fixedTime}}
+                                </div>
+                                <div *ngIf="isEditProductionTime"
+                                     [ngClass]="{'has-error':!productionTimeForm.controls['fixedTime'].valid&&productionTimeForm.controls['fixedTime'].dirty}">
+                                  <input type="text" class="form-control" id="fixedTime" (keydown)="numberOnly($event)"
+                                         name="fixedTime" maxlength="6" [(ngModel)]="productionTime.fixedTime"
+                                         formControlName="fixedTime">
+                                </div>
+                              </td>
+                              <td class="bg-color-default font-bold">1-5 item</td>
+                              <td class="bg-color-default font-bold">6-10 item</td>
+                              <td class="bg-color-default font-bold">11-20 item</td>
+                              <td class="bg-color-default font-bold"> > 20 item</td>
+                            </tr>
+                            <tr class="text-center">
+                              <td>
+                                Per Month Supply
+                                <span class="fontred">*</span>
+                              </td>
+                              <td class="bg-color-gray">
+                                <div *ngIf="!isEditProductionTime">
+                                  {{productionTime.perMonthSupply0}}
+                                </div>
+                                <div *ngIf="isEditProductionTime"
+                                     [ngClass]="{'has-error':!productionTimeForm.controls['perMonthSupply0'].valid&&productionTimeForm.controls['perMonthSupply0'].dirty}">
+                                  <input type="text" class="form-control" id="perMonthSupply0"
+                                         (keydown)="numberOnly($event)" name="perMonthSupply0" maxlength="6"
+                                         [(ngModel)]="productionTime.perMonthSupply0" formControlName="perMonthSupply0">
+                                </div>
+                              </td>
+                              <td class="bg-color-gray">
+                                <div *ngIf="!isEditProductionTime">
+                                  {{productionTime.perMonthSupply1}}
+                                </div>
+                                <div *ngIf="isEditProductionTime"
+                                     [ngClass]="{'has-error':!productionTimeForm.controls['perMonthSupply1'].valid&&productionTimeForm.controls['perMonthSupply1'].dirty}">
+                                  <input type="text" class="form-control" id="perMonthSupply1"
+                                         (keydown)="numberOnly($event)" name="perMonthSupply1" maxlength="6"
+                                         [(ngModel)]="productionTime.perMonthSupply1" formControlName="perMonthSupply1">
+                                </div>
+                              </td>
+                              <td class="bg-color-gray">
+                                <div *ngIf="!isEditProductionTime">
+                                  {{productionTime.perMonthSupply2}}
+                                </div>
+                                <div *ngIf="isEditProductionTime"
+                                     [ngClass]="{'has-error':!productionTimeForm.controls['perMonthSupply2'].valid&&productionTimeForm.controls['perMonthSupply2'].dirty}">
+                                  <input type="text" class="form-control" id="perMonthSupply2" name="perMonthSupply2"
+                                         (keydown)="numberOnly($event)" maxlength="6"
+                                         [(ngModel)]="productionTime.perMonthSupply2" formControlName="perMonthSupply2">
+                                </div>
+                              </td>
+                              <td class="bg-color-gray">
+                                <div *ngIf="!isEditProductionTime">
+                                  {{productionTime.perMonthSupply3}}
+                                </div>
+                                <div *ngIf="isEditProductionTime"
+                                     [ngClass]="{'has-error':!productionTimeForm.controls['perMonthSupply3'].valid&&productionTimeForm.controls['perMonthSupply3'].dirty}">
+                                  <input type="text" class="form-control" id="perMonthSupply3"
+                                         (keydown)="numberOnly($event)" name="perMonthSupply3" maxlength="6"
+                                         [(ngModel)]="productionTime.perMonthSupply3" formControlName="perMonthSupply3">
+                                </div>
+                              </td>
+                              <td class="bg-color-gray">
+                                <div *ngIf="!isEditProductionTime">
+                                  {{productionTime.perMonthSupply4}}
+                                </div>
+                                <div *ngIf="isEditProductionTime"
+                                     [ngClass]="{'has-error':!productionTimeForm.controls['perMonthSupply4'].valid&&productionTimeForm.controls['perMonthSupply4'].dirty}">
+                                  <input type="text" class="form-control" id="perMonthSupply4"
+                                         (keydown)="numberOnly($event)" name="perMonthSupply4" maxlength="6"
+                                         [(ngModel)]="productionTime.perMonthSupply4" formControlName="perMonthSupply4">
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <th colspan="6">
+                                Production Time (Hour)
+                              </th>
+                            </tr>
+                            <tr *ngFor="let productionTimeRow of productionTime.productionTimeList; let i = index;"
+                                [ngClass]="{'text-center': true, 'hide': productionTime.productionTimeList.length === 0}">
+                              <td *ngIf="productionTimeRow.no === 1"
+                                  [attr.rowspan]="productionTime.productionTimeList.length" class="vertical-text">
+                                Supply Month
+                              </td>
+                              <td>
+                                <div
+                                  *ngIf="!isEditProductionTime && productionTimeRow['supplyMonthEndRow' + productionTimeRow.no]">
+                                  {{productionTimeRow['supplyMonthStartRow' + productionTimeRow.no]}}
+                                  <span> - </span>
+                                  {{productionTimeRow['supplyMonthEndRow' + productionTimeRow.no]}}
+                                </div>
+                                <div
+                                  *ngIf="!isEditProductionTime && !productionTimeRow['supplyMonthEndRow' + productionTimeRow.no]">
+                                  <span
+                                    *ngIf="productionTimeRow['supplyMonthStartRow' + productionTimeRow.no]"> >= </span>
+                                  {{productionTimeRow['supplyMonthStartRow' + productionTimeRow.no]}}
+                                </div>
+                                <div *ngIf="isEditProductionTime" class="row">
+                                  <div class="col-sm-5 pr-0">
+                                    <input type="text" class="form-control" (keydown)="numberOnly($event)"
+                                           id="supplyMonthStartRow{{productionTimeRow.no}}"
+                                           name="supplyMonthStartRow{{productionTimeRow.no}}" maxlength="6"
+                                           [(ngModel)]="productionTimeRow['supplyMonthStartRow'+productionTimeRow.no]"
+                                           formControlName="supplyMonthStartRow{{productionTimeRow.no}}">
+                                  </div>
+                                  <div class="col-sm-2 pr-0 pl-0 pt-5 text-center">
+                                    -
+                                  </div>
+                                  <div class="col-sm-5 pl-0">
+                                    <input type="text" class="form-control" (keydown)="numberOnly($event)"
+                                           id="supplyMonthEndRow{{productionTimeRow.no}}"
+                                           name="supplyMonthEndRow{{productionTimeRow.no}}" maxlength="6"
+                                           [(ngModel)]="productionTimeRow['supplyMonthEndRow'+productionTimeRow.no]"
+                                           formControlName="supplyMonthEndRow{{productionTimeRow.no}}"
+                                           (paste)="(false)">
+                                  </div>
+                                </div>
+                              </td>
+                              <td>
+                                <div *ngIf="!isEditProductionTime">
+                                  {{productionTimeRow['productionTimeRow' + productionTimeRow.no + 'Col1']}}
+                                </div>
+                                <div *ngIf="isEditProductionTime"
+                                     [ngClass]="{'has-error':!productionTimeForm.controls['productionTimeRow'+ productionTimeRow.no +'Col1'].valid&&productionTimeForm.controls['productionTimeRow'+ productionTimeRow.no +'Col1'].dirty}">
+                                  <input type="text" class="form-control"
+                                         id="productionTimeRow{{productionTimeRow.no}}Col1"
+                                         name="productionTimeRow{{productionTimeRow.no}}Col1"
+                                         (input)="fnCalProductionTimeHour($event, i)"
+                                         [(ngModel)]="productionTimeRow['productionTimeRow' + productionTimeRow.no + 'Col1']"
+                                         formControlName="productionTimeRow{{productionTimeRow.no}}Col1">
+                                </div>
+                              </td>
+                              <td>
+                                <div *ngIf="!isEditProductionTime">
+                                  {{productionTimeRow['productionTimeRow' + productionTimeRow.no + 'Col2']}}
+                                </div>
+                                <div *ngIf="isEditProductionTime"
+                                     [ngClass]="{'has-error':!productionTimeForm.controls['productionTimeRow'+ productionTimeRow.no +'Col2'].valid&&productionTimeForm.controls['productionTimeRow'+ productionTimeRow.no +'Col2'].dirty}">
+                                  <input type="text" class="form-control"
+                                         id="productionTimeRow{{productionTimeRow.no}}Col2"
+                                         name="productionTimeRow{{productionTimeRow.no}}Col2"
+                                         (input)="fnCalProductionTimeHour($event, i)"
+                                         [(ngModel)]="productionTimeRow['productionTimeRow' + productionTimeRow.no + 'Col2']"
+                                         formControlName="productionTimeRow{{productionTimeRow.no}}Col2">
+                                </div>
+                              </td>
+                              <td>
+                                <div *ngIf="!isEditProductionTime">
+                                  {{productionTimeRow['productionTimeRow' + productionTimeRow.no + 'Col3']}}
+                                </div>
+                                <div *ngIf="isEditProductionTime"
+                                     [ngClass]="{'has-error':!productionTimeForm.controls['productionTimeRow'+ productionTimeRow.no +'Col3'].valid&&productionTimeForm.controls['productionTimeRow'+ productionTimeRow.no +'Col3'].dirty}">
+                                  <input type="text" class="form-control"
+                                         id="productionTimeRow{{productionTimeRow.no}}Col3"
+                                         name="productionTimeRow{{productionTimeRow.no}}Col3"
+                                         (input)="fnCalProductionTimeHour($event, i)"
+                                         [(ngModel)]="productionTimeRow['productionTimeRow' + productionTimeRow.no + 'Col3']"
+                                         formControlName="productionTimeRow{{productionTimeRow.no}}Col3">
+                                </div>
+                              </td>
+                              <td>
+                                <div *ngIf="!isEditProductionTime">
+                                  {{productionTimeRow['productionTimeRow' + productionTimeRow.no + 'Col4']}}
+                                </div>
+                                <div *ngIf="isEditProductionTime"
+                                     [ngClass]="{'has-error':!productionTimeForm.controls['productionTimeRow'+ productionTimeRow.no +'Col4'].valid&&productionTimeForm.controls['productionTimeRow'+ productionTimeRow.no +'Col4'].dirty}">
+                                  <input type="text" class="form-control"
+                                         id="productionTimeRow{{productionTimeRow.no}}Col4"
+                                         name="productionTimeRow{{productionTimeRow.no}}Col4"
+                                         (input)="fnCalProductionTimeHour($event, i)"
+                                         [(ngModel)]="productionTimeRow['productionTimeRow' + productionTimeRow.no + 'Col4']"
+                                         formControlName="productionTimeRow{{productionTimeRow.no}}Col4">
+                                </div>
+                              </td>
+                            </tr>
+                            <tr [ngClass]="{'hide': productionTime.productionTimeList.length > 0}">
+                              <td colspan="6" class="text-center">
+                                No Data
+                              </td>
+                            </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Production Schedule -->
+      <div class="row" id="divAdditionalProductionSchedule">
+        <div class="col-lg-12">
+          <div class="ibox">
+            <div class="ibox-bg">
+              <div class="ibox-heading">
+                <h5 class="ibox-title-text">Additional Production Schedule</h5>
+                <div class="ibox-graph-info collapse-link" (click)="clickCollapse('divAdditionalProductionSchedule')">
+                  <i class="far fa-chevron-down"></i>
+                </div>
+              </div>
+              <div class="ibox-body">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="panel-body">
+                      <dx-scheduler id="additionalProductionSchedule" timeZone="Asia/Bangkok"
+                                    [dataSource]="additionalScheduler" [views]="['month']" currentView="month"
+                                    (onAppointmentClick)="onAppointmentClick($event)"
+                                    dataCellTemplate="dataCellTemplate" appointmentTemplate="appointmentTemplate"
+                                    [firstDayOfWeek]="1"
+                                    [currentDate]="currentDate" [startDayHour]="9" [height]="600"
+                                    (onOptionChanged)="onAdditionalOptionChanged($event)"
+                                    (onCellClick)="onCellClick($event)">
+                        <dxo-editing [allowAdding]="false" [allowDeleting]="false" [allowUpdating]="false"
+                                     [allowResizing]="false" [allowDragging]="false">
+                        </dxo-editing>
+                        <!-- dataCellTemplate -->
+                        <div *dxTemplate="let dataCell of 'dataCellTemplate'"
+                             [ngClass]="{'disable-date': isDisableDate(dataCell.startDate)}">
+                          <div style="float: left;"
+                               [ngClass]="{'circle': isSelectedDate(dataCell.startDate),'circle-no-bg':!isSelectedDate(dataCell.startDate)}">
+                            {{dataCell.text}}
+                          </div>
+                          <div style="float: right;">
+                            <img src="../../assets/icons/production-line.png" style="height: 22px;" alt=""
+                                 *ngIf="isShowProductionLine(dataCell.startDate)">
+                            <br *ngIf="isShowProductionLine(dataCell.startDate)">
+                            <img src="../../assets/icons/production-time.png" style="height: 22px;" alt=""
+                                 *ngIf="isShowProductionTime(dataCell.startDate)">
+                            <br *ngIf="isShowProductionTime(dataCell.startDate)">
+                            <img src="../../assets/icons/production-stopped.png" style="height: 22px;" alt=""
+                                 *ngIf="isShowProductionStopped(dataCell.startDate)">
+                          </div>
+
+                        </div>
+                        <!-- appointmentTemplate -->
+                        <div *dxTemplate="let appointment of 'appointmentTemplate'">
+                        </div>
+                      </dx-scheduler>
+                      <br>
+                      <div class="row mb-15 mt-15">
+                        <div class="col-sm-6">
+                          <div class="title-underline">
+                            {{selectedDateDisplay}}
+                          </div>
+                        </div>
+                        <div class="col-sm-6 text-right" *ngIf="isCanEdit">
+                          <button id="btnEditAdditionalProductionSchedule"
+                                  class="btn btn-default icon btn-sm2 ng-star-inserted" title="Edit Additional Production Schedule"
+                                  style="padding: 4px 2px 6px 7px !important;"
+                                  (click)="fnEditAdditionalProductionSchedule()"
+                                  *ngIf="!isEditAdditionalProductionSchedule && menuPermissions.edit">
+                            <i class="fas fa-edit"></i>
+                          </button>
+                          <button id="btnSaveAdditionalProductionSchedule" class="btn btn-success float-xs-left mr-10"
+                                  [disabled]="isEditManPower" title="Save"
+                                  (click)="fnSaveAdditionalProductionSchedule()"
+                                  *ngIf="isEditAdditionalProductionSchedule">
+                            <i class="fas fa-save"></i><span>Save</span>
+                          </button>
+                          <button id="btnCancelAdditionalProductionSchedule" class="btn btn-default float-xs-right"
+                                  title="Cancel" style="margin-left: 3px;"
+                                  (click)="fnCancelAdditionalProductionSchedule()"
+                                  *ngIf="isEditAdditionalProductionSchedule">
+                            <i class="fal fa-times"></i><span>Cancel</span>
+                          </button>
+                        </div>
+                      </div>
+                      <form class="form-horizontal" [formGroup]="additionalProductionScheduleForm"
+                            style="background: #F9F7F2;border-radius: 5px;padding: 20px;">
+                        <div class="form-group">
+                          <div class="font-bold">
+                            Production Schedule
+                          </div>
+                        </div>
+                        <div class="pl-20">
+                          <!-- Opening Time -->
+                          <div class="form-group form-additional">
+                            <div class="additional-label">
+                              Opening Time
+                            </div>
+                            <div class="text-center additional-colon">:</div>
+                            <div class="additional-input">
+                              <span *ngIf="additionalOpenTimeDisplay">
+                                {{additionalOpenTimeDisplay}}
+                              </span>
+                              <span *ngIf="!additionalOpenTimeDisplay">
+                                -
+                              </span>
+                            </div>
+                          </div>
+                          <!-- Closing Time -->
+                          <div class="form-group form-additional">
+                            <div class="additional-label">
+                              Closing Time
+                            </div>
+                            <div class="text-center additional-colon">:</div>
+                            <div class="additional-input">
+                              <span *ngIf="additionalClosingTimeDisplay">
+                                {{additionalClosingTimeDisplay}}
+                              </span>
+                              <span *ngIf="!additionalClosingTimeDisplay">
+                                -
+                              </span>
+                            </div>
+                          </div>
+                          <!-- Man Power -->
+                          <div class="form-group form-additional">
+                            <div class="additional-label">
+                              Man Power
+                              <span class="fontred">*</span>
+                            </div>
+                            <div class="text-center additional-colon">:</div>
+                            <div class="additional-input">
+                              <div
+                                [ngClass]="{'has-error':!additionalProductionScheduleForm.controls['manPower'].valid&&additionalProductionScheduleForm.controls['manPower'].dirty}">
+                                <input type="text" class="form-control ml-10" id="manPower"
+                                       (keydown)="numberOnly($event)" name="manPower" maxlength="3"
+                                       (input)="fnChangeManPower()" [(ngModel)]="additional.manPower"
+                                       formControlName="manPower">
+
+                              </div>
+                            </div>
+                            <button id="btnEditManPower" class="btn btn-default icon btn-sm2 ng-star-inserted"
+                                    title="Edit Man Power"
+                                    style="padding: 4px 2px 6px 7px !important;margin-left: 13px !important;margin-top: -1px !important;"
+                                    (click)="fnEditManPower()"
+                                    *ngIf="!isEditManPower && isEditAdditionalProductionSchedule">
+                              <i class="fas fa-edit"></i>
+                            </button>
+                            <button id="btnSaveManPower" class="btn btn-success icon" title="Edit Man Power"
+                                    style="margin-left: 13px !important;margin-top: -1px !important;padding-left: 10px;padding-right: 10px;"
+                                    (click)="fnSaveManPower()"
+                                    *ngIf="isEditManPower && isEditAdditionalProductionSchedule">
+                              <i class="fas fa-save"></i>
+                            </button>
+                            <button id="btnCancelManPower" class="btn btn-default icon" title="Edit Man Power"
+                                    style="margin-top: -1px !important;padding-left: 10px;padding-right: 10px;"
+                                    (click)="fnCancelManPower()"
+                                    *ngIf="isEditManPower && isEditAdditionalProductionSchedule">
+                              <i class="fas fa-times"></i>
+                            </button>
+                          </div>
+                          <!-- Production Line -->
+                          <div class="form-group form-additional">
+                            <div class="additional-label">
+                              Production Line
+                              <span class="fontred">*</span>
+                            </div>
+                            <div class="text-center additional-colon">:</div>
+                            <div class="additional-input">
+                              <input type="text" class="form-control ml-10" id="productionLine" name="productionLine"
+                                     maxlength="3" [(ngModel)]="additional.productionLine"
+                                     formControlName="productionLine">
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+                        <!-- Additional Production Schedule -->
+                        <div class="form-group">
+                          <div class="font-bold">
+                            Additional Production Schedule
+                          </div>
+                        </div>
+                        <!-- Production Time -->
+                        <div class="form-group">
+                          <div class="col-sm-12">
+                            <dx-check-box [value]="additional.isAddProductionTime" text="Add Production Time"
+                                          [readOnly]="!isEditAdditionalProductionSchedule || !additional.productionLine"
+                                          (onValueChanged)="fnToggleAddProductionTime($event)">
+                            </dx-check-box>
+                          </div>
+                        </div>
+                        <div *ngIf="additional.isAddProductionTime" class="mr-45 ml-45">
+                          <div style="background: #FFFFFF;border-radius: 5px;padding: 20px;"
+                               *ngFor="let productionTime of additional.additionalProductionTime">
+                            <div class="form-group">
+                              <div class="col-sm-6">
+                                Line {{productionTime.lineNo}}
+                              </div>
+                            </div>
+
+
+                            <!-- Closing Time -->
+                            <div class="form-group">
+                              <label class="col-sm-4 control-label">Closing Time
+                                <!-- <span class="fontred">*</span> -->
+                              </label>
+                              <div
+                                [ngClass]="{'has-error':!additionalProductionScheduleForm.controls['productionTimeClosingTime'+productionTime.lineNo].valid&&additionalProductionScheduleForm.controls['productionTimeClosingTime'+productionTime.lineNo].dirty,'col-sm-6':true}">
+                                <dx-date-box id="productionTimeClosingTime{{productionTime.lineNo}}"
+                                             name="productionTimeClosingTime{{productionTime.lineNo}}"
+                                             class="no-dx-validate"
+                                             [disabled]="!isEditAdditionalProductionSchedule"
+                                             [displayFormat]="formatHHMM"
+                                             [min]="productionTimeTimeCloseMin"
+                                             [max]="productionTimeTimeCloseMax"
+                                             dateOutOfRangeMessage=""
+                                             formControlName="productionTimeClosingTime{{productionTime.lineNo}}"
+                                             [(ngModel)]="productionTime.timeClose" type="time" width="100%">
+                                </dx-date-box>
+                              </div>
+                            </div>
+
+                            <!-- Note -->
+                            <div class="form-group">
+                              <label class="col-sm-4 control-label">
+                                Note
+                              </label>
+                              <div
+                                [ngClass]="{'has-error':!additionalProductionScheduleForm.controls['productionTimeNote'+productionTime.lineNo].valid&&additionalProductionScheduleForm.controls['productionTimeNote'+productionTime.lineNo].dirty,'col-sm-6':true}">
+                                <textarea type="text" class="form-control"
+                                          id="productionTimeNote{{productionTime.lineNo}}"
+                                          name="productionTimeNote{{productionTime.lineNo}}"
+                                          [(ngModel)]="productionTime.note"
+                                          formControlName="productionTimeNote{{productionTime.lineNo}}" rows="5">
+                              </textarea>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+                        <!-- Production Line -->
+                        <div class="form-group">
+                          <div class="col-sm-6">
+                            <dx-check-box [value]="additional.isAddProductionLine" text="Add Production Line"
+                                          [readOnly]="!isEditAdditionalProductionSchedule || !additional.productionLine"
+                                          (onValueChanged)="fnToggleAddProductionLine($event)">
+                            </dx-check-box>
+                          </div>
+                          <div class="col-sm-6 text-right">
+                            <button id="btnAddProductionLine" style="margin-right: 30px !important;"
+                                    class="btn btn-default icon btn-sm2 ng-star-inserted mr-45"
+                                    title="Add Production Line"
+                                    (click)="fnAddProductionLine()"
+                                    [disabled]="!isEditAdditionalProductionSchedule || !additional.productionLine"
+                                    *ngIf="additional.isAddProductionLine && isEditAdditionalProductionSchedule">
+                              <i class="fas fa-plus"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <div *ngIf="additional.isAddProductionLine" class="mr-45 ml-45">
+                          <div *ngIf="additional.productionLine">
+                            <div style="background: #FFFFFF;border-radius: 5px;padding: 20px;"
+                                 *ngFor="let productionLine of additional.productionLineList">
+                              <div class="form-group">
+                                <div class="col-sm-6">
+                                  Line {{productionLine.lineNo}}
+                                </div>
+                                <div class="col-sm-6 text-right">
+                                  <button id="btnDeleteProductionLine"
+                                          class="btn btn-default icon btn-sm ng-star-inserted"
+                                          title="Delete Production Line" (click)="fnDeleteProductionLine(productionLine.lineNo)"
+                                          [disabled]="!isEditAdditionalProductionSchedule"
+                                          *ngIf="additional.isAddProductionLine && isEditAdditionalProductionSchedule">
+                                    <i class="fas fa-trash"></i>
+                                  </button>
+                                </div>
+                              </div>
+                              <!-- Opening Time -->
+                              <div class="form-group">
+                                <label class="col-sm-4 control-label">Opening Time
+                                  <span class="fontred">*</span>
+                                </label>
+                                <div
+                                  [ngClass]="{'has-error':!additionalProductionScheduleForm.controls['openingTime'+productionLine.lineNo].valid&&additionalProductionScheduleForm.controls['openingTime'+productionLine.lineNo].dirty,'col-sm-6':true}">
+                                  <dx-date-box id="openingTime{{productionLine.lineNo}}"
+                                               name="openingTime{{productionLine.lineNo}}"
+                                               [disabled]="!isEditAdditionalProductionSchedule"
+                                               [displayFormat]="formatHHMM"
+                                               formControlName="openingTime{{productionLine.lineNo}}"
+                                               [(ngModel)]="productionLine.openingTime" type="time"
+                                               [acceptCustomValue]="false" [openOnFieldClick]="true"
+                                               (onValueChanged)="fnCheckMinTime(productionLine, 'openingTime')"
+                                               [max]="productionLine.checkMaxTime" width="100%">
+                                  </dx-date-box>
+                                </div>
+                              </div>
+
+                              <!-- Closing Time -->
+                              <div class="form-group">
+                                <label class="col-sm-4 control-label">Closing Time
+                                  <span class="fontred">*</span>
+                                </label>
+                                <div
+                                  [ngClass]="{'has-error':!additionalProductionScheduleForm.controls['closingTime'+productionLine.lineNo].valid&&additionalProductionScheduleForm.controls['closingTime'+productionLine.lineNo].dirty,'col-sm-6':true}">
+                                  <dx-date-box id="closingTime{{productionLine.lineNo}}"
+                                               name="closingTime{{productionLine.lineNo}}"
+                                               [disabled]="!isEditAdditionalProductionSchedule"
+                                               [displayFormat]="formatHHMM"
+                                               formControlName="closingTime{{productionLine.lineNo}}"
+                                               [(ngModel)]="productionLine.closingTime" type="time"
+                                               [acceptCustomValue]="false" [openOnFieldClick]="true"
+                                               (onValueChanged)="fnCheckMaxTime(productionLine, 'closingTime')"
+                                               [min]="productionLine.checkMinTime" width="100%">
+                                  </dx-date-box>
+                                </div>
+                              </div>
+
+                              <!-- Note -->
+                              <div class="form-group">
+                                <label class="col-sm-4 control-label">
+                                  Note
+                                </label>
+                                <div
+                                  [ngClass]="{'has-error':!additionalProductionScheduleForm.controls['note'+productionLine.lineNo].valid&&additionalProductionScheduleForm.controls['note'+productionLine.lineNo].dirty,'col-sm-6':true}">
+                                  <textarea type="text" class="form-control" id="note{{productionLine.lineNo}}"
+                                            name="note{{productionLine.lineNo}}" [(ngModel)]="productionLine.note"
+                                            formControlName="note{{productionLine.lineNo}}" rows="5">
+                              </textarea>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <br>
+                        <!-- Production Stopped -->
+                        <div class="form-group">
+                          <div class="col-sm-12">
+                            <dx-check-box [value]="additional.isProductionStopped" text="Production Stopped"
+                                          [readOnly]="!isEditAdditionalProductionSchedule || !additional.productionLine"
+                                          (onValueChanged)="fnToggleAddProductionStopped($event)">
+                            </dx-check-box>
+                          </div>
+                        </div>
+                        <div *ngIf="additional.isProductionStopped" class="mr-45 ml-45">
+                          <div style="background: #FFFFFF;border-radius: 5px;padding: 20px;">
+                            <!-- Time -->
+                            <div class="form-group">
+                              <label class="col-sm-4 control-label">Time
+                                <span class="fontred">*</span>
+                              </label>
+                              <div
+                                [ngClass]="{'has-error':!additionalProductionScheduleForm.controls['productionStoppedTime'].valid&&additionalProductionScheduleForm.controls['productionStoppedTime'].dirty,'col-sm-6':true}">
+                                <label class="radio-inline">
+                                  <input type="radio" name="productionStoppedTime" id="timeAllDay" [value]="1"
+                                         formControlName="productionStoppedTime"
+                                         [(ngModel)]="additional.productionStoppedTime"> All day
+                                </label>
+                                <label class="radio-inline">
+                                  <input type="radio" name="productionStoppedTime" id="timeHours" [value]="2"
+                                         formControlName="productionStoppedTime"
+                                         [(ngModel)]="additional.productionStoppedTime"> Hours
+                                </label>
+                              </div>
+                            </div>
+
+                            <!-- From -->
+                            <div class="form-group" *ngIf="additional.productionStoppedTime===2">
+                              <label class="col-sm-4 control-label">From
+                                <span class="fontred">*</span>
+                              </label>
+                              <div
+                                [ngClass]="{'has-error':!additionalProductionScheduleForm.controls['productionStoppedFrom'].valid&&additionalProductionScheduleForm.controls['productionStoppedFrom'].dirty,'col-sm-6':true}">
+                                <dx-date-box id="productionStoppedFrom" name="productionStoppedFrom"
+                                             [disabled]="!isEditAdditionalProductionSchedule"
+                                             [displayFormat]="formatHHMM" formControlName="productionStoppedFrom"
+                                             [(ngModel)]="additional.productionStoppedFrom" type="time"
+                                             [acceptCustomValue]="false" [openOnFieldClick]="true"
+                                             (onValueChanged)="fnCheckMinTime(additional, 'productionStoppedFrom')"
+                                             [max]="additional.checkMaxTime" width="100%">
+                                </dx-date-box>
+                              </div>
+                            </div >
+
+                            <!-- To -->
+                            <div class="form-group" *ngIf="additional.productionStoppedTime===2">
+                              <label class="col-sm-4 control-label">To
+                                <span class="fontred">*</span>
+                              </label>
+                              <div
+                                [ngClass]="{'has-error':!additionalProductionScheduleForm.controls['productionStoppedTo'].valid&&additionalProductionScheduleForm.controls['productionStoppedTo'].dirty,'col-sm-6':true}">
+                                <dx-date-box id="productionStoppedTo" name="productionStoppedTo"
+                                             [disabled]="!isEditAdditionalProductionSchedule"
+                                             [displayFormat]="formatHHMM" formControlName="productionStoppedTo"
+                                             [(ngModel)]="additional.productionStoppedTo" type="time"
+                                             [min]="additional.checkMinTime"
+                                             (onValueChanged)="fnCheckMaxTime(additional,'productionStoppedTo')"
+                                             [acceptCustomValue]="false" [openOnFieldClick]="true" width="100%">
+                                </dx-date-box>
+                              </div>
+                            </div>
+
+                            <!-- Reason -->
+                            <div class="form-group">
+                              <label class="col-sm-4 control-label">
+                                Reason
+                                <span class="fontred">*</span>
+                              </label>
+                              <div
+                                [ngClass]="{'has-error':!additionalProductionScheduleForm.controls['productionStoppedReason'].valid&&additionalProductionScheduleForm.controls['productionStoppedReason'].dirty,'col-sm-6':true}">
+                                <textarea type="text" class="form-control" id="productionStoppedReason"
+                                          name="productionStoppedReason"
+                                          [(ngModel)]="additional.productionStoppedReason"
+                                          formControlName="productionStoppedReason" rows="5">
+                              </textarea>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert #myModal (onOkDelete)="onOkDelete()" (onCancelDelete)="onCancelDelete()"
+           (onCloseModalError)="onCloseModalError()" (onOkManPowerModal)="onOkManPowerModal()"></app-alert>

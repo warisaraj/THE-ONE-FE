@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  frontend-dev:
+    build:
+      context: . # Specifies the build context is the current directory (project root)
+      dockerfile: Dockerfile.dev # Tells Docker Compose to use our new Dockerfile.dev
+    ports:
+      - "4200:4200" # Map port 4200 on your host to port 4200 in the container
+    volumes:
+      # Mount the local 'src' directory into the container's '/app/src'
+      # Changes made locally in 'src' will reflect inside the container for hot-reloading
+      - ./src:/app/src
+      # Use a named volume for node_modules to prevent local node_modules
+      # from overwriting the ones installed in the container, and to persist them.
+      - node_modules_volume:/app/node_modules
+    container_name: vitallife-fe-dev # Optional: A friendly name for the container
+
+volumes:
+  node_modules_volume: # Declare the named volume used above

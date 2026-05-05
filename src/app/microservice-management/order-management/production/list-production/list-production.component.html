@@ -1,0 +1,245 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+    <div class="spiner-example-detail">
+        <div class="sk-spinner sk-spinner-double-bounce">
+            <div class="sk-double-bounce1"></div>
+            <div class="sk-double-bounce2"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+
+    <div class="soc-breadcrumb">
+        <div class="row">
+            <div class="col-md-8 col-xs-12 align-self-center">
+                <h4 class="soc-title">Orders</h4>
+                <div class="d-flex align-items-center" style="margin-top: -10px;">
+                    <nav>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Order Management</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                Orders
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-md-4 col-xs-12 align-self-center text-right fix-bt">
+                <button [routerLink]="['/order-management/orders-production-done']" id="btnCreateNewGroup"
+                    name="btnCreateNewGroup" class="btn btn-success float-xs-left " data-toggle="tooltip"
+                    data-placement="top" title="Production Done List">
+                    <span>Production Done List</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox">
+                <div class="ibox-bg">
+                    <div class="ibox-heading">
+                        <h5 class="ibox-title-text"><i class="fas fa-filter"></i>Filter</h5>
+                        <div class="ibox-graph-info collapse-link" #collapseLink (click)="clickCollapse()">
+                            <i class="far fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="ibox-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="panel-body">
+                                    <form method="get" class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Date From</label>
+                                            <div class="col-sm-3">
+                                                <dx-date-box style="width: 100%;" [openOnFieldClick]="true"
+                                                    [acceptCustomValue]="false" class="form-control cus-datebox"
+                                                    type="date" displayFormat="dd/MM/yyyy" [(ngModel)]="filter.dateFrom"
+                                                    name="dateDateFrom"
+                                                    (onValueChanged)="onValueChangedDate($event , 'dateFrom')">
+                                                </dx-date-box>
+                                            </div>
+                                            <label class="col-sm-2 control-label">Date To</label>
+                                            <div class="col-sm-3">
+                                                <dx-date-box style="width: 100%;" [openOnFieldClick]="true"
+                                                    [acceptCustomValue]="false" class="form-control cus-datebox"
+                                                    type="date" displayFormat="dd/MM/yyyy" [(ngModel)]="filter.dateTo"
+                                                    name="dateDateTo"
+                                                    (onValueChanged)="onValueChangedDate($event , 'dateTo')">
+                                                </dx-date-box>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Order Status</label>
+                                            <div class="col-sm-3">
+                                                <select name="txtOrderStatus" id="txtOrderStatus" class="form-control"
+                                                    [(ngModel)]="filter.orderStatus">
+                                                    <option selected="selected" [value]="''">Please select</option>
+                                                    <option *ngFor="let item of statusList" [value]="item">{{ item }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ibox-footer">
+                        <div class="ibox-footer-right">
+                            <button title="Search" (click)="clickSearch()" class="btn btn-success btn-md mr-10"
+                                *ngIf="menuPermissions.view">
+                                <span>Search</span>
+                            </button>
+                            <button title="Clear" (click)="clickClear()" class="btn btn-default btn-md"
+                                *ngIf="menuPermissions.view">
+                                <span>Clear</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox mb-0">
+                <div class="ibox-bg" style="box-shadow : none !important">
+                    <div class="ibox-heading-total">
+                        <h5 class="ibox-title-text">{{textTotal}}</h5>
+                    </div>
+                    <div class="ibox-body">
+                        <!--[selectedRowKeys]="selectRowKeyId" (onInitialized)="onInitialized($event)" (onSelectionChanged)="selectRow($event)"-->
+                        <div class="table-responsive table-wrapper">
+                            <dx-data-grid #gridDataPendingOrders id="gridDataPendingOrders"
+                                [(dataSource)]="dataPendingOrders" showBorders="false" [hoverStateEnabled]="true"
+                                noDataText="No data" [rowAlternationEnabled]="true" [columnAutoWidth]="true"
+                                [allowColumnResizing]="true" (onRowPrepared)="onRowPrepared($event)"
+                                (onCellPrepared)="onCellPrepared($event)" class="card-list-table"
+                                (onOptionChanged)="changePageIndex($event)">
+                                <dxo-load-panel [enabled]="true"></dxo-load-panel>
+                                <dxo-paging [pageSize]="dxgridPageSize" [pageIndex]="pageIndex"></dxo-paging>
+                                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="allowedPageSizes"
+                                    [showInfo]="false" [visible]="true" [showNavigationButtons]="true">
+                                </dxo-pager>
+                                <dxo-scrolling showScrollbar="onHover"></dxo-scrolling>
+                                <dxo-selection mode="single"></dxo-selection>
+                                <dxo-remote-operations [sorting]="true" [paging]="true">
+                                </dxo-remote-operations>
+
+                                <!--<dxi-column dataField="no" dataType="number" caption="No." alignment="left" width="10%"></dxi-column>-->
+                                <dxi-column caption="No" cellTemplate="cellTemplateNo" [allowSorting]="false"
+                                    [width]="50" alignment="center"></dxi-column>
+                                <div *dxTemplate="let data of 'cellTemplateNo'" style="text-align: center;"
+                                    title="{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}">
+                                    <span>{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1
+                                        }}</span>
+                                </div>
+
+                                <dxi-column dataField="order.orderId" dataType="string" caption="Order ID"
+                                    alignment="center" calculateSortValue="orderId"></dxi-column>
+                                <dxi-column dataField="order.hn" dataType="string" caption="HN" calculateSortValue="hn">
+                                </dxi-column>
+                                <dxi-column dataField="order.patientName" dataType="string" caption="Patient Name"
+                                    calculateSortValue="patientName" [width]="250">
+                                </dxi-column>
+                                <dxi-column dataField="order.locationDetail" dataType="string" caption="Location Detail"
+                                    calculateSortValue="locationDetail"></dxi-column>
+                                <dxi-column dataField="typeName" dataType="string" caption="Type"
+                                    calculateSortValue="type"></dxi-column>
+                                <dxi-column [width]="70" dataField="order.supplyDay" dataType="string"
+                                    caption="Supply Day" alignment="center" calculateSortValue="supplyDay">
+                                </dxi-column>
+                                <dxi-column dataField="productionBookingSlotDateTime" sortOrder="asc"
+                                    calculateSortValue="productionEndDate" dataType="string" caption="Production Booking
+                                Slot (Date/Time)">
+                                </dxi-column>
+                                <dxi-column dataField="arrivalDateTime" dataType="string" caption="Arrival (Date/Time)"
+                                    calculateSortValue="deliveryDate">
+                                </dxi-column>
+                                <dxi-column dataField="deliveryMethodName" dataType="string" caption="Delivery Method"
+                                    calculateSortValue="deliveryMethod">
+                                </dxi-column>
+                                <dxi-column [width]="150" dataField="order.prodPharmacyNote" dataType="string"
+                                    caption="Note from Pharmacist" calculateSortValue="prodPharmacyNote">
+                                </dxi-column>
+                                <dxi-column [width]="150" dataField="order.cashierSupNote" dataType="string"
+                                    caption="Note from Cashier" calculateSortValue="cashierSupNote">
+                                </dxi-column>
+                                <dxi-column dataField="orderstatusName" dataType="string" caption="Order Status"
+                                    calculateSortValue="orderStatus">
+                                </dxi-column>
+                                <!-- <dxi-column dataField="updatedAt" caption="Updated At" sortOrder="desc"
+                                    cssClass="wrapped-column" [width]="155" alignment="center"></dxi-column> -->
+                                <dxi-column dataType="string" caption="Action" cellTemplate="cellTemplateViewGroups"
+                                    [width]="90" alignment="center"></dxi-column>
+
+                                <div *dxTemplate="let data of 'cellTemplateViewGroups';let i=index;">
+
+                                    <!-- <a [routerLink]="['/master-data-management/bin', data.data.id ,'view']"  id="btnView{{i}}" class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip" data-placement="top" title="View"><i class="fas fa-eye"></i></a> -->
+                                    <!-- <span *ngIf="!data.data.isDisbled"> -->
+                                    <span>
+                                        <a *ngIf="data.data.order.orderStatus !== 13 && data.data.order.orderStatus !== 14 && data.data.order.orderStatus !== 17 && data.data.order.orderStatus !== 18 && menuPermissions.view"
+                                            [routerLink]="['/order-management/orders-production',data.data.order.orderId,'view']"
+                                            id="btnView{{i}}" class="btn btn-default icon btn-sm" data-toggle="tooltip"
+                                            data-placement="top" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+
+                                        <a *ngIf="data.data.order.orderStatus === 19 && menuPermissions.edit"
+                                            (click)="fnOpenModal(data.data)" id="btnReceiving{{i}}"
+                                            class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip"
+                                            data-placement="top" title="Receiving"><img src="assets/icon-md/c15.svg"
+                                                alt=""></a>
+
+                                        <a *ngIf="data.data.order.orderStatus === 20 && data.data.order.type === 1 && menuPermissions.edit"
+                                            (click)="fnOpenModal(data.data)" id="btnProductionDone{{i}}"
+                                            class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip"
+                                            data-placement="top" title="Weighing"> <img src="assets/icon-md/c14.svg"
+                                                alt=""></a>
+
+                                        <a *ngIf="data.data.order.orderStatus === 21 && menuPermissions.edit"
+                                            (click)="fnOpenModal(data.data)" id="btnCapsuleFilling{{i}}"
+                                            class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip"
+                                            data-placement="top" title="Capsule filling"> <i
+                                                class="fas fa-capsules"></i></a>
+
+                                        <a *ngIf="(data.data.order.orderStatus === 22 || (data.data.order.orderStatus === 20 && data.data.order.type === 2)) && menuPermissions.edit"
+                                            (click)="fnOpenModal(data.data)" id="btnProductionDone{{i}}"
+                                            class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip"
+                                            data-placement="top" title="Packing"> <img src="assets/icon-md/c13.svg"
+                                                alt=""></a>
+
+                                        <a *ngIf="data.data.order.orderStatus === 23 && menuPermissions.edit"
+                                            (click)="fnOpenModal(data.data)" id="btnProductionDone{{i}}"
+                                            class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip"
+                                            data-placement="top" title="Production Done"> <img
+                                                src="assets/icon-md/c16.svg" alt=""></a>
+
+
+                                    </span>
+
+                                </div>
+                            </dx-data-grid>
+                        </div>
+                    </div>
+                    <!--End List-->
+                </div>
+                <!--End ibox-content-->
+            </div>
+            <!--End ibox-->
+        </div>
+        <!--End col-sm-12-->
+    </div>
+    <!--End row-->
+</div>
+<!--End Wrapper-->
+
+<app-alert #myModal (onCloseModalError)="onCloseModalError()" (onOkProductionModal)="onOkProduction()"
+    (onOkProductionDoneModal)="onOkProductionDone($event)" (onClickEditOrder)="onClickEditOrder()"></app-alert>

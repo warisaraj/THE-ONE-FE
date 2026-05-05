@@ -1,0 +1,63 @@
+
+<div id="full-menu" class="wrapper-menu  animated fadeInRight" *ngIf="sharedService.dataTypePage.type !== 'external'">
+  <div class="row" >
+    <div *ngFor="let item of menuMicroServices">
+      <div class="col-lg-12" *ngIf="!item.subMenuParentId" >
+        <div class="section-title">
+          <a class="title" style="cursor: no-drop;">
+            {{item.subMenuName}}
+            <span></span>
+          </a>
+        </div>
+        <div class="row">
+          <div class="flex-menu">
+            <div class="col-md-2 col-sm-4 col-xs-6" *ngFor="let items of item.submenus">
+              <div class="menu_full_box" *ngIf="items.newTap !== null">
+                <a *ngIf="items.newTap === 'iframe with out token'" [href]="bypassTrustUrlWithOutToken(items.url)"  (click)="itemClickMenu(items,item,$event,bypassTrustUrlWithOutToken2(items.url))" class="menu_link" >
+                  <div class="menu_inner">
+                    <div class="menu_icon">
+                      <div class="menu_favicon">
+                        <i class="{{items.menuIcon || 'fal fa-spinner fa-spin'}}"></i>
+                      </div>
+                    </div>
+                    <div class="menu_title_content" [title]="items.subMenuName">
+                      {{items.subMenuName}}
+                    </div>
+                  </div>
+                </a>
+                <a *ngIf="items.newTap !== 'iframe with out token'" [href]="bypassTrustUrl(items.url)"  (click)="itemClickMenu(items,item,$event,bypassTrustUrl2(items.url))" class="menu_link" >
+                  <div class="menu_inner">
+                    <div class="menu_icon">
+                      <div class="menu_favicon">
+                        <i class="{{items.menuIcon || 'fal fa-spinner fa-spin'}}"></i>
+                      </div>
+                    </div>
+                    <div class="menu_title_content" [title]="items.subMenuName">
+                      {{items.subMenuName}}
+                    </div>
+                  </div>
+                </a>
+
+              </div>
+              <!--internal-->
+              <div class="menu_full_box" *ngIf="items.newTap === null">
+                <a [routerLink]="[checkUrl(items.url)]" (click)="internal()" routerLinkActive="active" class="menu_link">
+                  <div class="menu_inner">
+                    <div class="menu_icon">
+                      <div class="menu_favicon">
+                        <i class="{{items.menuIcon || 'fal fa-cog fa-spin'}}"></i>
+                      </div>
+                    </div>
+                    <div class="menu_title_content" [title]="items.subMenuName">
+                        {{items.subMenuName}}
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

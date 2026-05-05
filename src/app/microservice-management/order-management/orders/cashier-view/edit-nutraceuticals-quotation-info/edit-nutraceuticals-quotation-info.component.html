@@ -1,0 +1,356 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-6 col-xs-12 align-self-center">
+        <h4 class="soc-title">Orders</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Order Management</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a (click)="onClickBack()">Orders</a>
+              </li>
+              <li class="breadcrumb-item active">
+                <span *ngIf="pageType == 'view'"> View Nutraceuticals Quotation Info </span>
+                <span *ngIf="pageType == 'edit'"> Edit Nutraceuticals Quotation Info </span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-6 col-xs-12 align-self-center text-right">
+        <button *ngIf="pageType != 'view'" (click)="fnSave()" id="btnSave" name="btnSave" class="btn btn-success float-xs-left mr-10" title="Save" [disabled]="disbledBtn.save">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button *ngIf="pageType == 'view' && menuPermissions.edit" id="btnPrint" name="btnPrint" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Print" printSectionId="print-section" ngxPrint styleSheetFile="assets/css/bootstrap.min.css,assets/css/customstyle.css,assets/css/customstyle-print.css">
+          <i class="fas fa-print"></i>
+          <span>Print</span>
+        </button>
+        <button *ngIf="pageType == 'view' && menuPermissions.edit && patientInfo.orderStatus !== 8" [routerLink]="['/order-management/orders-cashier-view','nutraceuticals-quotation-info', orderId ,'edit']" [queryParams]="{ orderStatus: orderStatusParam }" id="btnEditTop" name="btnEditTop" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit" [disabled]="disbledBtn.save">
+          <i class="fas fa-edit"></i><span>Edit</span>
+        </button>
+        <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text">Nutraceuticals Quotation<br>
+              <small *ngIf="pageType != 'view'">*Please enter data in the "Require Field" textbox.</small>
+            </h5>
+          </div>
+          <div class="ibox-body">
+            <div class="panel-body">
+              <!--Patient Info-->
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="ibox float-e-margins">
+                    <div class="ibox-content" style="border:0px;">
+                      <div style="background-color: #F9F7F2 !important; width: 100%;margin-bottom: 20px; padding: 20px;">
+                        <label style="font-size: 18px;"> Patient Info </label>
+                        <div class="hr-line-solid" style="margin-top: 10px !important; margin-bottom: 30px !important; color: #AE934F!important;">
+                        </div>
+                        <form class="form-horizontal" [formGroup]="editGroupForm">
+                          <!--HN-->
+                          <div class="form-group"><label class="col-sm-3 control-label">HN</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtHn" name="txtHn" maxlength="50" [(ngModel)]="patientInfo.hn" formControlName="txtHn">
+                            </div>
+                          </div>
+                          <!--Patient Name-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Patient Name</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtPatientName" name="txtPatientName" maxlength="255" [(ngModel)]="patientInfo.patientName" formControlName="txtPatientName">
+                            </div>
+                          </div>
+                          <!--Order Date-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Order Date</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtOrderDate" name="txtOrderDate" maxlength="255" [(ngModel)]="patientInfo.orderDate" formControlName="txtOrderDate">
+                            </div>
+                          </div>
+                          <!--Supply Day-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Supply Day</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtSupplyDay" name="txtSupplyDay" maxlength="255" [(ngModel)]="patientInfo.supplyDay" formControlName="txtSupplyDay">
+                            </div>
+                          </div>
+                          <!--Physician-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Physician</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtPhysician" name="txtPhysician" maxlength="255" [(ngModel)]="patientInfo.physician" formControlName="txtPhysician">
+                            </div>
+                          </div>
+                          <!--Plan-->
+                          <div *ngIf="patientInfo.location === 'Trakcare'" class="form-group"><label class="col-sm-3 control-label">Plan</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtPlan" name="txtPlan" maxlength="255" [(ngModel)]="patientInfo.plan" formControlName="txtPlan">
+                            </div>
+                          </div>
+                          <!--Tariff-->
+<!--                          <div class="form-group"><label class="col-sm-3 control-label">Tariff</label>-->
+<!--                            <div class="col-sm-4">-->
+<!--                              <input type="text" class="form-control" id="txtTariff" name="txtTariff" maxlength="255" [(ngModel)]="patientInfo.tariff" formControlName="txtTariff">-->
+<!--                            </div>-->
+<!--                          </div>-->
+                          <!-- Order Type-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Order Type</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtOrderType" name="txtOrderType" maxlength="255" [(ngModel)]="patientInfo.location" formControlName="txtOrderType">
+                            </div>
+                          </div>
+                          <!--Status-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Status</label>
+                            <div class="col-sm-4">
+                              <div class="select-wrapper">
+                                <select name="ddlStatus" id="ddlStatus" formControlName="ddlStatus" class="form-control" [(ngModel)]="patientInfo.orderStatus" (change)="fnChangeStatus()">
+                                  <option selected="selected" [value]="null">Please select</option>
+                                  <option *ngFor="let item of statusList" [value]="item.id">{{ item.name }}</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <!--Remind date-->
+                          <div class="form-group" *ngIf="showRemindDate()">
+                            <label class="col-sm-3 control-label">Remind date
+                              <span class="fontred" *ngIf="pageType != 'view'">*</span>
+                            </label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls['txtRemindDate'].valid&&editGroupForm.controls['txtRemindDate'].dirty,'col-sm-4':true}">
+                              <dx-date-box [openOnFieldClick]="true" [acceptCustomValue]="false" style="width: 100%;" id="txtRemindDate" class="form-control cus-datebox" type="date" [min]="currentDate" displayFormat="dd/MM/yyyy" [(ngModel)]="patientInfo.remindDate" formControlName="txtRemindDate"></dx-date-box>
+                            </div>
+                          </div>
+                          <!--Additional Note-->
+                          <div class="form-group" *ngIf="showAdditionalNote()">
+                            <label class="col-sm-3 control-label">Additional Note
+                              <span class="fontred" *ngIf="pageType != 'view'">*</span>
+                            </label>
+                            <div [ngClass]="{'has-error':!editGroupForm.controls['txtAdditionalNote'].valid&&editGroupForm.controls['txtAdditionalNote'].dirty,'col-sm-4':true}">
+                              <textarea class="form-control" id="txtAdditionalNote" name="txtAdditionalNote" formControlName="txtAdditionalNote" rows="3" placeholder="" style="resize: vertical" [(ngModel)]="patientInfo.additionalNote"></textarea>
+                            </div>
+                          </div>
+                          <div class="hr-line-dashed"></div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--Details-->
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="ibox float-e-margins">
+                    <div class="ibox-content" style="border:0px;">
+                      <div style="background-color: #F9F7F2 !important; width: 100%;margin-bottom: 20px; padding: 20px;">
+                        <label style="font-size: 18px;"> Details </label>
+                        <div class="hr-line-solid" style="margin-top: 10px !important; margin-bottom: 30px !important; color: #AE934F!important;">
+                        </div>
+                        <table id="tblDetails" class="table table-bordered table-striped">
+                          <thead>
+                            <tr>
+                              <th class="text-center" style="width: auto;">Description</th>
+                              <th class="text-center" style="width: 10%;">Quantity</th>
+                              <th class="text-center" style="width: 10%;">UOM</th>
+                              <th class="text-center" style="width: 20%;">Unit Price</th>
+                              <th class="text-center" style="width: 20%;">Amount</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr *ngFor="let detail of detailList; let i = index;" [ngClass]="{'text-center': true, 'hide': detailList.length === 0}">
+                              <td class="text-center">
+                                <input type="text" class="form-control" id="txtDescription{{i}}" name="txtDescription{{i}}" [ngModel]="detail.name" disabled>
+                              </td>
+                              <td class="text-center">
+                                <input type="text" class="form-control text-center" id="txtQuantity{{i}}" name="txtQuantity{{i}}" [ngModel]="detail.quantity" disabled>
+                              </td>
+                              <td class="text-center">
+                                <input type="text" class="form-control text-center" id="txtUOM{{i}}" name="txtUOM{{i}}" [ngModel]="detail.uom" disabled>
+                              </td>
+                              <td class="text-center">
+                                <input type="text" class="form-control text-right" id="txtUnitPrice{{i}}" name="txtUnitPrice{{i}}" [ngModel]="detail.unitPrice | number:'1.2-2'" disabled>
+                              </td>
+                              <td class="text-center">
+                                <input type="text" class="form-control text-right" id="txtAmount{{i}}" name="txtAmount{{i}}" [ngModel]="detail.amount | number:'1.2-2'" disabled>
+                              </td>
+                            </tr>
+                            <tr [ngClass]="{'hide': detailList.length === 0}">
+                              <td colspan="4" class="text-right font-bold">
+                                Total Amount
+                              </td>
+                              <td>
+                                <input type="text" class="form-control text-right" id="txtSummary" name="txtSummary" [ngModel]="summary | number:'1.2-2'" disabled>
+                              </td>
+                            </tr>
+                            <tr [ngClass]="{'hide': detailList.length > 0}">
+                              <td colspan="6" class="text-center">
+                                No Data
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer no-bg">
+            <div class="ibox-footer-right">
+              <button *ngIf="pageType != 'view'" (click)="fnSave()" id="btnSave" name="btnSave" class="btn btn-success float-xs-left mr-10" title="Save" [disabled]="disbledBtn.save">
+                <i class="fas fa-save"></i><span>Save</span>
+              </button>
+              <button *ngIf="pageType == 'view' && menuPermissions.edit" id="btnPrint" name="btnPrint" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Print" printSectionId="print-section" ngxPrint styleSheetFile="assets/css/bootstrap.min.css,assets/css/customstyle.css,assets/css/customstyle-print.css">
+                <i class="fas fa-print"></i>
+                <span>Print</span>
+              </button>
+              <button *ngIf="pageType == 'view' && menuPermissions.edit && patientInfo.orderStatus !== 8" [routerLink]="['/order-management/orders-cashier-view','nutraceuticals-quotation-info', orderId ,'edit']" [queryParams]="{ orderStatus: orderStatusParam }" id="btnEditTop" name="btnEditTop" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top" title="Edit" [disabled]="disbledBtn.save">
+                <i class="fas fa-edit"></i><span>Edit</span>
+              </button>
+              <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                <i class="fal fa-times"></i><span>Cancel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()" (onCloseModalWarning)="onCloseModalWarning()" (onClickEditOrder)="onClickEditOrder()" (onCloseEditOrder)="onCloseEditOrder()"></app-alert>
+
+<div id="print-section" style="display: none;">
+  <!-- <table style="width: 100%;font-size: 10pt;">
+    <tr>
+      <td style="width: 30%;">
+        <img src="assets/VTL Supplement Logo.png" alt="Logo" style="height: 56px;"><br>
+        <p class="text-print-logo">Nutraceuticals Quotation</p>
+      </td>
+      <td>
+        <div class="text-print-title font-bold text-right">Name :</div>
+        <div class="text-print-title font-bold text-right">HN :</div>
+        <div class="text-print-title font-bold text-right">Date Order :</div>
+        <div class="text-print-title font-bold text-right">Supply Day :</div>
+        <div class="text-print-title font-bold text-right">Physician :</div>
+      </td>
+      <td>
+        <div class="text-print">&nbsp;{{patientInfo.patientName||'-'}}</div>
+        <div class="text-print">&nbsp;{{patientInfo.hn||'-'}}</div>
+        <div class="text-print">&nbsp;{{patientInfo.orderDate||'-'}}</div>
+        <div class="text-print">&nbsp;{{patientInfo.supplyDay||'-'}}</div>
+        <div class="text-print">&nbsp;{{patientInfo.physician||'-'}}</div>
+      </td>
+    </tr>
+  </table>
+  <br> -->
+  <table class="table">
+    <thead>
+      <tr>
+        <th  colspan="7">
+          <table style="width: 100%;font-size: 10pt;">
+            <tr>
+              <td style="width: 30%;">
+                <img src="assets/VTL-2T.png" alt="Logo" style="height: 56px;"><br>
+                <p class="text-print-logo">Nutraceuticals Quotation</p>
+              </td>
+              <td>
+                <div class="text-print-title font-bold text-right">Name :</div>
+                <div class="text-print-title font-bold text-right">HN :</div>
+                <div class="text-print-title font-bold text-right">Date Order :</div>
+                <div class="text-print-title font-bold text-right">Supply Day :</div>
+                <div class="text-print-title font-bold text-right">Physician :</div>
+              </td>
+              <td>
+                <div class="text-print">&nbsp;{{patientInfo.patientName||'-'}}</div>
+                <div class="text-print">&nbsp;{{patientInfo.hn||'-'}}</div>
+                <div class="text-print">&nbsp;{{patientInfo.orderDate||'-'}}</div>
+                <div class="text-print">&nbsp;{{patientInfo.supplyDay||'-'}}</div>
+                <div class="text-print">&nbsp;{{patientInfo.physician||'-'}}</div>
+              </td>
+            </tr>
+          </table>
+          <br>
+        </th>
+      </tr>
+      <tr>
+        <th class="text-print-title border-th text-center" style="width: 5%;">No</th>
+        <th class="text-print-title border-th text-left" style="width: auto;">Description</th>
+        <th class="text-print-title border-th text-center" style="width: 10%;">Quantity</th>
+        <th class="text-print-title border-th text-center" style="width: 10%;">UOM</th>
+        <th class="text-print-title border-th text-right" style="width: 20%;">Unit Price</th>
+        <th class="text-print-title border-th text-right" style="width: 20%;">Amount (Baht)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let detail of detailList; let i = index;" [ngClass]="{'text-center': true}">
+        <td class="text-center">
+          <span class="text-print">{{i + 1}}</span>
+        </td>
+        <td class="text-center">
+          <input type="text" class="text-print text-left no-borders pl-0 pr-0" style="width: 100%;" [ngModel]="detail.name" disabled>
+        </td>
+        <td class="text-center">
+          <input type="text" class="text-print text-center no-borders pl-0 pr-0" style="width: 100%;" [ngModel]="detail.quantity" disabled>
+        </td>
+        <td class="text-center">
+          <input type="text" class="text-print text-center no-borders pl-0 pr-0" style="width: 100%;" [value]="detail.uom || '-'" disabled>
+        </td>
+        <td class="text-center">
+          <input type="text" class="text-print text-right no-borders pl-0 pr-0" style="width: 100%;" [ngModel]="detail.unitPrice | number:'1.2-2'" disabled>
+        </td>
+        <td class="text-center">
+          <input type="text" class="text-print text-right no-borders pl-0 pr-0" style="width: 100%;" [ngModel]="detail.amount | number:'1.2-2'" disabled>
+        </td>
+      </tr>
+    <!-- </tbody>
+    <tbody> -->
+      <tr *ngFor="let detail of lineData();" [ngClass]="{'hide': detailList.length === 0}">
+        <td colspan="7">&nbsp;</td>
+      </tr>
+      <tr [ngClass]="{'hide': detailList.length === 0}">
+        <td colspan="2"></td>
+        <td colspan="3" class="text-right font-bold" style="border-left: 1px solid;border-bottom: 1px solid;border-top: 2px solid;">
+          จำนวนเงินรวม (Total Amount) :
+        </td>
+        <td style="border-right: 1px solid;border-bottom: 1px solid;border-top: 2px solid;">
+          <input type="text" class="text-right font-bold no-borders pl-0 pr-0" style="width: 100%;" [ngModel]="summary | number:'1.2-2'" disabled>
+        </td>
+      </tr>
+      <tr [ngClass]="{'hide': detailList.length === 0}">
+        <td colspan="2"></td>
+        <td colspan="3" class="text-right font-bold" style="border-left: 1px solid;border-bottom: 1px solid;border-top: 1px solid;">
+          Discount by Percentage :
+        </td>
+        <td style="border-right: 1px solid;border-bottom: 1px solid;border-top: 1px solid;">
+
+        </td>
+      </tr>
+      <tr [ngClass]="{'hide': detailList.length === 0}">
+        <td colspan="2"></td>
+        <td colspan="3" class="text-right font-bold" style="border-left: 1px solid;border-bottom: 1px solid;border-top: 1px solid;">
+          Total Net Amount :
+        </td>
+        <td style="border-right: 1px solid;border-bottom: 1px solid;border-top: 1px solid;">
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,14 @@
+{
+  "apps" : [{
+    "name"        : "vitallife-fe",
+    "script"      : "./server.js",
+    "watch"       : false,
+    "time"        : true,
+    "cwd"         : "./",
+    "env": {
+      "FE_PORT": 8500,
+      "BE_TARGET": "http://10.1.2.145:8501",
+      "SSL": false
+    }
+  }]
+}

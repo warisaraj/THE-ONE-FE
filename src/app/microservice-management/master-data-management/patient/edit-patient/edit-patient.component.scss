@@ -1,0 +1,55 @@
+.form-control.dx-numberbox {
+  border: 1px solid #8A998D !important;
+  border-radius: 5px !important;
+  width: 100% !important;
+}
+
+.custom-ibox {
+  background: #F9F7F2;
+
+  .ibox-title-text {
+    font-weight: 700 !important;
+  }
+
+  .ibox-heading {
+    border-bottom: 1px solid #AE934F !important;
+  }
+
+  .far.fa-chevron-down,
+  .far.fa-chevron-up {
+    color: #AE934F;
+    font-weight: 700;
+  }
+}
+
+
+::ng-deep #chkFavorite .dx-checkbox-icon {
+  height: 34px;
+  width: 34px;
+}
+
+::ng-deep #chkFavorite.dx-checkbox-checked .dx-checkbox-icon {
+  &::before {
+    color :#8A998D;
+    background-color: #8A998D;
+    position: absolute;
+    display: block;
+    width: 26px;
+    height: 26px;
+    top: 11px;
+    left: 11px;
+  }
+}
+
+::ng-deep #chkFavorite.dx-checkbox-indeterminate .dx-checkbox-icon {
+  &::before {
+    color :#8A998D;
+    background-color: #8A998D;
+    position: absolute;
+    display: block;
+    width: 26px;
+    height: 26px;
+    top: 10px;
+    left: 10px;
+  }
+}

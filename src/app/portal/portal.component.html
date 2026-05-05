@@ -1,0 +1,39 @@
+<div class="layout-wrapper bgmenu1 " id="wrapper" [ngClass]="{'layout-menu-slim': slimMenu,
+                'layout-menu-overlay': overlayMenu,
+                'layout-menu-static': staticMenu,
+                'layout-menu-static-inactive': staticMenuInactive,
+                'layout-menu-overlay-active': overlayMenuActive,
+                'layout-menu-active': mobileMenuActive}">
+  <app-menu></app-menu>
+  <div id="page-wrapper" class="gray-bg">
+    <app-header></app-header>
+    <div class="page-wrapper layout-wrapper content-wrapper" id="wrapper" [ngClass]="{'layout-menu-slim': slimMenu,
+                'layout-menu-overlay': overlayMenu,
+                'layout-menu-static': staticMenu,
+                'layout-menu-static-inactive': staticMenuInactive,
+                'layout-menu-overlay-active': overlayMenuActive,
+                'layout-menu-active': mobileMenuActive}">
+      <div class="main-wrapper clearfix" id="main-wrapper"
+           [ngClass]="{'main-wrapper-external': dataTypePage.type === 'external'}">
+        <div class="row" style="width: 50%" *ngIf="loading">
+          <div class="spiner-example">
+            <div class="sk-spinner sk-spinner-double-bounce">
+              <div class="sk-double-bounce1"></div>
+              <div class="sk-double-bounce2"></div>
+            </div>
+          </div>
+        </div>
+        <h2 *ngIf="dataMenu && dataMenu.length === 0" class="text-center"
+            style="color: #909090;font-weight: 600;font-size:  20px;left: 0;line-height: 200px;margin: auto;margin-top: -100px;position: absolute;top: 50%;width: 100%;">
+          You are not authorized to access this page. Please contact administrator.</h2>
+        <router-outlet></router-outlet>
+        <div [hidden]="!(dataMenu && dataMenu.length > 0 && dataTypePage.type === 'external')">
+          <iframe id="iframe-id"
+                  name="iframe-id" class="iframe-id iframe-box" scrolling="yes" frameBorder="0" src=""></iframe>
+        </div>
+      </div>
+    </div>
+    <div class="layout-mask" *ngIf="mobileMenuActive"></div>
+    <app-footer></app-footer>
+  </div>
+</div>

@@ -1,0 +1,72 @@
+.form-control.dx-numberbox{
+  border: 1px solid #8A998D !important;
+  border-radius: 5px !important;
+  width: 100% !important;
+}
+
+.navbar {
+  margin-bottom: 0px;
+}
+
+.nav>li>a {
+  margin-bottom: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.nav>li>a>span {
+  font-size: 16px;
+}
+
+.nav>li>a>span .sub-label {
+  font-size: 12px;
+}
+
+.nav>li {
+  background-color: #F9F7F2;
+  &:hover, &:focus, &:active, &:active:hover {
+    background-color: #FFF;
+    outline: none;
+  }
+}
+
+.nav>li.active {
+  border-left: none;
+  background-color: #FFF;
+}
+
+.nav>li.active>a {
+  background-color: #FFF;
+}
+
+.custom-ibox{
+  background: #F9F7F2;
+  .ibox-title-text{
+    font-weight: 700 !important;
+  }
+  .ibox-heading{
+    border-bottom: 1px solid #AE934F !important;
+  }
+  .far.fa-chevron-down,.far.fa-chevron-up{
+    color:#AE934F;
+    font-weight: 700;
+  }
+}
+
+@media (min-width: 820px) {
+  #labelPrint {
+    text-align: left !important;
+    padding-left: 0px !important;
+  }
+}
+@media (max-width: 820px) {
+  #labelPrint {
+
+    text-align:center !important;
+    padding-left: 25px !important;
+  }
+}
+
+.dx-checkbox.dx-state-readonly .dx-checkbox-icon {
+  background-color: #EFEFEF !important;
+}

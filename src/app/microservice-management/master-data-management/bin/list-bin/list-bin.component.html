@@ -1,0 +1,157 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">BIN</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Master Data Management</a>
+              </li>
+              <li class="breadcrumb-item active">
+                BIN
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-12 align-self-center text-right fix-bt">
+        <button *ngIf="menuPermissions.add" id="btnDownloadTemplate" style="padding: 5px 10px !important;" name="btnDownloadTemplate" class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Download Template" (click)="fnDownloadTemplate()">
+          <img src="assets/icon-md/c4.svg" alt="">
+        </button>
+        <button *ngIf="menuPermissions.add" id="btnUploadTemplate" style="padding: 5px 10px 5px 5px !important;" name="btnUploadTemplate" class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Import">
+          <label style="margin-bottom:0 !important">
+            <img src="assets/icon-md/c5.svg" alt="">
+            <input type="file" id="file" style="display: none" name="image" accept=".xlsx" multiple="false" (change)="onFileChange($event,0,'add')">
+          </label>
+        </button>
+        <button *ngIf="menuPermissions.add" [routerLink]="['/master-data-management','bin', 'new']" id="btnCreateNewGroup" name="btnCreateNewGroup" class="btn btn-success float-xs-left " data-toggle="tooltip" data-placement="top" title="Create BIN">
+          <i class="fal fa-plus"></i><span>Create BIN</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="ibox">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text"><i class="fas fa-filter"></i>Filter</h5>
+            <div class="ibox-graph-info collapse-link" #collapseLink (click)="clickCollapse()">
+              <i class="far fa-chevron-down"></i>
+            </div>
+          </div>
+          <div class="ibox-body">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="panel-body">
+                  <form method="get" class="form-horizontal">
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">BIN name</label>
+                      <div class="col-sm-3"><input id="txtMicroserviceName" name="txtMicroserviceName" maxlength="50" type="text" class="form-control" [(ngModel)]="txtInputSearch"></div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer">
+            <div class="ibox-footer-right">
+              <button title="Search" (click)="clickSearch()" class="btn btn-success btn-md mr-10" *ngIf="menuPermissions.view">
+                <span>Search</span>
+              </button>
+              <button title="Clear" (click)="clickClear()" class="btn btn-default btn-md" *ngIf="menuPermissions.view">
+                <span>Clear</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading-total">
+            <h5 class="ibox-title-text">{{textTotal}}</h5>
+            <div>
+              <button (click)="onClickExport()" class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top" title="Export" *ngIf="menuPermissions.view">
+                Export
+              </button>
+            </div>
+          </div>
+          <div class="ibox-body">
+            <!--[selectedRowKeys]="selectRowKeyId" (onInitialized)="onInitialized($event)" (onSelectionChanged)="selectRow($event)"-->
+            <div class="table-responsive table-wrapper">
+              <dx-data-grid #gridMicroservices id="gridMicroservices" [(dataSource)]="dataMicroservices" showBorders="false" [hoverStateEnabled]="true" noDataText="No data" [rowAlternationEnabled]="true" [columnAutoWidth]="true" [allowColumnResizing]="true" (onCellPrepared)="onCellPrepared($event)" class="card-list-table" (onOptionChanged)="changePageIndex($event)">
+                <dxo-load-panel [enabled]="true"></dxo-load-panel>
+                <dxo-paging [pageSize]="dxgridPageSize" [pageIndex]="pageIndex"></dxo-paging>
+                <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="allowedPageSizes" [showInfo]="false" [visible]="true" [showNavigationButtons]="true">
+                </dxo-pager>
+                <dxo-scrolling showScrollbar="onHover"></dxo-scrolling>
+                <dxo-selection mode="single"></dxo-selection>
+                <dxo-remote-operations [sorting]="true" [paging]="true">
+                </dxo-remote-operations>
+
+                <!--<dxi-column dataField="no" dataType="number" caption="No." alignment="left" width="10%"></dxi-column>-->
+                <dxi-column caption="No" cellTemplate="cellTemplateNo" [allowSorting]="false" [width]="50" alignment="center"></dxi-column>
+                <div *dxTemplate="let data of 'cellTemplateNo'" style="text-align: center;" title="{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}">
+                  <span>{{ data.component.pageIndex() * data.component.pageSize() + data.rowIndex + 1 }}</span>
+                </div>
+
+                <dxi-column dataField="binName" dataType="string" caption="BIN Name" width="38%"></dxi-column>
+                <dxi-column dataField="rawMaterialName" dataType="string" caption="Raw Material Name" width="40%" calculateSortValue="rawMaterialName"></dxi-column>
+                <dxi-column dataField="updatedAt" caption="Updated At" sortOrder="desc" cssClass="wrapped-column" [width]="155" alignment="center"></dxi-column>
+                <dxi-column dataField="" dataType="string" caption="Action" cellTemplate="cellTemplateViewGroups" [width]="155" alignment="center"></dxi-column>
+
+                <div *dxTemplate="let data of 'cellTemplateViewGroups';let i=index;">
+
+                  <!-- <a [routerLink]="['/master-data-management/bin', data.data.id ,'view']"  id="btnView{{i}}" class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip" data-placement="top" title="View"><i class="fas fa-eye"></i></a> -->
+                  <!-- <span *ngIf="!data.data.isDisbled"> -->
+                  <span>
+                    <a *ngIf="menuPermissions.view" [routerLink]="['/master-data-management/bin', data.data.binId ,'history']" id="btnView{{i}}" class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip" data-placement="top" title="View"><img src="assets/icon-md/c6.svg" alt=""></a>
+                    <a *ngIf="menuPermissions.edit && data.data.rawMaterials.length === 0" [routerLink]="['/master-data-management/bin', data.data.binId ,'edit']" id="btnEdit{{i}}" class="btn btn-default icon btn-sm mr-5" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fas fa-edit"></i></a>
+                    <a *ngIf="menuPermissions.delete && data.data.rawMaterials.length === 0" (click)="confirmDelete(data.data.binId)" id="btnDelete{{i}}" class="btn btn-default icon btn-sm" data-toggle="modal" data-target="#myModal88" data-placement="top" title="Delete"><i class="fas fa-trash"></i></a>
+                  </span>
+                  <!-- <span *ngIf="data.data.isDisbled">
+                      <a  *ngIf="menuPermissions.edit" class="btn btn-default icon btn-sm mr-5 disabled" disabled><i class="fas fa-edit"></i></a>
+                      <a  *ngIf="menuPermissions.delete" class="btn btn-default icon btn-sm disabled" disabled><i class="fas fa-trash"></i></a>
+                    </span> -->
+
+                </div>
+              </dx-data-grid>
+            </div>
+          </div>
+          <!--End List-->
+        </div>
+        <!--End ibox-content-->
+      </div>
+      <!--End ibox-->
+    </div>
+    <!--End col-sm-12-->
+  </div>
+  <!--End row-->
+</div>
+<!--End Wrapper-->
+
+<app-alert #myModal (onOkDelete)="onOkDelete()" (onCancelDelete)="onCancelDelete()" (onCloseModalError)="onCloseModalError()" (onDownload)="ondDownload()"></app-alert>
+
+<dx-load-panel shadingColor="rgba(0,0,0,0.4)" [(visible)]="isLoadingPanel" [showIndicator]="true" [showPane]="true"
+               [shading]="true">
+</dx-load-panel>

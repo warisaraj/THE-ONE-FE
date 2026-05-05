@@ -1,0 +1,476 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">Orders</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Order Management</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a (click)="onClickBack()">Orders</a>
+              </li>
+              <li class="breadcrumb-item active">
+                <span *ngIf="pageType == 'view'"> View Order Info </span>
+                <span *ngIf="pageType == 'edit'"> Edit Order Info </span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-12 align-self-center text-right">
+        <button *ngIf="pageType != 'view' " (click)="btnSubmit()" id="btnSaveTop" name="btnSaveTop"
+          class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal"
+          data-placement="top" title="Save" [disabled]="disbledBtn.save">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button *ngIf="pageType == 'view' && menuPermissions.edit "
+          [routerLink]="['/order-management','orders-customer-service-view', Id ,'edit']" id="btnEditTop"
+          name="btnEditTop" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top"
+          title="Edit" [disabled]="disbledBtn.save">
+          <i class="fas fa-edit"></i><span>Edit</span>
+        </button>
+        <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right"
+          data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;"
+          [disabled]="disbledBtn.cancel">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text">Delivery Info</h5>
+          </div>
+          <div class="ibox-body">
+            <div id="tab-1" class="tab-pane active">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="ibox float-e-margins">
+                      <div class="ibox-content" style="border:0px;">
+
+                        <div class="row" id="divPatientInfo">
+                          <div class="col-lg-12">
+                            <div class="ibox">
+                              <div class="custom-ibox">
+                                <div class="ibox-heading">
+                                  <h5 class="ibox-title-text">Patient Info</h5>
+                                </div>
+                                <div class="ibox-body">
+                                  <div class="row" style="padding:20px;">
+                                    <form class="form-horizontal" [formGroup]="editGroupForm">
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">HN</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtHn" name="txtHn" maxlength="50"
+                                            [(ngModel)]="editDataGroups.order.hn" formControlName="txtHn">
+                                        </div>
+                                      </div>
+                                      <div class="form-group"><label class="col-sm-3 control-label">Patient Name</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtPatientNameTh"
+                                            name="txtPatientNameTh" maxlength="255"
+                                            [(ngModel)]="editDataGroups.order.patientName"
+                                            formControlName="txtPatientNameTh">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">Phone</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtPhone" name="txtPhone"
+                                            maxlength="255" [(ngModel)]="editDataGroups.order.phone"
+                                            formControlName="txtPhone">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">Address</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtOtherAdress"
+                                            name="txtOtherAdress" maxlength="255"
+                                            [(ngModel)]="editDataGroups.order.address" formControlName="txtOtherAdress">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label
+                                          class="col-sm-3 control-label">District/Province</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtdistrictProvince"
+                                            name="txtdistrictProvince" maxlength="255"
+                                            [(ngModel)]="editDataGroups.order.districtProvince"
+                                            formControlName="txtProvince">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">Postcode</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtPostcode" name="txtPostcode"
+                                            maxlength="255" [(ngModel)]="editDataGroups.order.postcode"
+                                            formControlName="txtPostcode">
+                                        </div>
+                                      </div>
+
+                                      <!-- <div class="form-group"><label class="col-sm-3 control-label">Contact Person</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtContactPerson" name="txtContactPerson"
+                                            maxlength="255" [(ngModel)]="editDataGroups.order.contactPerson"
+                                            formControlName="txtContactPerson">
+                                        </div>
+                                      </div> -->
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">Item</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtItem" name="txtItem"
+                                            maxlength="255" [(ngModel)]="editDataGroups.order.item"
+                                            formControlName="txtItem">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">Status <span
+                                            class="fontred">*</span></label>
+                                        <div
+                                          [ngClass]="{'has-error':!editGroupForm.controls.txtStatus.valid&&editGroupForm.controls.txtStatus.dirty,'col-sm-4':true}">
+                                          <div class="select-wrapper">
+                                            <select name="txtStatus" id="txtStatus" formControlName="txtStatus"
+                                              class="form-control " [(ngModel)]="editDataGroups.status"
+                                              (change)="fnChangeStatus()">
+                                              <option [value]="''">Please select</option>
+                                              <option *ngFor="let item of statusList" [value]="item">{{ item }}</option>
+                                            </select>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div *ngIf="pageType == 'edit' && reasonRequired" class="form-group"><label
+                                          class="col-sm-3 control-label">Reason <span class="fontred">*</span></label>
+                                        <div
+                                          [ngClass]="{'has-error':!editGroupForm.controls.txtReason.valid&&editGroupForm.controls.txtReason.dirty,'col-sm-4':true}">
+                                          <textarea class="form-control" id="txtReason" name="txtReason" rows="3"
+                                            formControlName="txtReason" placeholder="" style="resize: vertical"
+                                            [(ngModel)]="editDataGroups.csReason"></textarea>
+                                        </div>
+                                      </div>
+
+                                      <div *ngIf="pageType == 'view' || (pageType == 'edit' && !reasonRequired)"
+                                        class="form-group"><label class="col-sm-3 control-label">Reason</label>
+                                        <div class="col-sm-4">
+                                          <textarea class="form-control" id="txtReason" name="txtReason" rows="3"
+                                            formControlName="txtReason" placeholder="" style="resize: vertical"
+                                            [(ngModel)]="editDataGroups.csReason"></textarea>
+                                        </div>
+                                      </div>
+
+                                      <!-- Picture -->
+                                      <div class="form-group"
+                                        *ngIf="editDataGroups.deliveryPicture.length || pageType == 'edit'">
+                                        <label class="col-sm-3 control-label" style="padding-top: 0px;">
+                                          Picture
+                                          <div *ngIf="pageType == 'edit'" class="tooltip-i tooltip-white"
+                                            style="margin-left:7px;">
+                                            <img src="assets/remark-icon.png" width="16px" height="16px" alt="">
+                                            <span class="tooltiptext" style="width: 150px;text-align: left !important;">
+                                              <ul>
+                                                <li>Max. 5 files</li>
+                                                <li>Max. 1MB/pic</li>
+                                              </ul>
+                                            </span>
+                                          </div>
+                                        </label>
+
+                                        <div *ngFor="let item of editDataGroups.deliveryPicture; let i = index"
+                                          [ngClass]="{
+                                            'col-sm-2': true,
+                                            'col-sm-offset-3': i === 4  
+                                          }">
+                                          <div style="margin-top:10px;">
+                                            <div class="picture-preview">
+                                              <div *ngIf="pageType == 'edit'" class="delete-icon"
+                                                (click)="removePicture(i)">
+                                                <img src="assets/icon-md/Vector.png" alt="Delete Icon" />
+                                              </div>
+                                              <img [attr.src]="item | resolveImageUrl" alt="" (click)="popupImg(item)" />
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group" style="text-align: right;">
+                                        <div class="col-sm-7" *ngIf="pageType == 'edit'">
+                                          <button class="btn btn-success float-xs-right" data-toggle="tooltip"
+                                            data-placement="top" title="Upload" style="margin-left: 3px;"
+                                            (click)="triggerFileInput()">
+                                            Upload
+                                          </button>
+                                        </div>
+                                      </div>
+
+                                      <input type="file" #fileInput style="display: none" accept="image/*" multiple
+                                        (change)="upload($event)" />
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="row" id="deliveryDetail">
+                          <div class="col-lg-12">
+                            <div class="ibox">
+                              <div class="custom-ibox">
+                                <div class="ibox-heading">
+                                  <h5 class="ibox-title-text">Delivery Detail</h5>
+                                  <div style="float: right;">
+                                    <button id="btnPrintDeliveryForm" data-toggle="tooltip"
+                                      (click)="fnClickPrintDocument('deliveryForm')" data-placement="top"
+                                      title="Print Delivery Form"
+                                      style="padding: 5px 10px !important; color :#FFFFFF !important;" name="btnExport"
+                                      class="btn btn-success float-xs-left">
+                                      <i style="margin-right : 0 !important; font-size: 22px; "
+                                        class="fas fa-print"></i>
+                                    </button>
+                                    <button id="btnPrintEms" data-toggle="tooltip"
+                                      (click)="fnClickPrintDocument('deliveryDetail')" data-placement="top"
+                                      title="Print EMS" style="padding: 5px 10px !important; color :#FFFFFF !important;"
+                                      name="btnExport" class="btn btn-success float-xs-left">
+                                      <span>EMS</span>
+                                    </button>
+                                  </div>
+                                </div>
+                                <div class="ibox-body">
+                                  <div class="row" style="padding:20px;">
+                                    <form class="form-horizontal">
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">Recipient
+                                          Name</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtHn" name="txtHn" maxlength="50"
+                                            [(ngModel)]="editDataGroups.recipientName" disabled="true">
+                                        </div>
+                                      </div>
+                                      <div class="form-group"><label class="col-sm-3 control-label">Phone</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtPhone" name="txtPhone"
+                                            maxlength="255" [(ngModel)]="editDataGroups.phone" disabled="true">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">Address</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtAddress" name="txtAddress"
+                                            maxlength="255" [(ngModel)]="editDataGroups.address" disabled="true">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">Adress
+                                          Detail</label>
+                                        <div class="col-sm-4">
+                                          <textarea class="form-control" id="txtOtherAdress" name="txtOtherAdress"
+                                            rows="3" placeholder="" style="resize: vertical" disabled="true"
+                                            [(ngModel)]="editDataGroups.otherAddress"></textarea>
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label
+                                          class="col-sm-3 control-label">District/Province</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtProvince" name="txtProvince"
+                                            maxlength="255" [(ngModel)]="editDataGroups.districtProvince"
+                                            disabled="true">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">Postcode</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtPostcode" name="txtPostcode"
+                                            maxlength="255" [(ngModel)]="editDataGroups.postcode" disabled="true">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">Delivery
+                                          Date</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtDeliveryDate"
+                                            name="txtDeliveryDate" maxlength="255"
+                                            [(ngModel)]="editDataGroups.deliveryDate" disabled="true">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">Arrival Time</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtArrivalTime"
+                                            name="txtArrivalTime" maxlength="255"
+                                            [(ngModel)]="editDataGroups.arrivalTime" disabled="true">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">Delivery
+                                          Method</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtDeliveryMethod"
+                                            name="txtDeliveryMethod" maxlength="255"
+                                            [(ngModel)]="editDataGroups.deliveryMethod" disabled="true">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group" *ngIf="editDataGroups.deliveryMethod === 'Other'">
+                                        <label class="col-sm-3 control-label">Delivery Method Other</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtDeliveryMethodOther"
+                                            name="txtDeliveryMethodOther" maxlength="255"
+                                            [(ngModel)]="editDataGroups.deliveryMethodOther" disabled="true">
+                                        </div>
+                                      </div>
+
+                                      <div *ngIf="editDataGroups.order.item !== 'Finished Product'" class="form-group">
+                                        <label class="col-sm-3 control-label">Packaging</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtPackaging" name="txtPackaging"
+                                            maxlength="255" [(ngModel)]="editDataGroups.packaging" disabled="true">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label
+                                          class="col-sm-3 control-label">Documentation</label>
+                                        <div class="col-sm-4">
+                                          <dx-check-box [(value)]="editDataGroups.isInvoice" text="Invoice"
+                                            [readOnly]="true" style="line-height: 1.35715; margin-top: 6px;">
+                                          </dx-check-box>
+                                          <div style="height: 20px;"></div>
+                                          <dx-check-box [(value)]="editDataGroups.isReceipt" text="Receipt"
+                                            [readOnly]="true" style="line-height: 1.35715;">
+                                          </dx-check-box>
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">Cashier Name</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtCashierName"
+                                            name="txtCashierName" maxlength="255"
+                                            [(ngModel)]="editDataGroups.cashierName" disabled="true">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">Status</label>
+                                        <div class="col-sm-4">
+                                          <input type="text" class="form-control" id="txtStatus" name="txtStatus"
+                                            maxlength="255" [(ngModel)]="editDataGroups.deliveryStatus" disabled="true">
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group"><label class="col-sm-3 control-label">Remark</label>
+                                        <div class="col-sm-4">
+                                          <textarea class="form-control" id="txtRemark" name="txtRemark" rows="3"
+                                            placeholder="" style="resize: vertical" disabled="true"
+                                            [(ngModel)]="editDataGroups.cashierDeliNote"></textarea>
+                                        </div>
+                                      </div>
+
+                                      <div class="form-group mt-20">
+                                        <label class="col-sm-3 control-label" style="margin-top: 7px;">Label</label>
+                                        <div class="col-sm-3">
+                                          <button id="btnPtintSmallLabel"
+                                            style="padding: 5px 10px !important; color :#FFFFFF !important;"
+                                            name="btnExport" class="btn btn-success float-xs-left" data-toggle="tooltip"
+                                            data-placement="top" title="Print Small Label"
+                                            (click)="fnClickPrintDocument('labelSmall')">
+                                            <i style="margin-right : 0 !important; font-size: 22px; "
+                                              class="fas fa-print"></i>
+                                          </button>
+                                          <label class="control-label" style="margin-top: 7px;">Small Label</label>
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                          <button id="btnPtintMediumLabel"
+                                            style="padding: 5px 10px !important; color :#FFFFFF !important;"
+                                            name="btnExport" class="btn btn-success float-xs-left" data-toggle="tooltip"
+                                            data-placement="top" title="Print Medium Label"
+                                            (click)="fnClickPrintDocument('labelMedium')">
+                                            <i style="margin-right : 0 !important; font-size: 22px; "
+                                              class="fas fa-print"></i>
+                                          </button>
+                                          <label class="control-label" style="margin-top: 7px;">Medium Label</label>
+                                        </div>
+
+                                        <div class="col-sm-3">
+                                          <button id="btnPtintLargeLabel"
+                                            style="padding: 5px 10px !important; color :#FFFFFF !important;"
+                                            name="btnExport" class="btn btn-success float-xs-left" data-toggle="tooltip"
+                                            data-placement="top" title="Print Large Label"
+                                            (click)="fnClickPrintDocument('labelLarge')">
+                                            <i style="margin-right : 0 !important; font-size: 22px; "
+                                              class="fas fa-print"></i>
+                                          </button>
+                                          <label class="control-label" style="margin-top: 7px;">Large Label</label>
+                                        </div>
+                                      </div>
+
+                                    </form>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer no-bg">
+            <div class="ibox-footer-right">
+              <button *ngIf="pageType != 'view' " (click)="btnSubmit()" id="btnSaveTop" name="btnSaveTop"
+                class="btn btn-success float-xs-left mr-10" data-target="#Modal-Savedsuccessfully" data-toggle="modal"
+                data-placement="top" title="Save" [disabled]="disbledBtn.save">
+                <i class="fas fa-save"></i><span>Save</span>
+              </button>
+              <button *ngIf="pageType == 'view' && menuPermissions.edit "
+                [routerLink]="['/order-management','orders-customer-service-view', Id ,'edit']" id="btnEditTop"
+                name="btnEditTop" class="btn btn-success float-xs-left mr-10" data-toggle="tooltip" data-placement="top"
+                title="Edit" [disabled]="disbledBtn.save">
+                <i class="fas fa-edit"></i><span>Edit</span>
+              </button>
+              <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop"
+                class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel"
+                style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                <i class="fal fa-times"></i><span>Cancel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<dx-popup [fullScreen]="true" [dragEnabled]="false" [showTitle]="true" [showCloseButton]="true"
+  [(visible)]="popupVisible">
+  <div *dxTemplate="let data of 'content'" class="text-center">
+    <img [src]="filePicture | resolveImageUrl" style="height:100%;" />
+  </div>
+</dx-popup>
+
+<app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()"
+  (onCloseModalWarning)="onCloseModalWarning()"></app-alert>
+
+<dx-load-panel shadingColor="rgba(0,0,0,0.4)" [(visible)]="isLoadingPanel" [showIndicator]="true" [showPane]="true"
+  [shading]="true">
+</dx-load-panel>

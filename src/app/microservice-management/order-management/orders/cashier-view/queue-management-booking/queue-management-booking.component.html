@@ -1,0 +1,622 @@
+<div class="row" style="width: 50%" *ngIf="loading">
+  <div class="spiner-example-detail">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-6 col-xs-12 align-self-center">
+        <h4 class="soc-title">Orders</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Order Management</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a (click)="onClickBack()">Orders</a>
+              </li>
+              <li class="breadcrumb-item active">
+                <span> Queue Management </span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-6 col-xs-12 align-self-center text-right">
+        <button *ngIf="pageType != 'view'" (click)="fnSave()" id="btnSave" name="btnSave"
+          class="btn btn-success float-xs-left mr-10" title="Save" [disabled]="disbledBtn.save || isChangeBookingMode">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right"
+          data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;"
+          [disabled]="disbledBtn.cancel">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text">Queue Management</h5>
+          </div>
+          <div class="ibox-body">
+            <div class="panel-body">
+              <!--Patient Info-->
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="ibox float-e-margins">
+                    <div class="ibox-content" style="border:0px;">
+                      <div
+                        style="background-color: #F9F7F2 !important; width: 100%;margin-bottom: 20px; padding: 20px;">
+                        <label style="font-size: 18px;"> Patient Info </label>
+                        <div class="hr-line-solid"
+                          style="margin-top: 10px !important; margin-bottom: 30px !important; color: #AE934F!important;">
+                        </div>
+                        <form class="form-horizontal" [formGroup]="patientInfoForm">
+                          <!--HN-->
+                          <div class="form-group"><label class="col-sm-3 control-label">HN</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtHn" name="txtHn" [ngModel]="patientInfo.hn"
+                                formControlName="txtHn">
+                            </div>
+                          </div>
+                          <!--Patient Name-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Patient Name</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtPatientName" name="txtPatientName"
+                                [ngModel]="patientInfo.patientName" formControlName="txtPatientName">
+                            </div>
+                          </div>
+                          <!--Phone-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Phone</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtPhone" name="txtPhone"
+                                [ngModel]="patientInfo.phone" formControlName="txtPhone" maxlength="255">
+                            </div>
+                          </div>
+                          <!--Address-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">Address</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtAddress" name="txtAddress"
+                                [ngModel]="patientInfo.address" formControlName="txtAddress">
+                              <!-- <textarea class="form-control" id="txtAddress" name="txtAddress" -->
+                              <!--           formControlName="txtAddress" rows="3" -->
+                              <!--           [ngModel]="patientInfo.address" style="resize: vertical"></textarea> -->
+                            </div>
+                          </div>
+                          <!--District/Province-->
+                          <div class="form-group"><label class="col-sm-3 control-label">District/Province</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtDistrictProvince"
+                                name="txtDistrictProvince" [ngModel]="patientInfo.districtProvince"
+                                formControlName="txtDistrictProvince">
+                            </div>
+                          </div>
+                          <!--Postcode-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Postcode</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtPostcode" name="txtPostcode"
+                                [ngModel]="patientInfo.postcode" formControlName="txtPostcode">
+                            </div>
+                          </div>
+                          <!--Contact Person-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Contact Person</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtContactPerson" name="txtContactPerson"
+                                [ngModel]="patientInfo.contactPerson" formControlName="txtContactPerson">
+                            </div>
+                          </div>
+                          <!--Item-->
+                          <!-- <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Item
+                              <span class="fontred">*</span>
+                            </label>
+                            <div [ngClass]="{'has-error':!patientInfoForm.controls.ddlItem.valid&&patientInfoForm.controls.ddlItem.dirty,'col-sm-4':true}">
+                              <select name="ddlItem" id="ddlItem" formControlName="ddlItem" class="form-control" [(ngModel)]="patientInfo.item">
+                                <option selected="selected" [value]="null">Please select</option>
+                                <option *ngFor="let item of patientItemList" [value]="item.id">{{ item.name }}</option>
+                              </select>
+                            </div>
+                          </div> -->
+                          <!--Plan-->
+                          <div *ngIf="patientInfo.location === 1" class="form-group"><label
+                              class="col-sm-3 control-label">Plan</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtPlan" name="txtPlan"
+                                [ngModel]="patientInfo.plan" formControlName="txtPlan">
+                            </div>
+                          </div>
+                          <!--Item-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Item</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtItem" name="txtItem" maxlength="255"
+                                [(ngModel)]="patientInfo.item" formControlName="txtItem">
+                            </div>
+                          </div>
+                          <div class="hr-line-dashed"></div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--Booking-->
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="ibox float-e-margins">
+                    <div class="ibox-content" style="border:0;background-color: #F9F7F2 !important;margin: 0 20px;">
+                      <div style="width: 100%;margin-bottom: 20px;">
+                        <div class="row">
+                          <div class="col-sm-6"><label style="font-size: 18px;"> Booking </label></div>
+                          <div class="col-sm-6 text-right" style="margin-top: -12px;">
+                            <button id="btnUrgentRequest" style="padding: 5px 10px !important;" class="btn btn-success"
+                              data-toggle="tooltip" data-placement="top"
+                              [disabled]="isChangeBookingMode || isChangeDeliveryDetail || +orderStatus === 11 || +orderStatus === 15"
+                              title="Urgent Request" (click)="fnUrgentRequest()">
+                              Urgent Request
+                            </button>
+                          </div>
+                        </div>
+                        <div class="hr-line-solid" style="margin-top: 10px !important; color: #AE934F!important;">
+                        </div>
+                        <div class="row" style="margin-bottom: 10px !important;" *ngIf="isChangeBookingMode">
+                          <div class="col-sm-12" style="font-weight: 700;color: #FF0000;font-size: 18px;">
+                            Remark : Before making a new booking, please cancel the previous one.
+                          </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 10px !important;">
+                          <div class="col-sm-12" style="font-weight: 700;color: #FF0000;font-size: 18px;">
+                            Note : Please check the details on the Master data - production schedule page if you are
+                            unable to select the booking time.
+                          </div>
+                        </div>
+                        <div *ngFor="let item of remarkMsg; index as i">
+                          <div *ngIf="i === 0" class="row" style="margin-bottom: 10px !important;">
+                            <div style="margin-left:15px;font-weight: 700;color: #FF0000;font-size: 18px; float:left;">
+                              Remark : {{item}}
+                            </div>
+                          </div>
+                          <div *ngIf="i !== 0" class="row" style="margin-bottom: 10px !important;">
+                            <div style="margin-left:96px; font-weight: 700;color: #FF0000;font-size: 18px;">
+                              {{item}}
+                            </div>
+                          </div>
+                        </div>
+                        <div *ngIf="showScheduler" class="order-booking">
+                          <dx-scheduler id="schedulerReservationBooking" timeZone="Asia/Bangkok"
+                            [dataSource]="appointmentsData" currentView="Week" [currentDate]="currentDate"
+                            [groupByDate]="true" [startDayHour]="startDayHour" [endDayHour]="endDayHour"
+                            [groups]="['priorityId']" [crossScrollingEnabled]="true" [showAllDayPanel]="false"
+                            [timeCellTemplate]="timeCellTemplate" dataCellTemplate="dataCellTemplate"
+                            dateCellTemplate="dateCellTemplate" [maxAppointmentsPerCell]="1"
+                            [showCurrentTimeIndicator]="false" appointmentTooltipTemplate="tooltip-template"
+                            [firstDayOfWeek]="1" (onInitialized)="onInitialized($event)"
+                            (onOptionChanged)="onOptionChanged($event)"
+                            (onAppointmentRendered)="onAppointmentRendered($event)"
+                            (onAppointmentDblClick)="onAppointmentDblClick($event)"
+                            (onAppointmentClick)="onAppointmentClick($event)"
+                            (onAppointmentUpdating)="onAppointmentUpdating($event)">
+                            <dxi-view type="week" name="Week" [maxAppointmentsPerCell]="1"></dxi-view>
+                            <dxi-resource [dataSource]="prioritiesData" fieldExpr="priorityId" label="Priority"
+                              [allowMultiple]="false">
+                            </dxi-resource>
+                            <dxo-editing [allowAdding]="false" [allowDeleting]="false" [allowResizing]="false">
+                            </dxo-editing>
+                            <dxo-appointment-dragging [onDragStart]="onDragStart">
+                            </dxo-appointment-dragging>
+                            <div *dxTemplate="let dataCell of 'dataCellTemplate'"
+                              [ngClass]="{ 'disable-date': isDisableDate(dataCell), 'reserved-date': isReservedDateForTemplate(dataCell)}">
+                            </div>
+                            <div *dxTemplate="let dateCell of 'dateCellTemplate'">
+                              {{ dateCell.text }}
+                            </div>
+                            <div *dxTemplate="let model of 'tooltip-template'" class="ml-15">
+                              <div class="col-sm-12 text-left mb-5 mt-20">
+                                <span class="pr-5 font-bold">HN</span>
+                                <span class="pr-5 font-bold">:</span>
+                                <span>{{model.appointmentData.data.hn}}</span>
+                              </div>
+                              <div class="col-sm-12 text-left mb-5">
+                                <span class="pr-5 font-bold">Name</span>
+                                <span class="pr-5 font-bold">:</span>
+                                <span>{{model.appointmentData.data.name}}</span>
+                              </div>
+                              <div class="col-sm-12 text-left mb-20">
+                                <span class="pr-5 font-bold">Supply Day</span>
+                                <span class="pr-5 font-bold">:</span>
+                                <span>{{model.appointmentData.data.supplyDay}}</span>
+                              </div>
+                            </div>
+                          </dx-scheduler>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--Supplement Detail-->
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="ibox float-e-margins">
+                    <div class="ibox-content" style="border:0px;">
+                      <div
+                        style="background-color: #F9F7F2 !important; width: 100%;margin-bottom: 20px; padding: 20px;">
+                        <label style="font-size: 18px;"> Supplement Confirmation </label>
+                        <div class="hr-line-solid"
+                          style="margin-top: 10px !important; margin-bottom: 30px !important; color: #AE934F!important;">
+                        </div>
+                        <form class="form-horizontal" [formGroup]="supplementDetailForm">
+                          <!--Confirmed Days-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Confirmed Days
+                              <span class="fontred">*</span>
+                            </label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtConfirmedDay" name="txtConfirmedDay"
+                                maxlength="50" [(ngModel)]="supplementDetail.confirmedDay"
+                                formControlName="txtConfirmedDay">
+                            </div>
+                          </div>
+                          <!--Slot No.-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Slot No.
+                              <span class="fontred">*</span>
+                            </label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtSlotNo" name="txtSlotNo" maxlength="255"
+                                [(ngModel)]="supplementDetail.slotNo" formControlName="txtSlotNo">
+                            </div>
+                          </div>
+                          <!--Production End (Date)-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Production End (Date)
+                              <span class="fontred">*</span>
+                            </label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtProductionEndDate"
+                                name="txtProductionEndDate" maxlength="255"
+                                [(ngModel)]="supplementDetail.productionEndDate" formControlName="txtProductionEndDate">
+                            </div>
+                          </div>
+                          <!--Production End (Time)-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Production End (Time)
+                              <span class="fontred">*</span>
+                            </label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtProductionEndTime"
+                                name="txtProductionEndTime" maxlength="255"
+                                [(ngModel)]="supplementDetail.productionEndTime" formControlName="txtProductionEndTime">
+                            </div>
+                          </div>
+                          <!--Std. Production Hour-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Std. Production Hour
+                              <span class="fontred">*</span>
+                            </label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtProductionHour" name="txtProductionHour"
+                                maxlength="255" [(ngModel)]="supplementDetail.productionHour"
+                                formControlName="txtProductionHour">
+                            </div>
+                          </div>
+                          <!--Start (Date/Time)-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Start (Date/Time)
+                              <span class="fontred">*</span>
+                            </label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtStartDateTime" name="txtStartDateTime"
+                                maxlength="255" [(ngModel)]="supplementDetail.startDateTime"
+                                formControlName="txtStartDateTime">
+                            </div>
+                          </div>
+                          <!--Additional Note-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Additional Note</label>
+                            <div class="col-sm-4">
+                              <textarea class="form-control" id="txtAdditionalNote" name="txtAdditionalNote"
+                                formControlName="txtAdditionalNote" rows="3"
+                                [(ngModel)]="supplementDetail.additionalNote" style="resize: vertical"></textarea>
+                            </div>
+                          </div>
+                          <div class="hr-line-dashed"></div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--Delivery Detail-->
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="ibox float-e-margins">
+                    <div class="ibox-content" style="border:0px;">
+                      <div
+                        style="background-color: #F9F7F2 !important; width: 100%;margin-bottom: 20px; padding: 20px;">
+                        <div class="row">
+                          <div class="col-sm-12"><label style="font-size: 18px;"> Delivery Detail </label></div>
+                        </div>
+                        <div class="hr-line-solid"
+                          style="margin-top: 10px !important; margin-bottom: 30px !important; color: #AE934F!important;">
+                        </div>
+                        <form class="form-horizontal" [formGroup]="deliveryDetailForm">
+                          <!--Recipient Name-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Recipient Name
+                              <span class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.txtDeliveryRecipientName.valid&&deliveryDetailForm.controls.txtDeliveryRecipientName.dirty,'col-sm-4':true}">
+                              <input type="text" class="form-control" id="txtDeliveryRecipientName"
+                                name="txtDeliveryRecipientName" maxlength="255"
+                                [(ngModel)]="deliveryDetail.recipientName" formControlName="txtDeliveryRecipientName">
+                            </div>
+                          </div>
+                          <!--Phone-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Phone
+                              <span class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.txtDeliveryPhone.valid&&deliveryDetailForm.controls.txtDeliveryPhone.dirty,'col-sm-4':true}">
+                              <input type="text" class="form-control" id="txtDeliveryPhone" name="txtDeliveryPhone"
+                                maxlength="255" [(ngModel)]="deliveryDetail.phone" formControlName="txtDeliveryPhone">
+                            </div>
+                          </div>
+                          <!--Address-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Address
+                              <span class="fontred" *ngIf="!isPickupSelected">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.ddlDeliveryAddress.valid&&deliveryDetailForm.controls.ddlDeliveryAddress.dirty,'col-sm-4':true}">
+                              <select name="ddlDeliveryAddress" id="ddlDeliveryAddress"
+                                formControlName="ddlDeliveryAddress" class="form-control"
+                                [(ngModel)]="deliveryDetail.patientAddressId" (change)="onClickDeliveryDetailAddress()">
+                                <option selected="selected" [value]="null">Please select</option>
+                                <option *ngFor="let item of addressList" [value]="item.patientAddressId">{{
+                                  item.concatAddress }}</option>
+                              </select>
+                              <div *ngIf="addressList.length === 0" style="color:red;font-weight: 700;">Please update
+                                address details on the Master data - Patient page.</div>
+                            </div>
+                          </div>
+                          <!--Address Detail-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">Address Detail</label>
+                            <div class="col-sm-4">
+                              <textarea class="form-control" id="txtDeliveryAddressDetail"
+                                name="txtDeliveryAddressDetail" formControlName="txtDeliveryAddressDetail" rows="3"
+                                [(ngModel)]="deliveryDetail.addressShow" style="resize: vertical"></textarea>
+                            </div>
+                          </div>
+                          <!--District/Province-->
+                          <div class="form-group"><label class="col-sm-3 control-label">District/Province</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtDeliveryDistrictProvince"
+                                name="txtDeliveryDistrictProvince" maxlength="255"
+                                [(ngModel)]="deliveryDetail.districtProvince"
+                                formControlName="txtDeliveryDistrictProvince">
+                            </div>
+                          </div>
+                          <!--Postcode-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Postcode</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtDeliveryPostcode"
+                                name="txtDeliveryPostcode" maxlength="255" [(ngModel)]="deliveryDetail.postcode"
+                                formControlName="txtDeliveryPostcode">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+                            <label class="col-sm-4" style="color:red">Remark : Entering the postcode is necessary if the
+                              delivery method is Thai Post, DHL,Aramex, Other. Please update the data on the patient
+                              master data if the data you choose does not include a postcode.</label>
+                          </div>
+                          <!--Reason Change delivery detail-->
+                          <div class="form-group" *ngIf="+deliveryDetail.deliveryStatus === 32">
+                            <label class="col-sm-3 control-label">Reason<div class="sub-label">Change delivery detail
+                              </div></label>
+                            <div class="col-sm-4">
+                              <textarea class="form-control" id="txtDeliveryDetailReason" name="txtDeliveryDetailReason"
+                                formControlName="txtDeliveryDetailReason" rows="3" [(ngModel)]="deliveryDetail.csReason"
+                                style="resize: vertical"></textarea>
+                            </div>
+                          </div>
+                          <!--Delivery Date-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Delivery Date
+                              <span class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.txtDeliveryDate.valid&&deliveryDetailForm.controls.txtDeliveryDate.dirty,'col-sm-4':true}">
+                              <dx-date-box [openOnFieldClick]="true" [acceptCustomValue]="false" style="width: 100%;"
+                                id="txtDeliveryDate" class="form-control cus-datebox" type="date"
+                                displayFormat="dd/MM/yyyy" [min]="minDeliveryDate"
+                                [(ngModel)]="deliveryDetail.deliveryDate" (onValueChanged)="deliveryDateValueChange()"
+                                formControlName="txtDeliveryDate"></dx-date-box>
+                            </div>
+                          </div>
+                          <!--Arrival Time-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Arrival Time
+                              <span class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.ddlDeliveryArrivalTime.valid&&deliveryDetailForm.controls.ddlDeliveryArrivalTime.dirty,'col-sm-4':true}">
+                              <div class="select-wrapper">
+                                <select name="ddlDeliveryArrivalTime" id="ddlDeliveryArrivalTime"
+                                  formControlName="ddlDeliveryArrivalTime" [title]="deliveryDetail.arrivalTime"
+                                  class="form-control" [(ngModel)]="deliveryDetail.arrivalTime"
+                                  (change)="fnConvertStringNull('arrivalTime')">
+                                  <option selected="selected" [value]="null">Please select</option>
+                                  <option *ngFor="let item of arrivalTimeList" [value]="item.id">{{ item.name }}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <!--Delivery Method-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Delivery Method
+                              <span class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.ddlDeliveryMethod.valid&&deliveryDetailForm.controls.ddlDeliveryMethod.dirty,'col-sm-4':true}">
+                              <div class="select-wrapper">
+                                <select name="ddlDeliveryMethod" id="ddlDeliveryMethod"
+                                  formControlName="ddlDeliveryMethod" [title]="deliveryDetail.deliveryMethod"
+                                  class="form-control" [(ngModel)]="deliveryDetail.deliveryMethod"
+                                  (change)="onDeliveryMethodChanged($event.target.value)">
+                                  <option selected="selected" [value]="null">Please select</option>
+                                  <option *ngFor="let item of deliveryMethodList" [value]="item.id">{{ item.name }}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <!--Delivery Method Other-->
+                          <div class="form-group" *ngIf="+deliveryDetail.deliveryMethod === 6">
+                            <label class="col-sm-3 control-label">
+                              Delivery Method Other
+                              <span class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.txtDeliveryMethodOther.valid&&deliveryDetailForm.controls.txtDeliveryMethodOther.dirty,'col-sm-4':true}">
+                              <input type="text" class="form-control" id="txtDeliveryMethodOther"
+                                name="txtDeliveryMethodOther" maxlength="255"
+                                [(ngModel)]="deliveryDetail.deliveryMethodOther"
+                                formControlName="txtDeliveryMethodOther">
+                            </div>
+                          </div>
+                          <!--Packaging-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Packaging
+                              <span class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.ddlDeliveryPackaging.valid&&deliveryDetailForm.controls.ddlDeliveryPackaging.dirty,'col-sm-4':true}">
+                              <div class="select-wrapper">
+                                <select name="ddlDeliveryPackaging" id="ddlDeliveryPackaging"
+                                  formControlName="ddlDeliveryPackaging" class="form-control"
+                                  [(ngModel)]="deliveryDetail.packaging" (change)="fnConvertStringNull('packaging')">
+                                  <option selected="selected" [value]="null">Please select</option>
+                                  <option *ngFor="let item of packagingList" [value]="item.id">{{ item.name }}</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <!--Documentation-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Documentation
+                            </label>
+                            <div class="col-sm-4">
+                              <dx-check-box name="cbxDeliveryDocumentationInvoice" id="cbxDeliveryDocumentationInvoice"
+                                formControlName="cbxDeliveryDocumentationInvoice" class="mb-5"
+                                [(value)]="deliveryDetail.isInvoice" text="Invoice">
+                              </dx-check-box>
+                              <br>
+                              <dx-check-box name="cbxDeliveryDocumentationReceipt" id="cbxDeliveryDocumentationReceipt"
+                                formControlName="cbxDeliveryDocumentationReceipt" [(value)]="deliveryDetail.isReceipt"
+                                text="Receipt">
+                              </dx-check-box>
+                            </div>
+                          </div>
+                          <!--Cashier Name-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Cashier Name
+                              <span class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.ddlDeliveryCashierName.valid&&deliveryDetailForm.controls.ddlDeliveryCashierName.dirty,'col-sm-4':true}">
+                              <div class="select-wrapper">
+                                <select name="ddlDeliveryCashierName" id="ddlDeliveryCashierName"
+                                  formControlName="ddlDeliveryCashierName" class="form-control"
+                                  [(ngModel)]="deliveryDetail.cashierId">
+                                  <option selected="selected" [value]="null">Please select</option>
+                                  <option *ngFor="let item of cashierList" [value]="item.userId">
+                                    {{item.firstname}}&nbsp;{{item.lastname}}</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <!--Urgent-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Urgent
+                            </label>
+                            <div class="col-sm-4">
+                              <dx-check-box name="cbxDeliveryIsUrgent" id="cbxDeliveryIsUrgent"
+                                formControlName="cbxDeliveryIsUrgent" [(value)]="deliveryDetail.isUrgent" text="Urgent">
+                              </dx-check-box>
+                            </div>
+                          </div>
+                          <!--Additional Note-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">Additional Note</label>
+                            <div class="col-sm-4">
+                              <textarea class="form-control" id="txtDeliveryCashierDeliNote"
+                                name="txtDeliveryCashierDeliNote" formControlName="txtDeliveryCashierDeliNote" rows="3"
+                                [(ngModel)]="deliveryDetail.cashierDeliNote" style="resize: vertical"></textarea>
+                            </div>
+                          </div>
+                          <div class="hr-line-dashed"></div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer no-bg">
+            <div class="ibox-footer-right">
+              <button *ngIf="pageType != 'view'" (click)="fnSave()" id="btnSave" name="btnSave"
+                class="btn btn-success float-xs-left mr-10" title="Save"
+                [disabled]="disbledBtn.save || isChangeBookingMode">
+                <i class="fas fa-save"></i><span>Save</span>
+              </button>
+              <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop"
+                class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel"
+                style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                <i class="fal fa-times"></i><span>Cancel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()" (onOk)="onClickOk()"
+  (onCloseModalWarning)="onCloseModalWarning()" (onClosePrintDocument)="onClosePrintDocument()"
+  (onConfirmUrgentRequest)="onConfirmUrgentRequest($event)" (onOkSuccess)="onOkSuccess()"
+  (onClickEditOrder)="onClickEditOrder()" (onCloseEditOrder)="onCloseEditOrder()" (onClickEditOrAcceptOrder)="onClickEditOrAcceptOrder()"></app-alert>

@@ -1,0 +1,160 @@
+    /*
+    Flaticon icon font: Flaticon
+    Creation date: 26/09/2018 12:04
+    */
+
+    @font-face {
+  font-family: "Flaticon";
+  src: url("./Flaticon.eot");
+  src: url("./Flaticon.eot?#iefix") format("embedded-opentype"),
+       url("./Flaticon.woff") format("woff"),
+       url("./Flaticon.ttf") format("truetype"),
+       url("./Flaticon.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "Flaticon";
+    src: url("./Flaticon.svg#Flaticon") format("svg");
+  }
+}
+    .fi:before{
+      display: inline-block;
+      font-family: "Flaticon";
+      font-style: normal;
+      font-weight: normal;
+      font-variant: normal;
+      line-height: 1;
+      text-decoration: inherit;
+      text-rendering: optimizeLegibility;
+      text-transform: none;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-font-smoothing: antialiased;
+      font-smoothing: antialiased;
+    }
+
+    .flaticon-magnifying-glass:before { content: "\f100"; }
+    .flaticon-pencil:before { content: "\f101"; }
+    .flaticon-more:before { content: "\f102"; }
+    .flaticon-forward:before { content: "\f103"; }
+    .flaticon-chart:before { content: "\f104"; }
+    .flaticon-calendar:before { content: "\f105"; }
+    .flaticon-eye:before { content: "\f106"; }
+    .flaticon-eye-1:before { content: "\f107"; }
+    .flaticon-cross:before { content: "\f108"; }
+    .flaticon-google-drive-pdf-file:before { content: "\f109"; }
+    .flaticon-microsoft-excel-logo:before { content: "\f10a"; }
+    .flaticon-microsoft-word-logo:before { content: "\f10b"; }
+    .flaticon-history-clock-button:before { content: "\f10c"; }
+    .flaticon-upload:before { content: "\f10d"; }
+    .flaticon-folder:before { content: "\f10e"; }
+    .flaticon-download-to-storage-drive:before { content: "\f10f"; }
+    .flaticon-calendar-page-empty:before { content: "\f110"; }
+    .flaticon-save:before { content: "\f111"; }
+    .flaticon-profile:before { content: "\f112"; }
+    .flaticon-file:before { content: "\f113"; }
+    .flaticon-settings:before { content: "\f114"; }
+    .flaticon-zoom-in:before { content: "\f115"; }
+    .flaticon-zoom-out:before { content: "\f116"; }
+    .flaticon-printer:before { content: "\f117"; }
+    .flaticon-web-page-home:before { content: "\f118"; }
+    .flaticon-fast-forward-arrows:before { content: "\f119"; }
+    .flaticon-long-right-arrow:before { content: "\f11a"; }
+    .flaticon-long-left-arrow:before { content: "\f11b"; }
+    .flaticon-arrow-pointing-right:before { content: "\f11c"; }
+    .flaticon-arrow-left-side:before { content: "\f11d"; }
+    .flaticon-filter:before { content: "\f11e"; }
+    .flaticon-more-button-of-three-dots:before { content: "\f11f"; }
+    .flaticon-male:before { content: "\f120"; }
+    .flaticon-sand-clock:before { content: "\f121"; }
+    .flaticon-folded-document-icon:before { content: "\f122"; }
+    .flaticon-briefcase:before { content: "\f123"; }
+    .flaticon-graph:before { content: "\f124"; }
+    .flaticon-up-chevron:before { content: "\f125"; }
+    .flaticon-down-chevron:before { content: "\f126"; }
+    .flaticon-graph-line-screen:before { content: "\f127"; }
+    .flaticon-next:before { content: "\f128"; }
+    .flaticon-back:before { content: "\f129"; }
+    .flaticon-cancel:before { content: "\f12a"; }
+    .flaticon-speedometer-counter:before { content: "\f12b"; }
+    .flaticon-download-button:before { content: "\f12c"; }
+    .flaticon-clock-circular-outline:before { content: "\f12d"; }
+    .flaticon-workflow:before { content: "\f12e"; }
+    .flaticon-clipboard:before { content: "\f12f"; }
+    .flaticon-workflow-1:before { content: "\f130"; }
+    .flaticon-growth:before { content: "\f131"; }
+    .flaticon-pause-button:before { content: "\f132"; }
+    .flaticon-pause-bars:before { content: "\f133"; }
+    .flaticon-add:before { content: "\f134"; }
+    .flaticon-trash:before { content: "\f135"; }
+    .flaticon-view:before { content: "\f136"; }
+    .flaticon-move-to-the-next-page-symbol:before { content: "\f137"; }
+    .flaticon-left-arrow-chevron:before { content: "\f138"; }
+    .flaticon-warning:before { content: "\f139"; }
+    .flaticon-pencil-on-a-notes-paper:before { content: "\f13a"; }
+    .flaticon-check-symbol:before { content: "\f13b"; }
+    .flaticon-attention:before { content: "\f13c"; }
+
+    $font-Flaticon-magnifying-glass: "\f100";
+    $font-Flaticon-pencil: "\f101";
+    $font-Flaticon-more: "\f102";
+    $font-Flaticon-forward: "\f103";
+    $font-Flaticon-chart: "\f104";
+    $font-Flaticon-calendar: "\f105";
+    $font-Flaticon-eye: "\f106";
+    $font-Flaticon-eye-1: "\f107";
+    $font-Flaticon-cross: "\f108";
+    $font-Flaticon-google-drive-pdf-file: "\f109";
+    $font-Flaticon-microsoft-excel-logo: "\f10a";
+    $font-Flaticon-microsoft-word-logo: "\f10b";
+    $font-Flaticon-history-clock-button: "\f10c";
+    $font-Flaticon-upload: "\f10d";
+    $font-Flaticon-folder-white-shape: "\f10e";
+    $font-Flaticon-download-to-storage-drive: "\f10f";
+    $font-Flaticon-calendar-page-empty: "\f110";
+    $font-Flaticon-save: "\f111";
+    $font-Flaticon-profile: "\f112";
+    $font-Flaticon-file: "\f113";
+    $font-Flaticon-settings: "\f114";
+    $font-Flaticon-zoom-in: "\f115";
+    $font-Flaticon-zoom-out: "\f116";
+    $font-Flaticon-printer: "\f117";
+    $font-Flaticon-web-page-home: "\f118";
+    $font-Flaticon-fast-forward-arrows: "\f119";
+    $font-Flaticon-long-right-arrow: "\f11a";
+    $font-Flaticon-long-left-arrow: "\f11b";
+    $font-Flaticon-arrow-pointing-right: "\f11c";
+    $font-Flaticon-arrow-left-side: "\f11d";
+    $font-Flaticon-filter: "\f11e";
+    $font-Flaticon-more-button-of-three-dots: "\f11f";
+    $font-Flaticon-male: "\f120";
+    $font-Flaticon-sand-clock: "\f121";
+    $font-Flaticon-folded-document-icon: "\f122";
+    $font-Flaticon-briefcase: "\f123";
+    $font-Flaticon-graph: "\f124";
+    $font-Flaticon-up-chevron: "\f125";
+    $font-Flaticon-down-chevron: "\f126";
+    $font-Flaticon-graph-line-screen: "\f127";
+    $font-Flaticon-next: "\f128";
+    $font-Flaticon-back: "\f129";
+    $font-Flaticon-cancel: "\f12a";
+    $font-Flaticon-speedometer-counter: "\f12b";
+    $font-Flaticon-download-button: "\f12c";
+    $font-Flaticon-clock-circular-outline: "\f12d";
+    $font-Flaticon-workflow: "\f12e";
+    $font-Flaticon-clipboard: "\f12f";
+    $font-Flaticon-workflow-1: "\f130";
+    $font-Flaticon-growth: "\f131";
+    $font-Flaticon-pause-button: "\f132";
+    $font-Flaticon-pause-bars: "\f133";
+    $font-Flaticon-add: "\f134";
+    $font-Flaticon-trash: "\f135";
+    $font-Flaticon-view: "\f136";
+    $font-Flaticon-move-to-the-next-page-symbol: "\f137";
+    $font-Flaticon-left-arrow-chevron: "\f138";
+    $font-Flaticon-warning: "\f139";
+    $font-Flaticon-pencil-on-a-notes-paper: "\f13a";
+    $font-Flaticon-check-symbol: "\f13b";
+    $font-Flaticon-attention: "\f13c";

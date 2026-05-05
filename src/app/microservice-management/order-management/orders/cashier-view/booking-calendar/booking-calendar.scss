@@ -1,0 +1,51 @@
+#schedulerReservationBooking .dx-scheduler-appointment {
+  //width: 78px !important;
+  margin-left: -1px;
+}
+
+#schedulerReservationBooking .dx-scheduler-appointment-title {
+  color: #646965;
+  overflow: unset;
+  text-overflow: unset;
+  white-space: pre-wrap;
+  text-align: center;
+  font-size: 11px;
+}
+
+#schedulerReservationBooking .dx-scheduler-appointment-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#schedulerReservationBooking .disable-date {
+  background-image: none;
+  background-color: #CDCDCD;
+  color: #CDCDCD;
+  pointer-events: none;
+  height: 100%;
+  width: 100%;
+}
+
+#schedulerReservationBooking .reserved-date {
+  background-image: none;
+  background-color: #CDDDD0;
+  color: #CDDDD0;
+  pointer-events: none;
+  height: 100%;
+  width: 100%;
+}
+
+#schedulerReservationBooking .dx-scheduler-appointment-content-details {
+  display: none;
+}
+
+
+#txtDeliveryDate.dx-texteditor.dx-editor-outlined {
+  background-color: #FFFFFF !important;
+  border: 1px solid #8A998D !important;
+  &.dx-state-disabled{
+    background-color: #eee !important;
+  }
+}
+

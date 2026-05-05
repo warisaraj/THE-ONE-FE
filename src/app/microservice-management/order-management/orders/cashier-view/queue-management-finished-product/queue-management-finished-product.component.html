@@ -1,0 +1,605 @@
+<div class="loading-overlay" *ngIf="loading">
+  <div class="loading-container">
+    <div class="sk-spinner sk-spinner-double-bounce">
+      <div class="sk-double-bounce1"></div>
+      <div class="sk-double-bounce2"></div>
+    </div>
+  </div>
+</div>
+<div class="row wrapper white-bg page-heading bgnone" *ngIf="!loading">
+  <div class="soc-breadcrumb">
+    <div class="row">
+      <div class="col-md-8 col-xs-12 align-self-center">
+        <h4 class="soc-title">Orders</h4>
+        <div class="d-flex align-items-center" style="margin-top: -10px;">
+          <nav>
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item">
+                <a (click)="goHomeMenu()"><i class="fas fa-folder-open mr-10"></i>Order Management</a>
+              </li>
+              <li class="breadcrumb-item">
+                <a (click)="onClickBack()">Orders</a>
+              </li>
+              <li class="breadcrumb-item active">
+                <span *ngIf="pageType == 'new'|| pageType == 'reorder'"> Create Queue Finished Product </span>
+                <span *ngIf="pageType == 'edit'"> Edit Queue Finished Product </span>
+                <span *ngIf="pageType == 'view'"> {{patientInfo.item == 3 ? 'View Queue (Pre-Order) Finished Product' :
+                  'View Queue Finished Product'}} </span>
+              </li>
+            </ol>
+          </nav>
+        </div>
+      </div>
+      <div class="col-md-4 col-xs-12 align-self-center text-right">
+        <button
+          *ngIf="pageType == 'view' && (orderStatus === 27 || orderStatus === 34) && redirectPage === 'pharmacist'"
+          (click)="fnComplete()" id="btnComplete" name="btnComplete" class="btn btn-success float-xs-left mr-10"
+          title="Complete" [disabled]="disbledBtn.save">
+          <span>Complete</span>
+        </button>
+        <button
+          *ngIf="(pageType == 'view' && menuPermissions.edit && isEditFinish && !isEditPage) && orderStatus != 35  && redirectPage === 'pharmacist'"
+          id="btnEditTop" name="btnEditTop" class="btn btn-success float-xs-left mr-10" (click)="fnEdit()"
+          data-toggle="tooltip" data-placement="top" title="Edit">
+          <i class="fas fa-edit"></i><span>Edit</span>
+        </button>
+        <button *ngIf="isEditPage && !isEditMode" (click)="fnUpdate()" id="btnSave" name="btnSave"
+          class="btn btn-success float-xs-left mr-10" title="Save" [disabled]="disbledBtn.save">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button *ngIf="pageType != 'view'" (click)="fnSave()" id="btnSave" name="btnSave"
+          class="btn btn-success float-xs-left mr-10" title="Save" [disabled]="disbledBtn.save">
+          <i class="fas fa-save"></i><span>Save</span>
+        </button>
+        <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop" class="btn btn-default float-xs-right"
+          data-toggle="tooltip" data-placement="top" title="Cancel" style="margin-left: 3px;"
+          [disabled]="disbledBtn.cancel">
+          <i class="fal fa-times"></i><span>Cancel</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="wrapper wrapper-content-custom  animated fadeInRight">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="ibox mb-0">
+        <div class="ibox-bg">
+          <div class="ibox-heading">
+            <h5 class="ibox-title-text">
+              {{patientInfo.item == 3 && (pageType == 'view' || pageType == 'reorder')
+              ? 'Queue of (Pre-Order) finished product' : 'Queue of finished product'}}
+            </h5>
+          </div>
+          <div class="ibox-body">
+            <div class="panel-body">
+              <!--Patient Info-->
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="ibox float-e-margins">
+                    <div class="ibox-content" style="border:0px;">
+                      <div
+                        style="background-color: #F9F7F2 !important; width: 100%;margin-bottom: 20px; padding: 20px;">
+                        <div class="row">
+                          <div class="col-sm-6"><label style="font-size: 18px;"> Patient Info </label></div>
+                          <div class="col-sm-6 text-right" style="margin-top: -12px;"
+                            *ngIf="redirectPage == 'allOrder'">
+                            <button *ngIf="isEditableRole()" (click)="enableEditMode()" id="" name=""
+                              style="padding: 5px 10px !important; color :#FFFFFF !important;"
+                              class="btn btn-success float-xs-left" data-toggle="tooltip" data-placement="top"
+                              title="Edit">
+                              <i style="margin-right : 0 !important; font-size: 22px; " class="fas fa-edit"></i>
+                            </button>
+                            <div *ngIf="isEditMode">
+                              <button id="" name="" class="btn btn-success float-xs-left mr-10" (click)="fnUpdate()"
+                                data-target="#Modal-Savedsuccessfully" data-toggle="modal" data-placement="top"
+                                title="Save">
+                                <i class="fas fa-save"></i><span>Save</span>
+                              </button>
+                              <button id="" name="" class="btn btn-default float-xs-right" data-toggle="tooltip"
+                                data-placement="top" title="Cancel" style="margin-left: 3px;" (click)="cancelUpload()">
+                                <i class="fal fa-times"></i><span>Cancel</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div class="hr-line-solid"
+                          style="margin-top: 10px !important; margin-bottom: 30px !important; color: #AE934F!important;">
+                        </div>
+                        <form class="form-horizontal" [formGroup]="patientInfoForm">
+                          <!--HN-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              HN
+                              <span class="fontred" *ngIf="this.pageType!=='view'">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!patientInfoForm.controls.txtHn.valid&&patientInfoForm.controls.txtHn.dirty,'col-sm-4':true}">
+                              <dx-autocomplete id="txtHn" name="txtHn" [ngModel]="patientInfo.hn" valueExpr="hn"
+                                (onItemClick)="onItemClick($event)" (onFocusOut)="onFocusOut($event,'hn','txtHn')"
+                                (onValueChanged)="onValueChanged($event,'hn')" formControlName="txtHn"
+                                [dataSource]="patientInfoDataSource">
+                              </dx-autocomplete>
+                            </div>
+                          </div>
+                          <!--Patient Name-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Patient Name
+                              <span class="fontred" *ngIf="this.pageType!=='view'">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!patientInfoForm.controls.txtPatientName.valid&&patientInfoForm.controls.txtPatientName.dirty,'col-sm-4':true}">
+                              <dx-autocomplete id="txtPatientName" name="txtPatientName"
+                                [ngModel]="patientInfo.patientName" valueExpr="patientName"
+                                (onItemClick)="onItemClick($event)"
+                                (onFocusOut)="onFocusOut($event,'patientName', 'txtPatientName')"
+                                (onValueChanged)="onValueChanged($event,'patientName')" formControlName="txtPatientName"
+                                [dataSource]="patientInfoDataSource">
+                              </dx-autocomplete>
+                            </div>
+                          </div>
+                          <!--Phone-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Phone</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtPhone" name="txtPhone" maxlength="255"
+                                [(ngModel)]="patientInfo.phone" formControlName="txtPhone">
+                            </div>
+                          </div>
+                          <!--Address-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Address</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtAddress" name="txtAddress" maxlength="255"
+                                [(ngModel)]="patientInfo.addressShow" formControlName="txtAddress">
+                            </div>
+                          </div>
+                          <!--District/Province-->
+                          <div class="form-group"><label class="col-sm-3 control-label">District/Province</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtDistrictProvince"
+                                name="txtDistrictProvince" maxlength="255" [(ngModel)]="patientInfo.districtProvince"
+                                formControlName="txtDistrictProvince">
+                            </div>
+                          </div>
+                          <!--Postcode-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Postcode</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtPostcode" name="txtPostcode" maxlength="10"
+                                [(ngModel)]="patientInfo.postcode" formControlName="txtPostcode">
+                            </div>
+                          </div>
+                          <!--Contact Person-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Contact Person</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtContactPerson" name="txtContactPerson"
+                                maxlength="255" [(ngModel)]="patientInfo.contactPerson"
+                                formControlName="txtContactPerson">
+                            </div>
+                          </div>
+
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Item
+                              <span class="fontred" *ngIf="this.pageType!=='view'">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!patientInfoForm.controls.ddlItem.valid&&patientInfoForm.controls.ddlItem.dirty,'col-sm-4':true}">
+                              <select name="ddlItem" id="ddlItem" formControlName="ddlItem" class="form-control"
+                                [(ngModel)]="patientInfo.item">
+                                <option selected="selected" [value]="null">Please select</option>
+                                <option *ngFor="let item of patientItemList" [value]="item.id">{{ item.name }}
+                                </option>
+                              </select>
+                            </div>
+
+                          </div>
+
+                          <div class="form-group" *ngIf="(isEditFinish && orderStatus != 27) && pageType != 'reorder'">
+                            <label class="col-sm-3 control-label">
+                              Remark
+                            </label>
+                            <div class="col-sm-4">
+                              <textarea class="form-control" id="txtOrderPharmacyNoteRemark"
+                                name="txtOrderPharmacyNoteRemark" formControlName="txtOrderPharmacyNoteRemark" rows="3"
+                                [readonly]="!isEditPage || isEditMode" [(ngModel)]="patientInfo.orderPharmacyNoteRemark"
+                                style="resize: vertical"></textarea>
+                            </div>
+
+                          </div>
+
+                          <div class="form-group" *ngIf="(pageType == 'view' && redirectPage !== 'pharmacist')"><label
+                              class="col-sm-3 control-label">Status</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtStatus" name="txtStatus" maxlength="255"
+                                [(ngModel)]="this.patientInfo.orderStatus" formControlName="txtStatus">
+                            </div>
+                          </div>
+
+                          <div class="form-group" *ngIf="(pageType == 'view' && redirectPage !== 'pharmacist')"><label
+                              class="col-sm-3 control-label">Reason</label>
+                            <div class="col-sm-4">
+                              <textarea class="form-control" id="txtReason" name="txtReason" formControlName="txtReason"
+                                rows="3" [(ngModel)]="deliveryDetail.csReason" style="resize: vertical"></textarea>
+                            </div>
+                          </div>
+
+                          <div class="form-group"
+                            *ngIf="(deliveryDetail.pharmacyPicture.length || isEditPage) && (pageOrderStatus != 32 || pageType == 'view')">
+                            <label class="col-sm-3 control-label" style="padding-top: 0px;">
+                              Picture
+                              <div *ngIf="isEditPage" class="tooltip-i tooltip-white" style="margin-left:7px;">
+                                <img src="assets/remark-icon.png" width="16px" height="16px" alt="">
+                                <span class="tooltiptext" style="width: 150px;text-align: left !important;">
+                                  <ul>
+                                    <li>Max. 5 files</li>
+                                    <li>Max. 1MB/pic</li>
+                                  </ul>
+                                </span>
+                              </div>
+                            </label>
+
+                            <div *ngFor="let item of deliveryDetail.pharmacyPicture; let i = index" [ngClass]="{
+                                            'col-sm-2': true,
+                                            'col-sm-offset-3': i === 4  
+                                          }">
+                              <div style="margin-top:10px;">
+                                <div class="picture-preview">
+                                  <div *ngIf="isEditPage" class="delete-icon" (click)="removePicture(i)">
+                                    <img src="assets/icon-md/Vector.png" alt="Delete Icon" />
+                                  </div>
+                                  <img [attr.src]="item | resolveImageUrl" alt="" (click)="popupImg(item)" />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="form-group" style="text-align: right;">
+                            <div class="col-sm-7" *ngIf="isEditPage && (pageOrderStatus != 32 || pageType == 'view')">
+                              <button class="btn btn-success float-xs-right" data-toggle="tooltip" data-placement="top"
+                                title="Upload" style="margin-left: 3px;" (click)="triggerFileInput()">
+                                Upload
+                              </button>
+                            </div>
+                          </div>
+
+                          <input type="file" #fileInput style="display: none" accept="image/*" multiple
+                            (change)="upload($event)" />
+
+                          <!--Location-->
+                          <!-- <div class="form-group"><label class="col-sm-3 control-label">Location</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtLocation" name="txtLocation" maxlength="255" [(ngModel)]="patientInfo.location" formControlName="txtLocation">
+                            </div>
+                          </div> -->
+                          <div class="hr-line-dashed"></div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--Delivery Detail-->
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="ibox float-e-margins">
+                    <div class="ibox-content" style="border:0px;">
+                      <div
+                        style="background-color: #F9F7F2 !important; width: 100%;margin-bottom: 20px; padding: 20px;">
+                        <div class="row">
+                          <div class="col-sm-12"><label style="font-size: 18px;"> Delivery Detail </label></div>
+                        </div>
+                        <div class="hr-line-solid"
+                          style="margin-top: 10px !important; margin-bottom: 30px !important; color: #AE934F!important;">
+                        </div>
+                        <form class="form-horizontal" [formGroup]="deliveryDetailForm">
+                          <!--Recipient Name-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Recipient Name
+                              <span *ngIf="pageType !== 'view'" class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.txtDeliveryRecipientName.valid&&deliveryDetailForm.controls.txtDeliveryRecipientName.dirty,'col-sm-4':true}">
+                              <input type="text" class="form-control" id="txtDeliveryRecipientName"
+                                name="txtDeliveryRecipientName" maxlength="255"
+                                [(ngModel)]="deliveryDetail.recipientName" formControlName="txtDeliveryRecipientName">
+                            </div>
+                          </div>
+                          <!--Phone-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Phone
+                              <span *ngIf="pageType !== 'view'" class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.txtDeliveryPhone.valid&&deliveryDetailForm.controls.txtDeliveryPhone.dirty,'col-sm-4':true}">
+                              <input type="text" class="form-control" id="txtDeliveryPhone" name="txtDeliveryPhone"
+                                maxlength="255" [(ngModel)]="deliveryDetail.phone" formControlName="txtDeliveryPhone">
+                            </div>
+                          </div>
+                          <!--Address-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Address
+                              <span *ngIf="pageType !== 'view' && !isPickupSelected" class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.ddlDeliveryAddress.valid&&deliveryDetailForm.controls.ddlDeliveryAddress.dirty,'col-sm-4':true}">
+                              <select name="ddlDeliveryAddress" id="ddlDeliveryAddress"
+                                formControlName="ddlDeliveryAddress" class="form-control"
+                                [(ngModel)]="deliveryDetail.patientAddressId" (change)="onClickDeliveryDetailAddress()">
+                                <option selected="selected" [value]="null">Please select</option>
+                                <option *ngFor="let item of addressList" [value]="item.patientAddressId">
+                                  {{item.concatAddress}}
+                                </option>
+                              </select>
+                              <div *ngIf="addressList.length === 0" style="color:red;font-weight: 700;">Please update
+                                address details on the Master data - Patient page.</div>
+                            </div>
+                          </div>
+                          <!--Address Detail-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">Address Detail</label>
+                            <div class="col-sm-4">
+                              <textarea class="form-control" id="txtDeliveryAddressDetail"
+                                name="txtDeliveryAddressDetail" formControlName="txtDeliveryAddressDetail" rows="3"
+                                [(ngModel)]="deliveryDetail.address" style="resize: vertical"></textarea>
+                            </div>
+                          </div>
+                          <!--District/Province-->
+                          <div class="form-group"><label class="col-sm-3 control-label">District/Province</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtDeliveryDistrictProvince"
+                                name="txtDeliveryDistrictProvince" maxlength="255"
+                                [(ngModel)]="deliveryDetail.districtProvince"
+                                formControlName="txtDeliveryDistrictProvince">
+                            </div>
+                          </div>
+                          <!--Postcode-->
+                          <div class="form-group"><label class="col-sm-3 control-label">Postcode</label>
+                            <div class="col-sm-4">
+                              <input type="text" class="form-control" id="txtDeliveryPostcode"
+                                name="txtDeliveryPostcode" maxlength="50" [(ngModel)]="deliveryDetail.postcode"
+                                formControlName="txtDeliveryPostcode">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label"></label>
+                            <label class="col-sm-4" style="color:red">Remark : Entering the postcode is necessary if the
+                              delivery method is Thai Post, DHL,Aramex, Other. Please update the data on the patient
+                              master data if the data you choose does not include a postcode.</label>
+                          </div>
+
+                          <!--Reason Change delivery detail-->
+                          <div class="form-group" *ngIf="+deliveryDetail.deliveryStatus === 32">
+                            <label class="col-sm-3 control-label">Reason<div class="sub-label">Change delivery detail
+                              </div></label>
+                            <div class="col-sm-4">
+                              <textarea class="form-control" id="txtDeliveryDetailReason" name="txtDeliveryDetailReason"
+                                formControlName="txtDeliveryDetailReason" rows="3" [(ngModel)]="patientInfo.csReason"
+                                style="resize: vertical"></textarea>
+                            </div>
+                          </div>
+
+                          <!--Delivery Date-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Delivery Date
+                              <span *ngIf="pageType !== 'view'" class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.txtDeliveryDate.valid&&deliveryDetailForm.controls.txtDeliveryDate.dirty,'col-sm-4':true}">
+                              <dx-date-box *ngIf="pageType !=='view'" [openOnFieldClick]="true"
+                                [acceptCustomValue]="false" style="width: 100%;" id="txtDeliveryDate"
+                                class="form-control cus-datebox" type="date" displayFormat="dd/MM/yyyy" [min]="now"
+                                [(ngModel)]="deliveryDetail.deliveryDate"
+                                (valueChange)="deliveryDateValueChange($event)"
+                                formControlName="txtDeliveryDate"></dx-date-box>
+                              <dx-date-box *ngIf="pageType==='view'" [openOnFieldClick]="true"
+                                [acceptCustomValue]="false" style="width: 100%;" id="txtDeliveryDate"
+                                class="form-control cus-datebox" type="date" displayFormat="dd/MM/yyyy"
+                                [(ngModel)]="deliveryDetail.deliveryDate"
+                                (valueChange)="deliveryDateValueChange($event)"
+                                formControlName="txtDeliveryDate"></dx-date-box>
+                            </div>
+                          </div>
+                          <!--Arrival Time-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Arrival Time
+                              <span *ngIf="pageType !== 'view'" class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.ddlDeliveryArrivalTime.valid&&deliveryDetailForm.controls.ddlDeliveryArrivalTime.dirty,'col-sm-4':true}">
+                              <div class="select-wrapper">
+                                <select name="ddlDeliveryArrivalTime" id="ddlDeliveryArrivalTime"
+                                  formControlName="ddlDeliveryArrivalTime" [title]="deliveryDetail.arrivalTime"
+                                  class="form-control" [(ngModel)]="deliveryDetail.arrivalTime"
+                                  (change)="fnConvertStringNull('arrivalTime')">
+                                  <option selected="selected" [value]="null">Please select</option>
+                                  <option *ngFor="let item of arrivalTimeList" [value]="item.id">{{ item.name }}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <!--Delivery Method-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Delivery Method
+                              <span *ngIf="pageType !== 'view'" class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.ddlDeliveryMethod.valid&&deliveryDetailForm.controls.ddlDeliveryMethod.dirty,'col-sm-4':true}">
+                              <div class="select-wrapper">
+                                <select name="ddlDeliveryMethod" id="ddlDeliveryMethod"
+                                  formControlName="ddlDeliveryMethod" [title]="deliveryDetail.deliveryMethod"
+                                  class="form-control" [(ngModel)]="deliveryDetail.deliveryMethod"
+                                  (change)="onDeliveryMethodChanged($event.target.value)">
+                                  <option selected="selected" [value]="null">Please select</option>
+                                  <option *ngFor="let item of deliveryMethodList" [value]="item.id">{{ item.name }}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <!--Delivery Method Other-->
+                          <div class="form-group" *ngIf="+deliveryDetail.deliveryMethod === 6">
+                            <label class="col-sm-3 control-label">
+                              Delivery Method Other
+                              <span *ngIf="pageType !== 'view'" class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.txtDeliveryMethodOther.valid&&deliveryDetailForm.controls.txtDeliveryMethodOther.dirty,'col-sm-4':true}">
+                              <input type="text" class="form-control" id="txtDeliveryMethodOther"
+                                name="txtDeliveryMethodOther" maxlength="255"
+                                [(ngModel)]="deliveryDetail.deliveryMethodOther"
+                                formControlName="txtDeliveryMethodOther">
+                            </div>
+                          </div>
+                          <!--Packaging-->
+                          <!-- <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Packaging
+                              <span class="fontred">*</span>
+                            </label>
+                            <div [ngClass]="{'has-error':!deliveryDetailForm.controls.ddlDeliveryPackaging.valid&&deliveryDetailForm.controls.ddlDeliveryPackaging.dirty,'col-sm-4':true}">
+                              <div class="select-wrapper">
+                                <select name="ddlDeliveryPackaging" id="ddlDeliveryPackaging" formControlName="ddlDeliveryPackaging" class="form-control" [(ngModel)]="deliveryDetail.packaging">
+                                  <option selected="selected" [value]="null">Please select</option>
+                                  <option *ngFor="let item of packagingList" [value]="item.id">{{ item.name }}</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div> -->
+                          <!--Documentation-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Documentation
+                            </label>
+                            <div class="col-sm-4">
+                              <dx-check-box name="cbxDeliveryDocumentationInvoice" id="cbxDeliveryDocumentationInvoice"
+                                formControlName="cbxDeliveryDocumentationInvoice" class="mb-5"
+                                [(value)]="deliveryDetail.isInvoice" text="Invoice">
+                              </dx-check-box>
+                              <br>
+                              <dx-check-box name="cbxDeliveryDocumentationReceipt" id="cbxDeliveryDocumentationReceipt"
+                                formControlName="cbxDeliveryDocumentationReceipt" [(value)]="deliveryDetail.isReceipt"
+                                text="Receipt">
+                              </dx-check-box>
+                            </div>
+                          </div>
+                          <!--Cashier Name-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Cashier Name
+                              <span *ngIf="pageType !== 'view'" class="fontred">*</span>
+                            </label>
+                            <div
+                              [ngClass]="{'has-error':!deliveryDetailForm.controls.ddlDeliveryCashierName.valid&&deliveryDetailForm.controls.ddlDeliveryCashierName.dirty,'col-sm-4':true}">
+                              <div class="select-wrapper">
+                                <select name="ddlDeliveryCashierName" id="ddlDeliveryCashierName"
+                                  formControlName="ddlDeliveryCashierName" class="form-control"
+                                  [(ngModel)]="deliveryDetail.cashierId">
+                                  <option selected="selected" [value]="null">Please select</option>
+                                  <option *ngFor="let item of cashierList" [value]="item.userId">
+                                    {{item.firstname}}&nbsp;{{item.lastname}}
+                                  </option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                          <!--Urgent-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">
+                              Urgent
+                            </label>
+                            <div class="col-sm-4">
+                              <dx-check-box name="cbxDeliveryIsUrgent" id="cbxDeliveryIsUrgent"
+                                formControlName="cbxDeliveryIsUrgent" [(value)]="deliveryDetail.isUrgent" text="Urgent">
+                              </dx-check-box>
+                            </div>
+                          </div>
+                          <!--Additional Note-->
+                          <div class="form-group">
+                            <label class="col-sm-3 control-label">Additional Note</label>
+                            <div class="col-sm-4">
+                              <textarea class="form-control" id="txtDeliveryCashierDeliNote"
+                                name="txtDeliveryCashierDeliNote" formControlName="txtDeliveryCashierDeliNote" rows="3"
+                                [(ngModel)]="deliveryDetail.cashierDeliNote" style="resize: vertical"></textarea>
+                            </div>
+                          </div>
+
+                          <div class="form-group"
+                            *ngIf="deliveryDetail.deliveryPicture.length && (pageOrderStatus != 32 || pageType == 'view')">
+                            <label class="col-sm-3 control-label" style="padding-top: 0px;">
+                              Picture
+                            </label>
+
+                            <div *ngFor="let item of deliveryDetail.deliveryPicture; let i = index" [ngClass]="{
+                                'col-sm-2': true,
+                                'col-sm-offset-3': i === 4  
+                              }">
+                              <div style="margin-top:10px;">
+                                <div class="picture-preview">
+                                  <img [attr.src]="item | resolveImageUrl" alt="" (click)="popupImg(item)" />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="hr-line-dashed"></div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ibox-footer no-bg">
+            <div class="ibox-footer-right">
+              <button
+                *ngIf="pageType == 'view' && (orderStatus === 27 || orderStatus === 34) && redirectPage === 'pharmacist' "
+                (click)="fnComplete()" id="btnComplete" name="btnComplete" class="btn btn-success float-xs-left mr-10"
+                title="Complete" [disabled]="disbledBtn.save">
+                <span>Complete</span>
+              </button>
+              <button
+                *ngIf="(pageType == 'view' && menuPermissions.edit && isEditFinish && !isEditPage) && orderStatus != 35  && redirectPage === 'pharmacist'"
+                id="btnEditTop" name="btnEditTop" class="btn btn-success float-xs-left mr-10" (click)="fnEdit()"
+                data-toggle="tooltip" data-placement="top" title="Edit">
+                <i class="fas fa-edit"></i><span>Edit</span>
+              </button>
+              <button *ngIf="isEditPage && !isEditMode" (click)="fnUpdate()" id="btnSave" name="btnSave"
+                class="btn btn-success float-xs-left mr-10" title="Save" [disabled]="disbledBtn.save">
+                <i class="fas fa-save"></i><span>Save</span>
+              </button>
+              <button *ngIf="pageType != 'view'" (click)="fnSave()" id="btnSave" name="btnSave"
+                class="btn btn-success float-xs-left mr-10" title="Save" [disabled]="disbledBtn.save">
+                <i class="fas fa-save"></i><span>Save</span>
+              </button>
+              <button (click)="onClickBack()" id="btnCancelTop" name="btnCancelTop"
+                class="btn btn-default float-xs-right" data-toggle="tooltip" data-placement="top" title="Cancel"
+                style="margin-left: 3px;" [disabled]="disbledBtn.cancel">
+                <i class="fal fa-times"></i><span>Cancel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-alert #myModal (onClickBack)="onClickBack()" (onCloseModalError)="onCloseModalError()"
+  (onCloseModalWarning)="onCloseModalWarning()" (onClosePrintDocument)="onClosePrintDocument()"
+  (onClickEditOrder)="onClickEditOrder()" (onCloseEditOrder)="onCloseEditOrder()"></app-alert>
+
+<dx-popup [fullScreen]="true" [dragEnabled]="false" [showTitle]="true" [showCloseButton]="true"
+  [(visible)]="popupVisible">
+  <div *dxTemplate="let data of 'content'" class="text-center">
+    <img [src]="filePicture | resolveImageUrl" style="height:100%;" />
+  </div>
+</dx-popup>

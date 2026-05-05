@@ -1,0 +1,1747 @@
+<div #myModalDelete class="modal inmodal" id="myModalDelete" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Confirm
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c3.png" style="margin: 30px 39px;width: 30px;height: 50px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">Are you sure</h4>
+        <p>You want to delete this data ?</p>
+        <br>
+        <div class="row">
+          <button style="margin-left:3px;width:129px" id="btnConfirmCancel" name="btnConfirmCancel" type="button"
+            class="btn btn-default font-btn width-btn-small" data-dismiss="modal" (click)="onCancelDeleteModal()"
+            title="Cancel">Cancel
+          </button>
+          <!--<button type="button" class="btn btn-successm-l-xs" data-toggle="modal" data-target="#myModal7">OK</button>-->
+          <a style="margin-left:3px;width:129px" id="btnConfirmOk" name="btnConfirmOk"
+            class="btn btn-success font-btn  width-btn-small" data-toggle="modal" data-target="#myModal99"
+            data-dismiss="model" title="OK" (click)="onOkDeleteModal()">OK</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalClone class="modal inmodal" id="myModalClone" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog-center-w450">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Confirm
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c3.png" style="margin: 30px 39px;width: 30px;height: 50px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">Are you sure</h4>
+        <p>You want to delete all edited data ?</p>
+        <br>
+        <div class="row">
+          <button style="margin-left:3px;width:129px" type="button" class="btn btn-white" data-dismiss="modal"
+            (click)="onCancelCloneModal()" title="Cancel">Cancel
+          </button>
+          <!--<button type="button" class="btn btn-successm-l-xs" data-toggle="modal" data-target="#myModal7">OK</button>-->
+          <a style="margin-left:3px;width:129px" class="btn btn-successm-l-xs" data-toggle="modal"
+            data-target="#myModal99" data-dismiss="model" title="OK">OK</a>
+          <!--(click)="onOkCloneModal()"-->
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div #myModalDiagramCancel class="modal inmodal" id="myModalDiagramCancel" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-center-w450">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Confirm
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c2.png" style="margin: 30px 50px;  width: 10px;height: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">Are you sure</h4>
+        <p>You want to cancel ?</p>
+        <br>
+        <div class="row">
+          <button style="margin-left:3px;width:129px" type="button" class="btn btn-white" data-dismiss="modal"
+            (click)="onCancelDiagramCancelModal()" title="Cancel">Cancel
+          </button>
+          <!--<button type="button" class="btn btn-successm-l-xs" data-toggle="modal" data-target="#myModal7">OK</button>-->
+          <a style="margin-left:3px;width:129px" class="btn btn-successm-l-xs" data-toggle="modal"
+            data-target="#myModal99" data-dismiss="model" title="Yes,cancel it!">OK</a>
+          <!--(click)="onOkDiagramCancelModal()"-->
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div #myModalSuccessDelete class="modal inmodal" id="myModalSuccessDelete" tabindex="-1" role="dialog"
+  aria-hidden="true" style="margin-left:-17px;">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bggreen">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Success
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c1.png" style="margin: 30px;width: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-green-w">Success</h4>
+        <p>Your data has been deleted successfully.</p>
+        <!-- <br> -->
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <button style="margin-left:3px;" class="btn btn-success font-btn  width-btn-small" data-dismiss="modal">OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--delete Warning-->
+<div #myModalDeleteWarning class="modal inmodal" id="myModalDeleteWarning" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-center-w450">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Warning
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c2.png" style="margin: 30px 50px;  width: 10px;height: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">Can't Delect !</h4>
+        <p>the data that has been used in resource relationship name is <b>"Intersellar Service Relationship"</b> You
+          can't delete this data.</p>
+        <!-- <br> -->
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <button style="margin-left:3px;" class="btn btn-success font-btn  width-btn-small" data-dismiss="modal">OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Create-->
+<div #myModalSuccess class="modal inmodal" id="myModalSuccess" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bggreen">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Success
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c1.png" style="margin: 30px;width: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-green-w">Success</h4>
+        <p>Your data has been saved successfully.</p>
+        <!-- </div>
+        <div class="row"> -->
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <button style="margin-left:3px;" class="btn btn-success font-btn  width-btn-small" data-dismiss="modal"
+            (click)="onClickOkSuccess()">OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div #myModalSuccessUser class="modal inmodal" id="myModalSuccessUser" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bggreen">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Success
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" (click)="goBack()" data-dismiss="modal"
+              style="border:none;color: #000000;"><i class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c1.png" style="margin: 30px;width: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-green-w">Success</h4>
+        <p style="font-family: 'Sukhumvit Set';font-style: normal;font-weight: 400;font-size: 12px;">Your data has been
+          saved successfully.<br /> Do you want to go to Assign Role & Permission</p>
+        <!-- </div>
+        <div class="row"> -->
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <button style="margin-left:3px;" class="btn btn-success font-btn  width-btn-small" data-dismiss="modal"
+            (click)="goBack()">LATER
+          </button>
+          <button style="margin-left:3px;" class="btn btn-success font-btn  width-btn-small" data-dismiss="modal"
+            (click)="goAssignRolePermission()">Assign Role & Permission
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalSuccessWarning class="modal inmodal" id="myModalSuccessWarning" class="modal inmodal" tabindex="-1"
+  role="dialog" aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Warning
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c2.png" style="margin: 30px 50px;  width: 10px;height: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">Field is required</h4>
+        <p>Your have left a field empty and a value must be entered.</p>
+        <br>
+        <div class="row">
+          <button type="button" class="btn btn-white" data-dismiss="modal" (click)="onCancelCloneModal()"
+            title="Cancel">OK
+          </button>
+          <!-- <button type="button" class="btn btn-successm-l-xs" data-toggle="modal" data-target="#myModal7">OK</button>
+          <a style="margin-left:0px;" class="btn btn-successm-l-xs" data-toggle="modal" data-target="#myModal99" data-dismiss="model" title="OK"  >OK</a> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalEditSuccess class="modal inmodal" id="myModalEditSuccess" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bggreen">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Success
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c1.png" style="margin: 30px;width: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-green-w">Success</h4>
+        <p>Your data has been saved successfully.</p>
+        <!-- <br> -->
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <button style="margin-left:3px;" class="btn btn-success font-btn  width-btn-small" data-dismiss="modal">OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--WarningSearch หน้า list ไม่กรอกกล่องค้นหา-->
+<div #myModalWarning class="modal inmodal" id="myModalWarning" class="modal inmodal" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Warning
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c2.png" style="margin: 30px 50px;  width: 10px;height: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">{{dataText.userTitle}}</h4>
+        <p [innerHTML]="dataText.userMessage"></p>
+        <br>
+        <div class="row">
+          <button class="btn btn-success float-xs-left mr-10 ng-star-inserted" data-dismiss="modal" title="OK"
+            style="width:215px"><span>OK</span></button>
+
+          <!-- <button type="button" class="btn btn-white" data-dismiss="modal" (click)="onCancelCloneModal()" title="Cancel" >OK</button> -->
+          <!-- <button type="button" class="btn btn-successm-l-xs" data-dismiss="modal" >OK</button> -->
+          <!-- <a style="margin-left:0px;" class="btn btn-successm-l-xs" data-toggle="modal" data-target="#myModal99" data-dismiss="model" title="OK"  >OK</a> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--myModalDbError 50001-->
+<div #myModalDbError class="modal inmodal" id="myModalDbError" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Warning
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c2.png" style="margin: 30px 50px;  width: 10px;height: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-red-w">Error Connecting to Database !</h4>
+        <p> Please contact your administrator.</p>
+        <!-- <br> -->
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <button style="margin-left:3px;" class="btn btn-success font-btn  width-btn-small" data-dismiss="modal">OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--myModalErrorDeleteButHaveMenuGroup 50002-->
+<div #myModalErrorDeleteButHaveMenuGroup class="modal inmodal" id="myModalErrorDeleteButHaveMenuGroup" tabindex="-1"
+  role="dialog" aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Warning
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c2.png" style="margin: 30px 50px;  width: 10px;height: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-red-w">Error !</h4>
+        <p>Please check menu or group before delete this microservice.</p>
+        <!-- <br> -->
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <button style="margin-left:3px;" class="btn btn-success font-btn  width-btn-small" data-dismiss="modal">OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--MissingParameter create -->
+<div #myModalErrorDataExisted class="modal inmodal" id="myModalErrorDataExisted" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Warning
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c2.png" style="margin: 30px 50px;  width: 10px;height: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-red-w">Error !</h4>
+        <p>Data existed. Please check your data and try again.</p>
+        <!-- <br> -->
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <button style="margin-left:3px;" class="btn btn-success font-btn  width-btn-small" data-dismiss="modal">OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalError class="modal inmodal" id="myModalError" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Error {{isNumber(dataText.userTitle) ? dataText.userTitle : ""}}
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/cil_image-broken.png" width="110px">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-red-w" *ngIf="dataText.userTitle">{{isNumber(dataText.userTitle) ? "Error" : ""}}
+          {{dataText.userTitle}}</h4>
+        <p [innerHTML]="dataText.userMessage"></p>
+        <!-- <br> -->
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <button style="margin-left:3px;" class="btn btn-success font-btn  width-btn-small" data-dismiss="modal">OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalErrorImport class="modal inmodal" id="myModalErrorImport" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Warning
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c2.png" style="margin: 30px 50px;  width: 10px;height: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-red-w">Warning</h4>
+        <!-- <br> -->
+        <div *ngFor="let d of dataText.userMessageList">
+          <span> {{d}} </span>
+        </div>
+        <br>
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <button style="margin-left:3px;" class="btn btn-success font-btn  width-btn-small"
+            (click)="onDownloadModal()">Download
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalViewWarning class="modal inmodal" id="myModalViewWarning" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog-center-w450">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Warning
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c2.png" style="margin: 30px 50px;  width: 10px;height: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-red-w">Error !</h4>
+        <!--<p>{{dataText.userMessage}}</p>-->
+        <!-- <br> -->
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <button style="margin-left:3px;" class="btn btn-success font-btn  width-btn-small" data-dismiss="modal">OK
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalConfirmManPower class="modal inmodal" id="myModalConfirmManPower" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Confirm
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;" alt="">
+              <img src="../../assets/icon-md/calendar.png" style="margin: 30px 34px;height: 50px;" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">Are you sure</h4>
+        <p>You want to change man power from {{data.manPowerFrom}} to {{data.manPowerTo}} ?</p>
+        <p style="font-size: 15px;color: #AE934F;">
+          All additional schedules entered for {{data.date}}<br>
+          will be cleared from the system.
+        </p>
+        <br>
+        <div class="row">
+          <button style="margin-left:3px;width:129px" id="btnCancelManPower" name="btnCancelManPower" type="button"
+            class="btn btn-default font-btn width-btn-small" data-dismiss="modal" (click)="onClickBackModal()"
+            title="Cancel">Cancel
+          </button>
+          <a style="margin-left:3px;width:129px" id="btnOkManPower" class="btn btn-success font-btn  width-btn-small"
+            data-toggle="modal" data-target="#myModalConfirmManPower" data-dismiss="model" title="OK"
+            (click)="onClickOkManPower()">OK</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalConfirmReOrder class="modal inmodal" id="myModalConfirmReOrder" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Confirm
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;" alt="">
+              <img src="assets/icon-md/c9.svg" style="margin: 34px 21px;height: 40px;" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">{{dataText.userTitle}}</h4>
+        <p>{{dataText.userMessage}}</p>
+        <p style="font-size: 15px;color: #AE934F;">
+          The information from the original order will be carried over <br>
+          into the creation of a new order. On the order page, you can edit the order.
+        </p>
+        <br>
+        <div class="row">
+          <button style="margin-left:3px;width:129px" id="btnCancelReOrder" name="btnCancelReOrder" type="button"
+            class="btn btn-default font-btn width-btn-small" data-dismiss="modal" (click)="onClickBackModal()"
+            title="Cancel">Cancel
+          </button>
+          <a style="margin-left:3px;width:129px" id="btnOkReOrder" class="btn btn-success font-btn  width-btn-small"
+            data-toggle="modal" data-target="#myModalConfirmReOrder" data-dismiss="model" title="OK"
+            (click)="onClickOkReOrder()">OK</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalConfirmUrgentRequest class="modal inmodal" id="myModalConfirmUrgentRequest" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Check Urgent Order
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center" style="margin-right: 25px;">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;" alt="">
+              <img src="assets/icon-md/c10.svg" style="margin-left: 37px;margin-top: 32px;height: 45px;" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">{{dataText.userTitle}}</h4>
+        <p [innerHTML]="dataText.userMessage"></p>
+        <div class="form-group text-left">
+          <div class="control-label" style="width: 400px; margin: auto;">Reason</div>
+          <textarea class="form-control" style="resize: vertical; width: 400px; height: 100px; margin: auto;"
+            [disabled]="true">{{dataText.cs}}</textarea>
+        </div>
+        <br>
+        <div class="row">
+          <button style="margin-left:6px;width:150px" id="btnCancelReOrder" name="btnCancelReOrder" type="button"
+            class="btn btn-default font-btn width-btn-small" data-dismiss="modal" (click)="onClickReject()"
+            title="Reject">Reject
+          </button>
+          <a style="margin-left:6px;width:150px" id="btnOkReOrder" class="btn btn-success font-btn  width-btn-small"
+            data-toggle="modal" data-target="#myModalConfirmUrgentRequest" data-dismiss="model" title="Approve"
+            (click)="onClickApprove()">Accept & Approve</a>
+          <button *ngIf="isArray(dataText.userMessageList) && dataText.userMessageList.length > 0"
+            style="margin-left:6px;width:150px;background-color:#FF0000 !important;" class="btn btn-success font-btn  width-btn-small" data-dismiss="modal"
+            title="Edit Order" (click)="onClickEditOrderModal()">Edit Order
+          </button>
+
+        </div>
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;"
+          *ngIf="isArray(dataText.userMessageList) && dataText.userMessageList.length > 0">
+          <small style="color: red;">When you click the Edit Order button, the order status is changed to Order received
+            by the
+            system.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalUrgentRequest class="modal inmodal" id="myModalUrgentRequest" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Urgent Request
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;" alt="">
+              <img src="assets/icon-md/c10.svg" style="margin-left: 37px;margin-top: 32px;height: 45px;" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">{{dataText.userTitle}}</h4>
+        <p>{{dataText.userMessage}}</p>
+        <form [formGroup]="urgentRequestForm">
+          <div class="form-group text-left" style="width: 400px; margin: auto;">
+            <label class="control-label">Reason <span class="fontred">*</span></label>
+            <div
+              [ngClass]="{'has-error':!urgentRequestForm.controls.txtUrgentRequestReason.valid&&urgentRequestForm.controls.txtUrgentRequestReason.dirty}">
+              <textarea id="txtUrgentRequestReason" name="txtUrgentRequestReason"
+                formControlName="txtUrgentRequestReason" class="form-control" style="resize: vertical; height: 100px;"
+                [(ngModel)]="urgentRequestReason"></textarea>
+            </div>
+          </div>
+        </form>
+        <br>
+        <div class="row">
+          <button style="margin-left:3px;width:129px" id="btnCancelUrgentRequest" type="button"
+            class="btn btn-default font-btn width-btn-small" data-dismiss="modal" (click)="onClickCancelUrgentRequest()"
+            title="Cancel">Cancel
+          </button>
+          <a style="margin-left:3px;width:129px" id="btnOkUrgentRequest"
+            class="btn btn-success font-btn  width-btn-small" data-dismiss="model" title="Confirm"
+            (click)="onClickConfirmUrgentRequest()">Confirm</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div #myModalPrintDocument class="modal inmodal" id="myModalPrintDocument" tabindex="-1" role="dialog"
+  data-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow" style="height: auto;">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Print Document
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <button class="btn pull-right" style="background-color: transparent;box-shadow: none;"
+              (click)="onClickClosePrintDocument()">
+              <i class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </button>
+          </div>
+        </div>
+        <div style="padding: 0 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+      </div>
+      <br>
+      <div class="pt-30 pb-30 pl-30 pr-30 mr-30 ml-30">
+        <div class="row" *ngFor="let print of printPageList; index as i">
+          <div style="border-bottom: 1px solid #AE934F;" *ngIf="i > 0" class="mt-20 mb-20"></div>
+          <div class="col-sm-12 title-no-menu text-right pr-0">
+            <span style="float: left;padding-top: 10px;">{{print.name}}</span>
+            <button *ngIf="print.name != 'Nutraceuticals Quotation'" id="btnDocument"
+              style="padding: 5px 10px !important;" class="btn btn-success float-xs-left ml-10" data-toggle="tooltip"
+              data-placement="top" title="Print {{print.name}}" (click)="fnClickPrintDocument(print)">
+              <img src="assets/icon-md/print.svg" alt="">
+            </button>
+            <button *ngIf="print.name == 'Nutraceuticals Quotation'" id="btnPrintNutraceuticalsQuotation"
+              style="padding: 5px 10px !important;" class="btn btn-success float-xs-left ml-10" data-toggle="tooltip"
+              data-placement="top" title="Print Nutraceuticals Quotation" printSectionId="print-section" ngxPrint
+              styleSheetFile="assets/css/bootstrap.min.css,assets/css/customstyle.css,assets/css/customstyle-print.css">
+              <img src="assets/icon-md/print.svg" alt="">
+            </button>
+          </div>
+        </div>
+        <br>
+        <!--Label-->
+        <div class="row" *ngIf="isShowPrintLabel">
+          <label class="col-sm-12 pl-30" style="font-size: 18px;font-weight: 700;">Label</label>
+          <div class="col-sm-12 pl-25">
+            <!--Small Label-->
+            <button id="btnPrintSmallLabel" style="padding: 5px 10px !important;" class="btn btn-success float-xs-left"
+              data-toggle="tooltip" data-placement="top" title="Print Small Label" (click)="fnClickPrintLabel('S')">
+              <img src="assets/icon-md/print.svg" alt="">
+            </button>
+            <span class="pl-5 pr-15">Small Label</span>
+            <!--Medium  Label-->
+            <button id="btnPrintMediumLabel" style="padding: 5px 10px !important;"
+              class="btn btn-success float-xs-left ml-10" data-toggle="tooltip" data-placement="top"
+              title="Print Medium Label" (click)="fnClickPrintLabel('M')">
+              <img src="assets/icon-md/print.svg" alt="">
+            </button>
+            <span class="pl-5 pr-15">Medium Label</span>
+            <!--Large Label-->
+            <button id="btnPrintLargeLabel" style="padding: 5px 10px !important;"
+              class="btn btn-success float-xs-left ml-10" data-toggle="tooltip" data-placement="top"
+              title="Print Large Label" (click)="fnClickPrintLabel('L')">
+              <img src="assets/icon-md/print.svg" alt="">
+            </button>
+            <span class="pl-5">Large Label</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalPrintDocument2 class="modal inmodal" id="myModalPrintDocument2" tabindex="-1" role="dialog"
+  data-keyboard="false" aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow" style="height: auto;">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Print Document
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <button class="btn pull-right" style="background-color: transparent;box-shadow: none;"
+              (click)="onClickClosePrintDocument2()">
+              <i class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </button>
+          </div>
+        </div>
+        <div style="padding: 0 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+      </div>
+      <br>
+      <div class="pt-30 pb-30 pl-30 pr-30 mr-30 ml-30">
+        <div class="row">
+          <div class="col-sm-6 pl-0 pr-0" *ngFor="let print of printPageList; index as i">
+            <button *ngIf="print.name != 'Nutraceuticals Quotation'" id="btnPrint{{print.name}}"
+              style="padding: 5px 10px !important;" class="btn btn-success float-xs-left ml-10" data-toggle="tooltip"
+              data-placement="top" title="Print {{print.name}}" (click)="fnClickPrintDocument(print)">
+              <img src="assets/icon-md/print.svg" alt="">
+            </button>
+            <button *ngIf="print.name == 'Nutraceuticals Quotation'" id="btnPrint{{print.name}}"
+              style="padding: 5px 10px !important;" class="btn btn-success float-xs-left ml-10" data-toggle="tooltip"
+              data-placement="top" title="Print Nutraceuticals Quotation" printSectionId="print-section" ngxPrint
+              styleSheetFile="assets/css/bootstrap.min.css,assets/css/customstyle.css,assets/css/customstyle-print.css">
+              <img src="assets/icon-md/print.svg" alt="">
+            </button>
+            <span class="pt-10 pl-10">{{print.name}}</span>
+          </div>
+        </div>
+        <div class="row text-center">
+          <a href="javascript:void(0)" id="btnDownloadAll" style="padding: 5px 10px !important; color :#FFFFFF !important;"
+            title="Download All" class="btn btn-success" (click)="fnPrintDocument('all')">
+            Download All
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalConfirmProduction class="modal inmodal" id="myModalConfirmProduction" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Confirm
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;" alt="">
+              <img *ngIf="dataText.userTitle == 'assets/icon-md/c15.svg'" src={{dataText.userTitle}}
+                style="margin: 34px 40px;height: 40px;" alt="">
+              <img *ngIf="dataText.userTitle == 'assets/icon-md/c13.svg'" src={{dataText.userTitle}}
+                style="margin: 34px 27px;height: 40px;" alt="">
+              <!-- <img *ngIf="dataText.userTitle == 'assets/icon-md/c17.svg'" src={{dataText.userTitle}} style="margin: 34px 27px;height: 40px;" alt=""> -->
+              <img *ngIf="dataText.userTitle === 'assets/icon-md/c14.svg'" src={{dataText.userTitle}}
+                style="margin: 34px 35px;height: 40px;" alt="">
+              <i *ngIf="dataText.userTitle === 'fas fa-capsules'" class={{dataText.userTitle}}
+                style="margin: 34px 34px;font-size: 40px; color: #AE934F;" alt=""></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">Are you Sure</h4>
+        <p>{{dataText.userMessage}}</p>
+        <br>
+        <div class="row">
+          <button style="margin-left:3px;width:129px" id="btnCancelProduction" name="btnCancelProduction" type="button"
+            class="btn btn-default font-btn width-btn-small" data-dismiss="modal" (click)="onClickBackModal()"
+            title="Cancel">Cancel
+          </button>
+          <a style="margin-left:3px;width:129px" id="btnOkProduction" class="btn btn-success font-btn  width-btn-small"
+            data-toggle="modal" data-target="#myModalConfirmProduction" data-dismiss="model" title="OK"
+            (click)="onClickOkProduction()">OK</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalConfirm class="modal inmodal" id="myModalConfirm" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Confirm
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;" alt="">
+              <img [src]="iconURL" style="margin: 30px 37px;height: 50px;" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">{{dataText.userTitle}}</h4>
+        <p>{{dataText.userMessage}}</p>
+        <br>
+        <div class="row">
+          <button style="margin-left:3px;width:129px" id="btnCancel" name="btnCancel" type="button"
+            class="btn btn-default font-btn width-btn-small" data-dismiss="modal" (click)="onClickCancel()"
+            title="Cancel">Cancel
+          </button>
+          <a style="margin-left:3px;width:129px" id="btnOk" class="btn btn-success font-btn  width-btn-small"
+            data-toggle="modal" data-target="#myModalConfirm" data-dismiss="model" title="OK"
+            (click)="onClickOk()">OK</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div #myModalConfirmProductionDone class="modal inmodal" id="myModalConfirmProductionDone" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-custom2">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Confirm
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a class="btn pull-right" style="border:none;color: #000000;" data-dismiss="modal">
+              <i class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;" alt="">
+
+              <img src="assets/icon-md/c16.svg" style="margin: 34px 28px;height: 40px;" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+
+      <div class="modal-header" style="text-align: left;">
+        <h4 class="modal-title font-yellow-w text-center">Are you Sure</h4>
+        <p>You want to change status to production done ?</p>
+        <br>
+        <form [formGroup]="productionDoneForm">
+          <div class="mt-10">
+            <span style="color:#202020; margin-left: 30px; margin-bottom: 5px;">HN</span>
+            <input type="text" class="form-control" style="width: 555px;margin: auto;" formControlName="txtHn"
+              [disabled]="true">
+
+          </div>
+          <div class="mt-10">
+            <span style="color:#202020; margin-left: 30px; margin-bottom: 5px;">Name</span>
+            <input type="text" class="form-control" style="width: 555px;margin: auto;" formControlName="txtName"
+              [disabled]="true">
+          </div>
+          <div class="mt-10">
+            <span style="color:#202020; margin-left: 30px; margin-bottom: 5px;">Production Note</span>
+            <textarea class="form-control" style="resize: vertical; width: 555px; height: 100px; margin: auto;"
+              formControlName="txtProductionNote" [(ngModel)]="productionNote"></textarea>
+          </div>
+
+          <!-- <div
+            [ngClass]="{'has-error':!productionDoneForm.controls.txtPackageNote.valid&&productionDoneForm.controls.txtPackageNote.dirty ,'mt-10':true}">
+            <span style="color:#202020; margin-left: 30px; margin-bottom: 5px;">Packaging Note<span
+                class="fontred">*</span></span>
+            <textarea class="form-control" style="resize: vertical; width: 555px; height: 100px; margin: auto;"
+              formControlName="txtPackageNote" [(ngModel)]="packageNote"></textarea>
+          </div> -->
+          <div class="mt-10">
+            <div style="display: flex; justify-content: space-between; margin-left: 30px; margin-right: 30px;">
+              <span style="color:#202020; margin-bottom: 0px;margin-top: 5px;">
+                Packaging Note<span class="fontred">*</span>
+              </span>
+              <button title="" class="btn btn-add-packaging-note" type="button" (click)="addPackagingNote()">
+                <i class="fas fa-plus" style="margin:0; font-size:15px"></i>
+              </button>
+            </div>
+
+            <div formArrayName="txtPackageNoteList">
+              <div *ngFor="let note of txtPackageNoteListControls; let i = index"
+                [formGroupName]="i">
+
+                <div class="packaging-note-form-list"
+                  style="padding:10px; border:1px solid; border-radius:5px; width:550px; margin:15px auto; position: relative;">
+
+                  <div class="delete-icon" *ngIf="packagingNoteListLength > 1" (click)="removePackagingNote(i)">
+                    <img src="assets/icon-md/Vector.png" alt="Delete Icon" />
+                  </div>
+
+                  <!-- Qty -->
+                  <div style="display: flex; gap: 10px;margin-bottom: 15px;">
+                    <div class="form-group"
+                      [ngClass]="{'has-error': txtPackageNoteListControls[i].get('qty').invalid && txtPackageNoteListControls[i].get('qty').dirty}"
+                      style="display: flex; align-items: center;margin-bottom: 0px;">
+                      <label class="control-label" style="margin-right: 5px;">Qty =</label>
+                      <input type="number" onwheel="this.blur()" min="1" step="1" formControlName="qty"
+                        class="form-control no-spinner" style="width: 100px; height: 25px; border-radius: 10px;">
+                    </div>
+
+                    <!-- Type -->
+                    <div formArrayName="type" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                      <div *ngFor="let opt of typeOptions; let j = index" class="checkbox-wrapper">
+                        <dx-check-box [formControlName]="j" [text]="opt.text" [ngClass]="{
+                          'dx-has-error': isCheckboxGroupInvalid(txtPackageNoteListControls[i].get('type'))
+                        }" (onValueChanged)="onTypeChange(i, j)"></dx-check-box>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Supply Days / supType -->
+                  <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;margin-bottom: 15px;">
+                    <!-- Supply Days = [input] x -->
+                    <div class="form-group"
+                      [ngClass]="{'has-error': txtPackageNoteListControls[i].get('supplyDays').invalid && txtPackageNoteListControls[i].get('supplyDays').dirty}"
+                      style="display: flex; align-items: center; gap: 5px;margin-bottom: 0px;">
+                      <label class="control-label">Supply Days =</label>
+                      <input type="number" onwheel="this.blur()" min="1" formControlName="supplyDays"
+                        class="form-control no-spinner" style="width: 100px; height: 25px; border-radius: 10px;">
+                      <span style="font-size: 14px;margin-left: 9px;">x</span>
+                    </div>
+
+                    <!-- ( checkbox checkbox ) -->
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                      <span style="font-size: 14px;">(</span>
+                      <div formArrayName="supType" style="display: flex; gap: 10px;">
+                        <div *ngFor="let option of supTypeOptions; let j = index">
+                          <dx-check-box [formControlName]="j" [text]="option.text" [ngClass]="{
+            'dx-has-error': isCheckboxGroupInvalid(txtPackageNoteListControls[i].get('supType'))
+          }">
+                          </dx-check-box>
+                        </div>
+                      </div>
+                      <span style="font-size: 14px;">)</span>
+                    </div>
+                  </div>
+
+                  <!-- Other -->
+                  <div style="display: flex; gap: 10px;">
+                    <div class="form-group"
+                      [ngClass]="{'has-error': txtPackageNoteListControls[i].get('other').invalid && txtPackageNoteListControls[i].get('other').dirty}"
+                      style="display: flex; align-items: center;">
+                      <label class="control-label" style="margin-right: 5px;">Other :</label>
+                      <input type="text" formControlName="other" class="form-control"
+                        style="width: 430px; height: 25px; border: none; border-bottom: 1px solid; border-radius: 0; outline: none; box-shadow: none;">
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-10">
+            <span style="color:#202020; margin-left: 30px; margin-bottom: 5px;">Picture</span>
+            <div class="tooltip-i tooltip-white" style="margin-left:7px;">
+              <img src="assets/remark-icon.png" width="16px" height="16px" alt="">
+              <span class="tooltiptext" style="width: 150px;text-align: left !important;">
+                <ul>
+                  <li>Max. 5 files</li>
+                  <li>Max. 1MB/pic</li>
+                </ul>
+              </span>
+            </div>
+          </div>
+          <!-- <div class="custom-file-upload mt-10 mb-20" style="width: 555px; margin:auto;" (click)="imageInput.click()"> -->
+          <!--   <input #imageInput type="file" accept="image/*" (change)="processFile(imageInput)" style="display: none"> -->
+          <!--   <span class="upload-text"> {{imageInputText}} </span> -->
+          <!--   <a class="upload-bt"> Upload </a> -->
+          <!-- </div> -->
+          <div style="width: 555px; margin:auto;margin-top:10px;border-radius: 5px;"
+            [ngStyle]="{border: imageList.length > 0 ? '1px solid ' : 'none',padding: imageList.length > 0 ? '10px' : '0'}">
+            <div class="row">
+              <div *ngFor="let item of imageList; let i = index" [ngClass]="{'col-sm-4': true}">
+                <div style="margin-top:10px;">
+                  <div class="picture-preview">
+                    <div class="delete-icon" (click)="removePicture(i)">
+                      <img src="assets/icon-md/Vector.png" alt="Delete Icon" />
+                    </div>
+                    <img [attr.src]="item.base64 | resolveImageUrl" alt="" (click)="popupImg(item.base64)" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="uploadPicture" style="width: 555px; margin:auto;" class="mt-10">
+            <div class="div-content-upload text-left" style="background-color: #FFF;border: none;">
+              <!-- <div style="display: none">
+                <dx-file-uploader [multiple]="true" accept=".heic,.heif,image/*" [(value)]="imageList"
+                  (onValueChanged)="onValueChanged($event)" uploadMode="useButtons">
+                </dx-file-uploader>
+              </div> -->
+              <!-- <div class="upload-text" style="width: 90px;" *ngFor="let file of imageList; index as i">
+                <i class="fas fa-times-circle" style="color: #ec4758;cursor: pointer;" (click)="fnDeleteImage(i)"></i>
+                {{ file.name }}
+              </div> -->
+              <a class="upload-bt" (click)="fnClickUploader()"> Upload </a>
+              <input type="file" #fileInput style="display: none" accept="image/*" multiple (change)="upload($event)" />
+              <!-- <div class="form-group" style="text-align: right;">
+                <div class="col-sm-7" *>
+                  <button class="btn btn-success float-xs-right" data-toggle="tooltip" data-placement="top"
+                    title="Upload" style="margin-left: 3px;" (click)="fnClickUploader()">
+                    Upload
+                  </button>
+                </div>
+              </div> -->
+
+              <!-- <input type="file" #fileInput style="display: none" accept="image/*" multiple (change)="upload($event)" /> -->
+            </div>
+          </div>
+
+
+        </form>
+
+        <div class="row text-center mt-20">
+          <button style="margin-left:3px;width:129px" id="btnCancelProductionDone" name="btnCancelProductionDone"
+            type="button" class="btn btn-default font-btn width-btn-small" data-dismiss="modal" title="Cancel">Cancel
+          </button>
+          <a style="margin-left:3px;width:129px" id="btnOkProductionDone"
+            class="btn btn-success font-btn width-btn-small" data-toggle="modal" title="OK"
+            (click)="onClickOkProductionDone()">OK</a>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalChangeBooking class="modal inmodal" id="myModalChangeBooking" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Confirm
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c19.svg" style="margin: 30px 39px;width: 30px;height: 50px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">Are you sure</h4>
+        <p>You want to change booking ?</p>
+        <br>
+        <div class="row">
+          <button style="margin-left:3px;width:129px" id="btnConfirmCancel" name="btnConfirmCancel" type="button"
+            class="btn btn-default font-btn width-btn-small" data-dismiss="modal" (click)="onCancelChangeBookingModal()"
+            title="Cancel">Cancel
+          </button>
+          <!--<button type="button" class="btn btn-successm-l-xs" data-toggle="modal" data-target="#myModal7">OK</button>-->
+          <a style="margin-left:3px;width:129px" id="btnConfirmOk" name="btnConfirmOk"
+            class="btn btn-success font-btn  width-btn-small" data-toggle="modal" data-target="#myModal99"
+            data-dismiss="model" title="OK" (click)="onOkChangeBookingModal()">OK</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalInsertTrakCare class="modal inmodal" id="myModalInsertTrakCare" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Confirm
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c20.svg" style="margin: 30px 39px;width: 30px;height: 50px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">Are you sure</h4>
+        <p>You already insert order in TrakCare ?</p>
+        <br>
+        <div class="row">
+          <button style="margin-left:3px;width:129px" id="btnConfirmCancel" name="btnConfirmCancel" type="button"
+            class="btn btn-default font-btn width-btn-small" data-dismiss="modal"
+            (click)="onCancelInsertTrakCareModal()" title="Cancel">Cancel
+          </button>
+          <!--<button type="button" class="btn btn-successm-l-xs" data-toggle="modal" data-target="#myModal7">OK</button>-->
+          <a style="margin-left:3px;width:129px" id="btnConfirmOk" name="btnConfirmOk"
+            class="btn btn-success font-btn  width-btn-small" data-toggle="modal" data-target="#myModal99"
+            data-dismiss="model" title="Confirm" (click)="onOkInsertTrakCareModal()">Confirm</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalCompleteDelivery class="modal inmodal" id="myModalCompleteDelivery" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Confirm
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/c10.svg" style="margin: 30px 39px;width: 30px;height: 50px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">Are you sure</h4>
+        <p>You want to complete this task?</p>
+        <br>
+        <div class="row">
+          <button style="margin-left:3px;width:129px" id="btnConfirmCancel" name="btnConfirmCancel" type="button"
+            class="btn btn-default font-btn width-btn-small" data-dismiss="modal"
+            (click)="onCancelCompleteDeliveryModal()" title="Cancel">Cancel
+          </button>
+          <!--<button type="button" class="btn btn-successm-l-xs" data-toggle="modal" data-target="#myModal7">OK</button>-->
+          <a style="margin-left:3px;width:129px" id="btnConfirmOk" name="btnConfirmOk"
+            class="btn btn-success font-btn  width-btn-small" data-toggle="modal" data-target="#myModal99"
+            data-dismiss="model" title="OK" (click)="onOkCompleteDeliveryModal()">OK</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalOrderError class="modal inmodal" id="myModalOrderError" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Error {{isNumber(dataText.userTitle) ? dataText.userTitle : ""}}
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a (click)="onCloseEditOrderModal()" class="btn pull-right" data-dismiss="modal"
+              style="border:none;color: #000000;"><i class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center mt-20">
+            <div>
+              <img src="assets/cil_image-broken.png" width="110px">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-header">
+        <h4 class="modal-title font-red-w" *ngIf="dataText.userTitle">{{isNumber(dataText.userTitle) ? "Error" : ""}}
+          {{dataText.userTitle}}</h4>
+        <!-- <p [innerHTML]="dataText.userMessage"></p> -->
+        <div class="error-list">
+          <div *ngFor="let d of dataText.userMessageList">
+            <span> {{d}} </span>
+          </div>
+        </div>
+        <br>
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <button style="margin-left:3px;background-color:#FF0000 !important;" class="btn btn-success font-btn  width-btn-small" data-dismiss="modal"
+            title="Edit Order" (click)="onClickEditOrderModal()">Edit Order
+          </button>
+
+        </div>
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <small style="color: red;">When you click the Edit Order button, the order status is changed to Order received
+            by the
+            system.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div #myModalOrderErrorEditOrAccept class="modal inmodal" id="myModalOrderErrorEditOrAccept" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Error {{isNumber(dataText.userTitle) ? dataText.userTitle : ""}}
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a (click)="onCloseEditOrderModal()" class="btn pull-right" data-dismiss="modal"
+              style="border:none;color: #000000;"><i class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center mt-20">
+            <div>
+              <img src="assets/cil_image-broken.png" width="110px">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-header">
+        <h4 class="modal-title font-red-w" *ngIf="dataText.userTitle">{{isNumber(dataText.userTitle) ? "Error" : ""}}
+          {{dataText.userTitle}}</h4>
+        <!-- <p [innerHTML]="dataText.userMessage"></p> -->
+        <div class="error-list">
+          <div *ngFor="let d of dataText.userMessageList">
+            <span> {{d}} </span>
+          </div>
+        </div>
+
+        <br>
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <button style="margin-left:3px;" class="btn btn-success font-btn  width-btn-small" data-dismiss="modal"
+            title="Accept & Continue" (click)="onClickEditOrAcceptOrderModal()">Accept & Continue
+          </button>
+          <button style="margin-left:3px;background-color:#FF0000 !important;" class="btn btn-success font-btn  width-btn-small" data-dismiss="modal"
+            title="Edit Order" (click)="onClickEditOrderModal()">Edit Order
+          </button>
+
+        </div>
+        <div class="col-sm-12 pull-center m-r" style="text-align: center;">
+          <small style="color: red;">When you click the Edit Order button, the order status is changed to Order received
+            by the
+            system.</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalOrderErrorStatus1 class="modal inmodal" id="myModalOrderErrorStatus1" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Error {{isNumber(dataText.userTitle) ? dataText.userTitle : ""}}
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a (click)="onCloseEditOrderModal()" class="btn pull-right" data-dismiss="modal"
+              style="border:none;color: #000000;"><i class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center mt-20">
+            <div>
+              <img src="assets/cil_image-broken.png" width="110px">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-header">
+        <h4 class="modal-title font-red-w" *ngIf="dataText.userTitle">{{isNumber(dataText.userTitle) ? "Error" : ""}}
+          {{dataText.userTitle}}</h4>
+        <!-- <p [innerHTML]="dataText.userMessage"></p> -->
+        <div class="error-list">
+          <div *ngFor="let d of dataText.userMessageList">
+            <span> {{d}} </span>
+          </div>
+        </div>
+        <br>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalOrderInactive class="modal inmodal" id="myModalOrderInactive" tabindex="-1" role="dialog"
+  aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Confirm
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;">
+              <i class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;" alt="">
+              <img src="assets/icon-md/c12.svg" style="margin-left: 37px;margin-top: 32px;height: 45px;" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">{{dataText.userTitle}}</h4>
+        <p>{{dataText.userMessage}}</p>
+        <form [formGroup]="orderInactiveForm">
+          <div class="form-group text-left" style="width: 400px; margin: auto;">
+            <label class="control-label">Remark <span class="fontred">*</span></label>
+            <div
+              [ngClass]="{'has-error':!orderInactiveForm.controls.txtOrderInactiveRemark.valid&&orderInactiveForm.controls.txtOrderInactiveRemark.dirty}">
+              <textarea id="txtOrderInactiveRemark" name="txtOrderInactiveRemark"
+                formControlName="txtOrderInactiveRemark" class="form-control" style="resize: vertical; height: 100px;"
+                [(ngModel)]="orderInactiveRemark"></textarea>
+            </div>
+          </div>
+        </form>
+        <br>
+        <div class="row">
+          <button style="margin-left:3px;width:129px" id="btnCancelOrderInactive" type="button"
+            class="btn btn-default font-btn width-btn-small" data-dismiss="modal" (click)="onClickCancelOrderInactive()"
+            title="Cancel">Cancel
+          </button>
+          <a style="margin-left:3px;width:129px" id="btnOkOrderInactive"
+            class="btn btn-success font-btn  width-btn-small" data-dismiss="model" title="OK"
+            (click)="onClickOKOrderInactive()">OK</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div #myModalSplitDeliveryAlert class="modal inmodal" id="modalSplitDeliveryAlert" class="modal inmodal" tabindex="-1"
+  role="dialog" aria-hidden="true">
+  <div class="modal-dialog-custom">
+    <div class="modal-content animated fadeIn">
+      <div class="bgyellow">
+        <div class="row" style="padding-top:30px;padding-left: 10px;padding-right: 10px;margin-bottom:10px;">
+          <div class="col-sm-8 modal-title-1" style="padding: 0px 23px;">
+            Notification
+          </div>
+          <div class="col-sm-4 modal-title-1">
+            <a href="#" class="btn pull-right" data-dismiss="modal" style="border:none;color: #000000;"><i
+                class="btn-em-btn-close fal fa-times fa-close-em-white"></i>
+            </a>
+          </div>
+        </div>
+        <div class="mb-30" style="padding: 0px 23px;">
+          <div style="border: 1px solid #C4C4C4;"></div>
+        </div>
+        <div class="m-l-n-sm">
+          <div class="text-center">
+            <div>
+              <img src="assets/icon-md/c.png" width="110px" style="position: absolute;">
+              <img src="assets/icon-md/phone.svg" style="margin: 25px 25px;height: 60px;">
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="modal-header">
+        <h4 class="modal-title font-yellow-w">Alert</h4>
+        <p>Please call the delivery team to reprint the 'Delivery Form'</p>
+        <br>
+        <div class="row">
+          <button style="margin-left:3px;width:129px" type="button" class="btn btn-success font-btn  width-btn-small"
+            data-dismiss="modal" (click)="onCloseSplitAlertModal()" title="Cancel">Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<dx-popup [fullScreen]="true" [dragEnabled]="false" [showTitle]="true" [showCloseButton]="true"
+  [(visible)]="popupVisible">
+  <div *dxTemplate="let data of 'content'" class="text-center">
+    <img [src]="filePicture | resolveImageUrl" style="height:100%;" />
+  </div>
+</dx-popup>
+
+<dx-load-panel shadingColor="rgba(0,0,0,0.4)" [(visible)]="isLoadingPanel" [showIndicator]="true" [showPane]="true"
+  [shading]="true">
+</dx-load-panel>

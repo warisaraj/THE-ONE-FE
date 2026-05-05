@@ -1,0 +1,30 @@
+
+
+.bs-docs-header {
+    margin-bottom: 40px;
+    font-size: 20px;
+    margin-top: 70px;
+}
+
+@media (min-width: 768px)
+.bs-docs-header {
+    margin-top: 20px;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    font-size: 24px;
+    text-align: left;
+}
+
+@media (min-width: 992px)
+.masthead, .mastfoot, .cover-container {
+    width: 700px;
+}
+
+@media (min-width: 768px)
+.masthead, .mastfoot, .cover-container {
+    width: 100%;
+}
+.cover-container {
+    margin-right: auto;
+    margin-left: auto;
+}

@@ -1,0 +1,89 @@
+.custom-ibox {
+  background: #F9F7F2;
+
+  .ibox-title-text {
+    font-weight: 700 !important;
+  }
+
+  .ibox-heading {
+    border-bottom: 1px solid #AE934F !important;
+  }
+
+  .far.fa-chevron-down,
+  .far.fa-chevron-up {
+    color: #AE934F;
+    font-weight: 700;
+  }
+}
+
+#tblCompound {
+  th {
+    border: 1px solid #E9E9E9;
+    background-color: #fff;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  tr:nth-child(even) {
+    td {
+
+      background: #fff;
+    }
+  }
+
+  tr:nth-child(odd) {
+    td {
+
+      background: #f6f6f6;
+    }
+  }
+
+  td {
+    border: 1px solid #E9E9E9;
+  }
+
+  .input-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10%;
+
+    input {
+      text-align: center !important;
+    }
+  }
+}
+
+#tblDetails {
+
+  thead>tr>th,
+  tbody>tr>th,
+  tfoot>tr>th,
+  thead>tr>td,
+  tbody>tr>td,
+  tfoot>tr>td {
+    background-color: #FFFFFF;
+    border: 2px solid #E5E5E5;
+  }
+}
+
+.form-control.cus-datebox {
+  background-color: #fff !important;
+
+  &.dx-state-disabled {
+    background-color: #eee !important;
+  }
+}
+
+.dx-checkbox.dx-state-readonly .dx-checkbox-icon {
+  background-color: #EFEFEF !important;
+}
+
+.errorTable {
+  td {
+    background-color: rgba(255, 2, 2, 0.3) !important;
+    .dx-dropdowneditor-input-wrapper , input {
+      background:rgba(255, 2, 2, 0.1);
+    }
+  }
+}
